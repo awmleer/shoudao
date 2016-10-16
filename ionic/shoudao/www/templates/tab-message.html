@@ -4,15 +4,12 @@
       <ion-item>
         <button class="button button-block button-positive" style="margin: 0 auto;">发送新消息</button>
       </ion-item>
-      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="chat in chats" type="item-text-wrap" href="#/tab/chats/{{chat.id}}">
-        <img ng-src="{{chat.face}}">
-        <h2>{{chat.name}}</h2>
-        <p>{{chat.lastText}}</p>
+      <ion-item class="item-avatar item-icon-right" ng-repeat="chat in chats" type="item-text-wrap" href="#/tab/chats/{{chat.id}}">
+        <!--<img ng-src="{{chat.face}}">-->
+        <div class="item-number-icon"><span><i class="ion ion-flag"></i></span></div>
+        <h2>明天下午开会统计</h2>
+        <p>14/30</p>
         <i class="icon ion-chevron-right icon-accessory"></i>
-
-        <ion-option-button class="button-assertive" ng-click="remove(chat)">
-          Delete
-        </ion-option-button>
       </ion-item>
     </ion-list>
   </ion-content>
