@@ -1,4 +1,4 @@
-angular.module('starter.controllers', [])
+angular.module('shoudao.controllers', [])
 
     .controller('PeopleCtrl', function($scope) {
       document.addEventListener("deviceready", onDeviceReady, false);
