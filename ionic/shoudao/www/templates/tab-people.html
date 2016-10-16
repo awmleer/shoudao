@@ -2,6 +2,22 @@
   <ion-content>
     aaaa
     <button class="button button-positive" ng-click="log_contacts()">获取</button><br>
-    {{people}}
+    <!--{{people}}-->
+    <div class="list">
+      <div class="item item-divider">分组</div>
+
+      <a class="item item-icon-right" href="#">
+        创建一个分组
+        <i class="icon ion-plus-round"></i>
+      </a>
+
+      <a class="item" href="#">
+        同学<span class="badge badge-dark">0</span>
+      </a>
+      <div class="item item-divider">分组</div>
+      <a class="item" href="#">
+        查看全部联系人<span class="badge badge-dark">{{people.length}}</span>
+      </a>
+    </div>
   </ion-content>
 </ion-view>
