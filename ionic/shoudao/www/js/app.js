@@ -23,7 +23,21 @@ angular.module('shoudao', ['ionic', 'shoudao.controllers', 'shoudao.services'])
       });
     })
 
-    .config(function($stateProvider, $urlRouterProvider) {
+    .config(function($stateProvider, $urlRouterProvider,$ionicConfigProvider) {
+
+      $ionicConfigProvider.backButton.text('返回');
+      $ionicConfigProvider.backButton.icon('ion-chevron-left');
+      $ionicConfigProvider.views.transition('ios');
+      $ionicConfigProvider.backButton.previousTitleText(false);
+      $ionicConfigProvider.form.checkbox('circle');
+      $ionicConfigProvider.tabs.style('standard');
+      $ionicConfigProvider.tabs.position('bottom');
+      $ionicConfigProvider.navBar.alignTitle('center');
+      $ionicConfigProvider.form.toggle('large');
+      // $ionicConfigProvider.;
+      // $ionicConfigProvider.;
+
+
 
       // Ionic uses AngularUI Router which uses the concept of states
       // Learn more here: https://github.com/angular-ui/ui-router
