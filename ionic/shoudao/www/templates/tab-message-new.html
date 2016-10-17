@@ -4,5 +4,35 @@
         <!--<p>-->
             <!--{{chat.lastText}}-->
         <!--</p>-->
+      <div class="list">
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">通知标题</span>
+          <input type="text" placeholder="二十个字以内…">
+        </label>
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">通知内容</span>
+          <textarea placeholder="这里输入通知的内容…" style="height: 10em"></textarea>
+        </label>
+        <label class="item item-input item-stacked-label" style="padding-right: 16px">
+          <span class="input-label">发送给</span>
+          <!--<input type="text" placeholder="john@suhr.com">-->
+          <button class="button button-stable button-block" style="width: 100%;" ng-click="select_recipients()">点我选择收件人</button>
+        </label>
+      </div>
+
+      <button class="button button-balanced button-block" >立刻发送</button>
     </ion-content>
 </ion-view>
+
+
+
+<!--<script id="my-modal.html" type="text/ng-template">-->
+  <!--<ion-modal-view>-->
+    <!--<ion-header-bar>-->
+      <!--<h1 class="title">My Modal title</h1>-->
+    <!--</ion-header-bar>-->
+    <!--<ion-content>-->
+      <!--Hello!-->
+    <!--</ion-content>-->
+  <!--</ion-modal-view>-->
+<!--</script>-->

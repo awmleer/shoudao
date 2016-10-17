@@ -1,0 +1,16 @@
+<ion-modal-view>
+    <ion-header-bar>
+        <!--<button class="button button-clear button-dark" ng-click="cancel()"><i class="icon ion-chevron-left"></i> 取消</button>-->
+        <h1 class="title" style="font-weight: normal">请勾选收件人</h1>
+        <button class="button button-clear button-positive" ng-click="commit_select()"><b>确定</b></button>
+    </ion-header-bar>
+    <ion-content>
+        <ion-list>
+
+            <ion-checkbox ng-model="filter.blue">Red</ion-checkbox>
+            <ion-checkbox ng-model="filter.yellow">Yellow</ion-checkbox>
+            <ion-checkbox ng-model="filter.pink">Pink</ion-checkbox>
+
+        </ion-list>
+    </ion-content>
+</ion-modal-view>

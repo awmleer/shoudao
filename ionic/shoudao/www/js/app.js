@@ -29,7 +29,7 @@ angular.module('shoudao', ['ionic', 'shoudao.controllers', 'shoudao.services'])
 
         $ionicConfigProvider.backButton.text('返回');
         $ionicConfigProvider.backButton.icon('ion-chevron-left');
-        $ionicConfigProvider.views.transition('ios');
+        $ionicConfigProvider.views.transition('platform');
         $ionicConfigProvider.backButton.previousTitleText(false);
         $ionicConfigProvider.form.checkbox('circle');
         $ionicConfigProvider.tabs.style('standard');
