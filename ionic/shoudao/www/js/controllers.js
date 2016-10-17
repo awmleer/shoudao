@@ -36,12 +36,16 @@ angular.module('shoudao.controllers', [])
       scope: $scope,
       animation: 'slide-in-up'
     }).then(function(modal) {
+      $scope.modal_select_people={
+        title:'请勾选收件人',
+        show_group:true
+      };
       $scope.modal = modal;
     });
     $scope.select_recipients = function() {
       $scope.modal.show();
     };
-    $scope.commit_select = function() {
+    $scope.commit_select_recipients = function() {
       $scope.modal.hide();
     };
     // Cleanup the modal when we're done with it!
