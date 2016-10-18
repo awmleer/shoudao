@@ -10,9 +10,13 @@ angular.module('login',['ionic'])
         login_name:$scope.login_name,
         password:$scope.password
       }).then(function (response) {
-        // store.set('login_name',response.data.payload.login_name);
-        // store.set('device_password',response.data.payload.device_password);
-        // location.href='hall.html';
+        if (response.data == 'success') {
+          store.set('login_name',response.data.payload.login_name);
+          store.set('device_password',response.data.payload.device_password);
+          location.href='main.html';
+        }else{
+          alert(response.data);
+        }
       }, function () {
         alert("登录失败");
       });
