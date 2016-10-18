@@ -4,10 +4,9 @@
   </ion-nav-buttons>
   <ion-content>
     <ul class="list">
-      <li ng-repeat="(phone,contact) in contacts | orderBy:'contact.name'" class="item">{{contact.name}} ({{phone}})</li>
-      <!--todo orderby problem-->
+      <li ng-repeat="contact in contacts | orderBy:'name'" class="item">{{contact.name}} ({{contact.phone}})</li>
     </ul>
-    <div class="card" ng-if="!contacts || contacts=={}">
+    <div class="card" ng-show="contacts.length==0">
       <div class="item item-text-wrap" style="text-align: center">
         <p>
           联系人列表为空<br>

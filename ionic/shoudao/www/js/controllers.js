@@ -3,12 +3,21 @@ angular.module('shoudao.controllers', [])
   .controller('ContactsCtrl', function($scope,contacts,$rootScope) {
     // $rootScope.contacts={a:1,b:2};
 
+    $rootScope.contacts=[
+      {name:'啦啦啦',checked:false,phone:18112345678},
+      {name:'哈哈哈',checked:false,phone:18122223333}
+    ];
     $scope.log_contacts=function () {
       contacts.get_contacts();
     }
   })
 
   .controller('ContactsAllCtrl', function($scope,contacts,$rootScope) {
+    $rootScope.contacts=[
+      {name:'啦啦啦',checked:false,phone:18112345678},
+      {name:'哈哈哈',checked:false,phone:18122223333}
+    ];
+
     $scope.fresh_contacts=function () {
       contacts.get_contacts();
     }

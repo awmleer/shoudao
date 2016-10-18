@@ -17,16 +17,19 @@ angular.module('shoudao.services', [])
       console.log(contacts);
       // $rootScope.contacts=JSON.stringify(contacts);//for DEBUG
       // var aResult = [];
-      $rootScope.contacts={};
+      $rootScope.contacts=[];
       for (var i = 0; i<contacts.length; i++) {
-        console.log(contacts[i].phoneNumbers.length);
         if (contacts[i].phoneNumbers.length) {
           for (var j = 0;  j < contacts[i].phoneNumbers.length; j++) {
-            console.log();
-            $rootScope.contacts[contacts[i].phoneNumbers[j].value]={
+            $rootScope.contacts.push({
+              phone:contacts[i].phoneNumbers[j].value,
               name:contacts[i].displayName,
               checked:false
-            };
+            });
+            // $rootScope.contacts[contacts[i].phoneNumbers[j].value]={
+            //   name:contacts[i].displayName,
+            //   checked:false
+            // };
           }
         }
       }
