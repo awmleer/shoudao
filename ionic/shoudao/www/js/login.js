@@ -2,17 +2,17 @@ angular.module('login',['ionic'])
   .controller('LoginCtrl', function ($scope,$http,$rootScope) {
     //for DEBUG
     $scope.phone="18811112222";
-    $scope.password="123456";
+    $scope.password="sparker1113";
 
 
     $scope.login=function () {
       $http.post(API_URL+'/account/login/',{
-        login_name:$scope.login_name,
+        phone:$scope.phone,
         password:$scope.password
       }).then(function (response) {
         if (response.data == 'success') {
-          store.set('login_name',response.data.payload.login_name);
-          store.set('device_password',response.data.payload.device_password);
+          store.set('phone',$scope.phone);
+          store.set('password',$scope.password);
           location.href='main.html';
         }else{
           alert(response.data);
