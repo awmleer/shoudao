@@ -76,8 +76,11 @@ angular.module('shoudao.controllers', [])
 
 
 
-  .controller('AccountCtrl', function($scope) {
-    $scope.settings = {
-      enableFriends: true
+  .controller('AccountCtrl', function($scope,$rootScope) {
+    $rootScope.user_info={
+      name:'测试',
+      phone:'1881112222',
+      text_surplus:130,
+      type:'普通用户'
     };
   });
