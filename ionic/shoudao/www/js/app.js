@@ -10,9 +10,14 @@ angular.module('shoudao', ['ionic', 'shoudao.controllers', 'shoudao.services'])
   .run(function($ionicPlatform,$rootScope,contacts) {
     contacts_service=contacts;
 
-    // if (typeof ($rootScope.contacts) == undefined) {
-    //   $rootScope.contacts={};
-    // }
+    if (typeof ($rootScope.contacts) == undefined || $rootScope.contacts==null) {
+      $rootScope.contacts=[];
+      console.log('contacts init ');
+    }
+    if (typeof ($rootScope.groups) == undefined || $rootScope.groups==null) {
+      $rootScope.groups=[];
+      console.log('groups init ');
+    }
 
     $ionicPlatform.ready(function() {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
