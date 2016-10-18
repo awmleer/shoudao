@@ -1,8 +1,15 @@
 angular.module('shoudao.controllers', [])
 
-  .controller('PeopleCtrl', function($scope,contacts,$rootScope) {
-    // $rootScope.people={a:1,b:2};
+  .controller('ContactsCtrl', function($scope,contacts,$rootScope) {
+    // $rootScope.contacts={a:1,b:2};
+
     $scope.log_contacts=function () {
+      contacts.get_contacts();
+    }
+  })
+
+  .controller('ContactsAllCtrl', function($scope,contacts,$rootScope) {
+    $scope.fresh_contacts=function () {
       contacts.get_contacts();
     }
   })
@@ -40,7 +47,7 @@ angular.module('shoudao.controllers', [])
       scope: $scope,
       animation: 'slide-in-up'
     }).then(function(modal) {
-      $scope.modal_select_people={
+      $scope.modal_select_contacts={
         title:'请勾选收件人',
         show_group:true
       };

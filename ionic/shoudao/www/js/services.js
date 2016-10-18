@@ -13,22 +13,25 @@ angular.module('shoudao.services', [])
 
     self.get_contacts_success= function (contacts) {
 
-      // $rootScope.people=contacts;
+      // $rootScope.contacts=contacts;
       console.log(contacts);
-      // $rootScope.people=JSON.stringify(contacts);//for DEBUG
-      $rootScope.$apply();
+      // $rootScope.contacts=JSON.stringify(contacts);//for DEBUG
       // var aResult = [];
-      $rootScope.people={};
+      $rootScope.contacts={};
       for (var i = 0; i<contacts.length; i++) {
+        console.log(contacts[i].phoneNumbers.length);
         if (contacts[i].phoneNumbers.length) {
           for (var j = 0;  j < contacts[i].phoneNumbers.length; j++) {
-            $rootScope[contacts[i].phoneNumbers[j].value]={
+            console.log();
+            $rootScope.contacts[contacts[i].phoneNumbers[j].value]={
               name:contacts[i].displayName,
               checked:false
             };
           }
         }
       }
+      console.log($rootScope.contacts);
+      $rootScope.$apply();
     };
 
     self.get_contacts_error= function () {

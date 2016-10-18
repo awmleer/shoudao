@@ -1,0 +1,27 @@
+<ion-view view-title="全部联系人">
+  <ion-nav-buttons side="right">
+    <button class="button button-positive" ng-click="fresh_contacts()">刷新</button>
+  </ion-nav-buttons>
+  <ion-content>
+    <ul class="list">
+      <li ng-repeat="(phone,contact) in contacts | orderBy:'contact.name'" class="item">{{contact.name}} ({{phone}})</li>
+      <!--todo orderby problem-->
+    </ul>
+    <div class="card" ng-if="!contacts || contacts=={}">
+      <div class="item item-text-wrap" style="text-align: center">
+        <p>
+          联系人列表为空<br>
+          <small>可点击右上角的按钮进行刷新</small>
+        </p>
+      </div>
+    </div>
+    <!--<ion-list>-->
+
+    <!--<ion-checkbox ng-model="filter.blue">啦啦啦(11122223333)</ion-checkbox>-->
+    <!--<ion-checkbox ng-model="filter.yellow">Yellow</ion-checkbox>-->
+    <!--<ion-checkbox ng-model="filter.pink">Pink</ion-checkbox>-->
+    <!--<ion-checkbox ng-repeat="(phone,contact) in contacts" ng-model="contact.checked">{{contact.name}} ({{phone}})</ion-checkbox>-->
+
+    <!--</ion-list>-->
+  </ion-content>
+</ion-view>

@@ -10,8 +10,8 @@ angular.module('shoudao', ['ionic', 'shoudao.controllers', 'shoudao.services'])
   .run(function($ionicPlatform,$rootScope,contacts) {
     contacts_service=contacts;
 
-    if (typeof ($rootScope.people) == undefined) {
-      $rootScope.people={};
+    if (typeof ($rootScope.contacts) == undefined) {
+      $rootScope.contacts={};
     }
 
     $ionicPlatform.ready(function() {
@@ -60,21 +60,30 @@ angular.module('shoudao', ['ionic', 'shoudao.controllers', 'shoudao.services'])
 
       // Each tab has its own nav history stack:
 
-      .state('tab.people', {
-        url: '/people',
+      .state('tab.contacts', {
+        url: '/contacts',
         views: {
-          'tab-people': {
-            templateUrl: 'templates/tab-people.html',
-            controller: 'PeopleCtrl'
+          'tab-contacts': {
+            templateUrl: 'templates/tab-contacts.html',
+            controller: 'ContactsCtrl'
           }
         }
       })
-      .state('tab.people-newgroup', {
-        url: '/people/newgroup',
+      .state('tab.contacts-newgroup', {
+        url: '/contacts/newgroup',
         views: {
-          'tab-people': {
-            templateUrl: 'templates/tab-people-newgroup.html',
+          'tab-contacts': {
+            templateUrl: 'templates/tab-contacts-newgroup.html',
             controller: 'NewGroupCtrl'
+          }
+        }
+      })
+      .state('tab.contacts-all', {
+        url: '/contacts/all',
+        views: {
+          'tab-contacts': {
+            templateUrl: 'templates/tab-contacts-all.html',
+            controller: 'ContactsAllCtrl'
           }
         }
       })
