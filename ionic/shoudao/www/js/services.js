@@ -22,7 +22,7 @@ angular.module('shoudao.services', [])
         if (contacts[i].phoneNumbers.length) {
           for (var j = 0;  j < contacts[i].phoneNumbers.length; j++) {
             $rootScope.contacts.push({
-              phone:contacts[i].phoneNumbers[j].value,
+              phone:contacts[i].phoneNumbers[j].value.replace(/ /g,'').replace(/-/g,''),//去除掉空格和-
               name:contacts[i].displayName,
               checked:false
             });
