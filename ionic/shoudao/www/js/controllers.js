@@ -1,11 +1,15 @@
 angular.module('shoudao.controllers', [])
 
   .controller('PeopleCtrl', function($scope,contacts,$rootScope) {
-    // contacts.get_contacts();
+    // $rootScope.people={a:1,b:2};
     $scope.log_contacts=function () {
-      $rootScope.people=JSON.stringify(navigator.contacts);
       contacts.get_contacts();
     }
+  })
+
+
+  .controller('NewGroupCtrl', function($scope,contacts,$rootScope) {
+
   })
 
   .controller('MessageCtrl', function($scope, Chats) {
