@@ -41,7 +41,18 @@ angular.module('shoudao.services', [])
       alert("获取联系人失败");
     };
 
+
+    self.clear_check=function () {
+      for (var i = 0; $rootScope.contacts[i]; i++) {
+        $rootScope.contacts[i].checked=false;
+      }
+    };
+
   })
+
+
+
+
 
   .filter("object_length",function () {
     return function (input) {
@@ -53,6 +64,14 @@ angular.module('shoudao.services', [])
       return array_tmp.length;
     }
   })
+
+
+
+
+
+
+
+
 
 
   .factory('Chats', function() {

@@ -25,7 +25,10 @@ angular.module('shoudao.controllers', [])
 
 
   .controller('NewGroupCtrl', function($scope,contacts,$rootScope) {
-
+    $scope.$on('$destroy',function(){
+      console.log('$destroy');
+      contacts.clear_check();
+    });
   })
 
   .controller('MessageCtrl', function($scope, Chats) {
@@ -51,7 +54,12 @@ angular.module('shoudao.controllers', [])
 
 
 
-  .controller('MessageNewCtrl', function($scope,$ionicModal) {
+  .controller('MessageNewCtrl', function($scope,$ionicModal,contacts) {
+    $scope.$on('$destroy',function(){
+      console.log('$destroy');
+      contacts.clear_check();
+    });
+
     $ionicModal.fromTemplateUrl('templates/modal-select-recipients.html', {
       scope: $scope,
       animation: 'slide-in-up'
@@ -80,7 +88,8 @@ angular.module('shoudao.controllers', [])
     $rootScope.user_info={
       name:'测试',
       phone:'1881112222',
-      text_surplus:130,
+      text_sent:130,
+      text_limit:300,
       type:'普通用户'
     };
   });

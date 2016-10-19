@@ -10,16 +10,8 @@
                 <input type="text" placeholder="请输入分组名称…">
             </label>
 
-            <div class="item item-divider">分组</div>
-            <ion-checkbox ng-model="filter.group1">技术组</ion-checkbox>
-            <ion-checkbox ng-model="filter.group2">舍友</ion-checkbox>
-            <ion-checkbox ng-model="filter.group3">策划组</ion-checkbox>
-
-            <div class="item item-divider">全部联系人</div>
-            <ion-checkbox ng-model="filter.blue">啦啦啦(11122223333)</ion-checkbox>
-            <ion-checkbox ng-model="filter.yellow">Yellow</ion-checkbox>
-            <ion-checkbox ng-model="filter.pink">Pink</ion-checkbox>
-            <ion-checkbox ng-repeat="(phone,contact) in contacts" ng-model="contact.checked">{{contact.name}} ({{phone}})</ion-checkbox>
+            <div class="item item-divider">请勾选联系人</div>
+            <ion-checkbox ng-repeat="contact in contacts" ng-model="contact.checked">{{contact.name}} ({{contact.phone}})</ion-checkbox>
 
         </ion-list>
     </ion-content>
