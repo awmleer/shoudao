@@ -48,6 +48,29 @@ angular.module('shoudao.services', [])
       }
     };
 
+    self.get_checked_contacts= function () {
+      var contacts=[];
+      for (var i = 0; $rootScope.contacts[i]; i++) {
+        if ($rootScope.contacts[i].checked) {
+          contacts.push({
+            phone:$rootScope.contacts.phone,
+            name:$rootScope.contacts.name
+          });
+        }
+      }
+      return contacts;
+    }
+
+    self.get_checked_phones= function () {
+      var contacts=[];
+      for (var i = 0; $rootScope.contacts[i]; i++) {
+        if ($rootScope.contacts[i].checked) {
+          contacts.push($rootScope.contacts.phone);
+        }
+      }
+      return contacts;
+    }
+
   })
 
 

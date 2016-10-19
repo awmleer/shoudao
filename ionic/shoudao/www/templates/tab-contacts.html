@@ -8,12 +8,14 @@
         <i class="icon ion-plus-round"></i>
       </a>
 
-      <a class="item" href="#">
-        同学<span class="badge badge-dark">0</span>
+      <a class="item" href="#" ng-repeat="group in groups">
+        {{group.group_name}}<span class="badge badge-dark">{{group.contacts.length}}</span>
       </a>
+      <!--todo 分组详情界面-->
+
       <div class="item item-divider">分组</div>
       <a class="item" ui-sref="tab.contacts-all">
-        查看全部联系人<span class="badge badge-dark">{{contacts | object_length}}</span>
+        查看全部联系人<span class="badge badge-dark">{{contacts.length}}</span>
       </a>
     </div>
   </ion-content>

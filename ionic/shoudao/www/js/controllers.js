@@ -6,9 +6,6 @@ angular.module('shoudao.controllers', [])
       {name:'小明',checked:false,phone:18112345678},
       {name:'小华',checked:false,phone:18122223333}
     ];
-    $scope.log_contacts=function () {
-      contacts.get_contacts();
-    }
   })
 
   .controller('ContactsAllCtrl', function($scope,contacts,$rootScope) {
@@ -24,7 +21,25 @@ angular.module('shoudao.controllers', [])
   })
 
 
-  .controller('NewGroupCtrl', function($scope,contacts,$rootScope) {
+  .controller('NewGroupCtrl', function($scope,contacts,$rootScope,$state) {
+    $scope.group={
+      group_name:'',
+      contacts:[]
+    };
+    $scope.new_group=function () {
+      if ($scope.group.group_name=='') {
+        alert("请输入分组名");
+        return;
+      }
+      $scope.group.contacts=contacts.get_checked_phones();
+      if ($scope.group.contacts==[]) {
+        alert('请选择要添加到分组的联系人');
+        return;
+      }
+      $rootScope.groups.push($scope.group);
+      $state.go('tab.contacts');
+    };
+
     $scope.$on('$destroy',function(){
       console.log('$destroy');
       contacts.clear_check();

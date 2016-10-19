@@ -1,13 +1,13 @@
 <ion-view view-title="创建分组">
     <ion-nav-buttons side="right">
-        <button class="button button-positive" ng-click="doSomething()"><b>确定</b></button>
+        <button class="button button-positive" ng-click="new_group()"><b>确定</b></button>
     </ion-nav-buttons>
     <ion-content>
 
         <ion-list>
             <label class="item item-input item-stacked-label">
                 <span class="input-label">分组名称</span>
-                <input type="text" placeholder="请输入分组名称…">
+                <input type="text" placeholder="请输入分组名称…" ng-model="group.group_name">
             </label>
 
             <div class="item item-divider">请勾选联系人</div>
