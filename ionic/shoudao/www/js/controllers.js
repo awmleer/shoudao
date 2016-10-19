@@ -27,7 +27,7 @@ angular.module('shoudao.controllers', [])
   })
 
 
-  .controller('NewGroupCtrl', function($scope,contacts,$rootScope,$state) {
+  .controller('NewGroupCtrl', function($scope,contacts,$rootScope,$ionicHistory) {
     $scope.group={
       group_name:'',
       contacts:[]
@@ -43,7 +43,8 @@ angular.module('shoudao.controllers', [])
         return;
       }
       $rootScope.groups.push($scope.group);
-      $state.go('tab.contacts');
+      $ionicHistory.goBack();
+      // $state.go('tab.contacts');
     };
 
     $scope.$on('$destroy',function(){

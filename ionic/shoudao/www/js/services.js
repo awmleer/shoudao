@@ -58,7 +58,7 @@ angular.module('shoudao.services', [])
           });
         }
       }
-      console.log(contacts);
+      // console.log(contacts);
       return contacts;
     };
 
