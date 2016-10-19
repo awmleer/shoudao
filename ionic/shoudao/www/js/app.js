@@ -83,12 +83,12 @@ angular.module('shoudao', ['ionic', 'shoudao.controllers', 'shoudao.services'])
           }
         }
       })
-      .state('tab.contacts-all', {
-        url: '/contacts/all',
+      .state('tab.contacts-list', {
+        url: '/contacts/list/:group_id',
         views: {
           'tab-contacts': {
-            templateUrl: 'templates/tab-contacts-all.html',
-            controller: 'ContactsAllCtrl'
+            templateUrl: 'templates/tab-contacts-list.html',
+            controller: 'ContactsListCtrl'
           }
         }
       })

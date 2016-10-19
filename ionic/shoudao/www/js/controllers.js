@@ -8,7 +8,13 @@ angular.module('shoudao.controllers', [])
     ];
   })
 
-  .controller('ContactsAllCtrl', function($scope,contacts,$rootScope) {
+  .controller('ContactsListCtrl', function($scope,contacts,$rootScope,$stateParams) {
+    if ($stateParams.group_id == 'all') {
+      $scope.all=true;
+    }else{
+      $scope.all=false;
+      $scope.group=$rootScope.groups[$stateParams.group_id];
+    }
     // $rootScope.contacts=[
     //   {name:'啦啦啦',checked:false,phone:18112345678},
     //   {name:'哈哈哈',checked:false,phone:18122223333}
@@ -31,7 +37,7 @@ angular.module('shoudao.controllers', [])
         alert("请输入分组名");
         return;
       }
-      $scope.group.contacts=contacts.get_checked_phones();
+      $scope.group.contacts=contacts.get_checked_contacts();
       if ($scope.group.contacts==[]) {
         alert('请选择要添加到分组的联系人');
         return;

@@ -53,13 +53,14 @@ angular.module('shoudao.services', [])
       for (var i = 0; $rootScope.contacts[i]; i++) {
         if ($rootScope.contacts[i].checked) {
           contacts.push({
-            phone:$rootScope.contacts.phone,
-            name:$rootScope.contacts.name
+            phone:$rootScope.contacts[i].phone,
+            name:$rootScope.contacts[i].name
           });
         }
       }
+      console.log(contacts);
       return contacts;
-    }
+    };
 
     self.get_checked_phones= function () {
       var contacts=[];
@@ -69,7 +70,7 @@ angular.module('shoudao.services', [])
         }
       }
       return contacts;
-    }
+    };
 
   })
 
