@@ -8,3 +8,4 @@ plugins/
 node_modules/
 .tmp
 .sass-cache
+__pycache__/

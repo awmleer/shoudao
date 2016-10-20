@@ -5,6 +5,7 @@ from . import views
 app_name = 'main'
 urlpatterns = [
     url(r'^account/login',views.login),
+    url(r'^groups/all',views.groups_all),
     # url(r'^$',views.index,name='index'),
     # url(r'^index/$',views.index,name='index'),
     # url(r'^story/add/$',views.story_add,name='story_add'),

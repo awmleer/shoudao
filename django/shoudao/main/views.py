@@ -4,8 +4,15 @@ import django.contrib.auth as auth #用户登录认证
 from main.models import *
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required,permission_required
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
 import json
+
+
+
+import logging
+logger = logging.getLogger('django')
+
+
 
 @require_http_methods(["GET","POST"])
 def login(request):
@@ -25,3 +32,23 @@ def login(request):
         # The username and password were incorrect.
         res = HttpResponse('用户名或密码错误', content_type="text/plain")
     return res
+
+
+
+
+
+@require_http_methods(["GET"])
+@login_required
+def groups_all(request):
+    # data = json.loads(request.body.decode())
+    groups=request.user.contact_groups.all()
+    res=[]
+    for group in groups:
+        res.append({
+            'group_name':group.group_name,
+            'contacts':group.contacts
+        })
+    logger.info(res)
+    return JsonResponse(res,safe=False)
+
+
