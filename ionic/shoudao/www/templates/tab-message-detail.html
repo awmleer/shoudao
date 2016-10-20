@@ -10,5 +10,28 @@
         <!--<p>-->
             <!--{{chat.lastText}}-->
         <!--</p>-->
+      <h2>{{message.title}}</h2>
+      <p><small>发送于{{message.send_time}}</small></p>
+
+      <p style="margin-top: 20px;margin-bottom: 30px">{{message.content}}</p>
+
+      <!--progress bar-->
+      <div class="progress" style="margin: 0;border-radius: 0;">
+        <div class="progress-bar progress-bar progress-bar-striped progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="100" ng-style="{'width':message.received.length/message.recipients.length*100+'%'}">
+          <!--<span class="sr-only">40% Complete (success)</span>-->
+        </div>
+      </div>
+      <p>共发送给{{message.recipients.length}}人，已有{{message.received.length}}人确认收到</p>
+
+      <div class="list">
+        <div class="item item-icon-right" ng-repeat="recipient in message.recipients | orderBy:'-received'">
+          {{recipient.name}} ({{recipient.phone}})
+          <i ng-show="!recipient.received" class="icon ion-ios-clock-outline" style="color: #7a7a7a;"></i>
+          <i ng-show="recipient.received" class="icon ion-ios-checkmark-outline" style="color: #5cb85c;"></i>
+        </div>
+      </div>
+
+      <button class="button button-balanced button-block" style="margin-top: 20px">一键提醒尚未确认的成员</button>
+
     </ion-content>
 </ion-view>

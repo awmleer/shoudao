@@ -1,6 +1,7 @@
 <ion-view view-title="{{all?'全部联系人':group.group_name}}">
   <ion-nav-buttons side="right">
     <button class="button button-positive" ng-click="fresh_contacts()" ng-if="all">刷新</button>
+    <!--todo 编辑、删除分组-->
   </ion-nav-buttons>
   <ion-content>
     <ul class="list" ng-if="all">
