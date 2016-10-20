@@ -23,14 +23,14 @@ def login(request):
         if user.is_active:
             # User is valid, active and authenticated
             auth.login(request, user)
-            res = HttpResponse('success', content_type="text/plain")
+            res = HttpResponse('success')
         else:
             # The password is valid, but the account has been disabled!
-            res = HttpResponse('您的账号已被锁定', content_type="text/plain")
+            res = HttpResponse('您的账号已被锁定')
     else:
         # the authentication system was unable to verify the username and password
         # The username and password were incorrect.
-        res = HttpResponse('用户名或密码错误', content_type="text/plain")
+        res = HttpResponse('用户名或密码错误')
     return res
 
 
@@ -46,9 +46,28 @@ def groups_all(request):
     for group in groups:
         res.append({
             'group_name':group.group_name,
-            'contacts':group.contacts
+            'contacts':group.get_contacts()
         })
     logger.info(res)
     return JsonResponse(res,safe=False)
+
+
+
+
+@require_http_methods(["POST"])
+@login_required
+def groups_new(request):
+    data = json.loads(request.body.decode())
+    if data['group_name']=='':
+        return HttpResponse('分组名不能为空')
+    if len(data['group_name'])>15:
+        return HttpResponse('分组名过长(最多十五个字)')
+    group=ContactGroup(group_name=data['group_name'],user=request.user)
+    group.set_contacts(data['contacts'])
+    # todo 每个分组中联系人数量上限
+    group.save()
+    return HttpResponse('success')
+
+
 
 

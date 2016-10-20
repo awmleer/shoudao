@@ -27,7 +27,7 @@ angular.module('shoudao.controllers', [])
   })
 
 
-  .controller('NewGroupCtrl', function($scope,contacts,$rootScope,$ionicHistory) {
+  .controller('NewGroupCtrl', function($scope,contacts,$rootScope,$ionicHistory,$http) {
     $scope.group={
       group_name:'',
       contacts:[]
@@ -38,12 +38,24 @@ angular.module('shoudao.controllers', [])
         return;
       }
       $scope.group.contacts=contacts.get_checked_contacts();
-      if ($scope.group.contacts==[]) {
+      if ($scope.group.contacts.length==0) {
         alert('请选择要添加到分组的联系人');
         return;
       }
-      $rootScope.groups.push($scope.group);
-      $ionicHistory.goBack();
+      $http.post(API_URL+'/groups/new/', {
+        group_name:$scope.group.group_name,
+        contacts:$scope.group.contacts
+      }).then(function (response) {
+        if (response.data == 'success') {
+          $rootScope.groups.push($scope.group);
+          $ionicHistory.goBack();
+        }else {
+          alert(response.data);
+        }
+      }, function () {
+        alert("请求失败");
+      });
+
       // $state.go('tab.contacts');
     };
 
