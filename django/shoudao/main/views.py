@@ -45,6 +45,7 @@ def groups_all(request):
     res=[]
     for group in groups:
         res.append({
+            'group_id':group.id,
             'group_name':group.group_name,
             'contacts':group.get_contacts()
         })
@@ -66,7 +67,7 @@ def groups_new(request):
     group.set_contacts(data['contacts'])
     # todo 每个分组中联系人数量上限
     group.save()
-    return HttpResponse('success')
+    return HttpResponse(group.id)
 
 
 

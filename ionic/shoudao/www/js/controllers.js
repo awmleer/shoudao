@@ -46,7 +46,8 @@ angular.module('shoudao.controllers', [])
         group_name:$scope.group.group_name,
         contacts:$scope.group.contacts
       }).then(function (response) {
-        if (response.data == 'success') {
+        if (_.isNumber(response.data) || /^[0-9]*$/.test(response.data)) { //如果是数字，则为其ID
+          $scope.group.group_id=response.data;
           $rootScope.groups.push($scope.group);
           $ionicHistory.goBack();
         }else {
