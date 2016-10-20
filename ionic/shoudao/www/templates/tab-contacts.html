@@ -8,7 +8,7 @@
         <i class="icon ion-plus-round"></i>
       </a>
 
-      <a class="item" ui-sref="tab.contacts-list({group_id:$index})" ng-repeat="group in groups">
+      <a class="item" ui-sref="tab.contacts-list({group_index:$index})" ng-repeat="group in groups">
         {{group.group_name}}<span class="badge badge-dark">{{group.contacts.length}}</span>
       </a>
 

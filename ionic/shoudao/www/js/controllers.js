@@ -8,17 +8,33 @@ angular.module('shoudao.controllers', [])
     ];
   })
 
-  .controller('ContactsListCtrl', function($scope,contacts,$rootScope,$stateParams) {
-    if ($stateParams.group_id == 'all') {
+  .controller('ContactsListCtrl', function($scope,contacts,$rootScope,$stateParams,$http,$ionicHistory) {
+    if ($stateParams.group_index == 'all') {
       $scope.all=true;
     }else{
       $scope.all=false;
-      $scope.group=$rootScope.groups[$stateParams.group_id];
+      $scope.group=$rootScope.groups[$stateParams.group_index];
     }
     // $rootScope.contacts=[
     //   {name:'啦啦啦',checked:false,phone:18112345678},
     //   {name:'哈哈哈',checked:false,phone:18122223333}
     // ];
+    $scope.delete_group= function () {
+      var group_id=$scope.group.group_id;
+      console.log($scope.group);
+      $http.get(API_URL+'/groups/delete/?group_id='+group_id).then(function (response) {
+        if (response.data == 'success') {
+          $rootScope.groups=_.remove($rootScope.groups, function (group) {
+            return !(group.group_id==group_id);
+          });
+          $ionicHistory.goBack();
+        }else {
+          alert(response.data);
+        }
+      }, function () {
+        alert("请求失败");
+      });
+    };
 
     console.log($rootScope.contacts);
     $scope.fresh_contacts=function () {

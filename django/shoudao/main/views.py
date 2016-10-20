@@ -72,3 +72,24 @@ def groups_new(request):
 
 
 
+@require_http_methods(["GET"])
+@login_required
+def groups_delete(request):
+    logger.info(request.GET)
+    if request.GET['group_id']=='':
+        return HttpResponse('请求参数错误')
+    groups=ContactGroup.objects.filter(id=request.GET['group_id'])
+    if len(groups)==0:
+        return HttpResponse('分组不存在')
+    if groups[0].user!=request.user:
+        return HttpResponse('您没有权限该分组')
+    groups[0].delete()
+    return HttpResponse('success')
+
+
+
+
+
+
+
+

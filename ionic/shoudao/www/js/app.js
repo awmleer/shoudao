@@ -86,7 +86,7 @@ angular.module('shoudao', ['ionic', 'shoudao.controllers', 'shoudao.services'])
         }
       })
       .state('tab.contacts-list', {
-        url: '/contacts/list/:group_id',
+        url: '/contacts/list/:group_index',
         views: {
           'tab-contacts': {
             templateUrl: 'templates/tab-contacts-list.html',
