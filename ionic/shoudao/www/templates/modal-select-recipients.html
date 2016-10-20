@@ -1,18 +1,16 @@
 <ion-modal-view>
   <ion-header-bar>
-    <!--<button class="button button-clear button-dark" ng-click="cancel()"><i class="icon ion-chevron-left"></i> 取消</button>-->
+    <button class="button button-clear button-assertive" ng-click="clear_check()">清空</button>
     <h1 class="title" style="font-weight: normal">请勾选收件人</h1>
     <button class="button button-clear button-positive" ng-click="commit_select_recipients()"><b>确定</b></button>
   </ion-header-bar>
   <ion-content>
     <ion-list>
       <div class="item item-divider">分组</div>
-      <ion-checkbox ng-model="filter.group1">技术组</ion-checkbox>
-      <ion-checkbox ng-model="filter.group2">舍友</ion-checkbox>
-      <ion-checkbox ng-model="filter.group3">策划组</ion-checkbox>
+      <ion-checkbox ng-model="group.checked" ng-click="group_click()" ng-repeat="group in groups">{{group.group_name}}<span class="badge badge-dark">{{group.contacts.length}}</span></ion-checkbox>
 
       <div class="item item-divider">全部联系人</div>
-      <ion-checkbox ng-repeat="contact in contacts" ng-model="contact.checked">{{contact.name}} ({{contact.phone}})</ion-checkbox>
+      <ion-checkbox ng-repeat="contact in contacts" ng-model="contact.checked" ng-click="contact_click()">{{contact.name}} ({{contact.phone}})</ion-checkbox>
 
 
     </ion-list>

@@ -1,6 +1,6 @@
 angular.module('shoudao.services', [])
 
-  .service('contacts',function ($rootScope) {
+  .service('Contacts',function ($rootScope) {
     var self=this;
     self.get_contacts= function () {
       var fields = ["displayName", "name", "phoneNumbers"];
@@ -42,10 +42,29 @@ angular.module('shoudao.services', [])
     };
 
 
+    self.check=function (phone) {
+      _.forEach($rootScope.contacts, function (contact) {
+        if (contact.phone==phone) {
+          contact.checked=true;
+        }
+      })
+    };
+
+    self.uncheck=function (phone) {
+      _.forEach($rootScope.contacts, function (contact) {
+        if (contact.phone==phone) {
+          contact.checked=false;
+        }
+      })
+    };
+
     self.clear_check=function () {
-      for (var i = 0; $rootScope.contacts[i]; i++) {
-        $rootScope.contacts[i].checked=false;
-      }
+      _.forEach($rootScope.contacts, function (contact) {
+        contact.checked=false;
+      });
+      _.forEach($rootScope.groups, function (group) {
+        group.checked=false;
+      })
     };
 
     self.get_checked_contacts= function () {
@@ -76,7 +95,7 @@ angular.module('shoudao.services', [])
 
 
 
-  .service('groups',function ($rootScope,$http) {
+  .service('Groups',function ($rootScope, $http) {
     this.refresh=function () {
       $http.get(API_URL+'/groups/all/').then(function (response) {
         $rootScope.groups=response.data;
@@ -84,6 +103,12 @@ angular.module('shoudao.services', [])
         alert("获取联系人分组失败");
       });
     };
+
+    this.clear_check= function () {
+      _.forEach($rootScope.groups, function (group) {
+        group.checked=false;
+      })
+    }
   })
 
 
@@ -101,7 +126,21 @@ angular.module('shoudao.services', [])
     }
   })
 
-
+  .filter("checked_count",function () {
+    return function (input) {
+      // console.log(input);
+      if (typeof (input) == undefined || input == null) {
+        return '';
+      }
+      var count=0;
+      _.forEach(input, function (obj) {
+        if (obj.checked) {
+          count++;
+        }
+      });
+      return count;
+    }
+  })
 
 
 

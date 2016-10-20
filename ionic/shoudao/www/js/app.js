@@ -7,8 +7,8 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('shoudao', ['ionic', 'shoudao.controllers', 'shoudao.services'])
 
-  .run(function($ionicPlatform,$rootScope,contacts,groups) {
-    contacts_service=contacts;
+  .run(function($ionicPlatform, $rootScope, Contacts, Groups) {
+    contacts_service=Contacts;
 
     if (typeof ($rootScope.contacts) == undefined || $rootScope.contacts==null) {
       $rootScope.contacts=[];
@@ -19,7 +19,7 @@ angular.module('shoudao', ['ionic', 'shoudao.controllers', 'shoudao.services'])
       console.log('groups init ');
     }
 
-    groups.refresh();//刷新联系人分组
+    Groups.refresh();//刷新联系人分组
 
     $ionicPlatform.ready(function() {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard

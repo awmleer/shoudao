@@ -1,6 +1,6 @@
 angular.module('shoudao.controllers', [])
 
-  .controller('ContactsCtrl', function($scope,contacts,$rootScope) {
+  .controller('ContactsCtrl', function($scope, Contacts, $rootScope) {
     // $rootScope.contacts={a:1,b:2};
     $rootScope.contacts=[
       {name:'小明',checked:false,phone:18112345678},
@@ -8,7 +8,7 @@ angular.module('shoudao.controllers', [])
     ];
   })
 
-  .controller('ContactsListCtrl', function($scope,contacts,$rootScope,$stateParams,$http,$ionicHistory) {
+  .controller('ContactsListCtrl', function($scope, Contacts, $rootScope, $stateParams, $http, $ionicHistory) {
     if ($stateParams.group_index == 'all') {
       $scope.all=true;
     }else{
@@ -20,13 +20,12 @@ angular.module('shoudao.controllers', [])
     //   {name:'哈哈哈',checked:false,phone:18122223333}
     // ];
     $scope.delete_group= function () {
+      //todo confirm dialog
       var group_id=$scope.group.group_id;
       console.log($scope.group);
       $http.get(API_URL+'/groups/delete/?group_id='+group_id).then(function (response) {
         if (response.data == 'success') {
-          $rootScope.groups=_.remove($rootScope.groups, function (group) {
-            return !(group.group_id==group_id);
-          });
+          $rootScope.groups=_.reject($rootScope.groups,{group_id:group_id});
           $ionicHistory.goBack();
         }else {
           alert(response.data);
@@ -38,12 +37,12 @@ angular.module('shoudao.controllers', [])
 
     console.log($rootScope.contacts);
     $scope.fresh_contacts=function () {
-      contacts.get_contacts();
+      Contacts.get_contacts();
     }
   })
 
 
-  .controller('NewGroupCtrl', function($scope,contacts,$rootScope,$ionicHistory,$http) {
+  .controller('NewGroupCtrl', function($scope, Contacts, $rootScope, $ionicHistory, $http) {
     $scope.group={
       group_name:'',
       contacts:[]
@@ -53,7 +52,7 @@ angular.module('shoudao.controllers', [])
         alert("请输入分组名");
         return;
       }
-      $scope.group.contacts=contacts.get_checked_contacts();
+      $scope.group.contacts=Contacts.get_checked_contacts();
       if ($scope.group.contacts.length==0) {
         alert('请选择要添加到分组的联系人');
         return;
@@ -78,7 +77,7 @@ angular.module('shoudao.controllers', [])
 
     $scope.$on('$destroy',function(){
       console.log('$destroy');
-      contacts.clear_check();
+      Contacts.clear_check();
     });
   })
 
@@ -124,11 +123,36 @@ angular.module('shoudao.controllers', [])
 
 
 
-  .controller('MessageNewCtrl', function($scope,$ionicModal,contacts) {
+  .controller('MessageNewCtrl', function($scope, $rootScope, $ionicModal, Contacts, Groups) {
     $scope.$on('$destroy',function(){
       console.log('$destroy');
-      contacts.clear_check();
+      Contacts.clear_check();
+      Groups.clear_check();
+      $scope.modal.remove();// Cleanup the modal
     });
+
+    $scope.group_click=function () {
+      console.log(this.group.checked);
+      if (this.group.checked) {
+        _.forEach(this.group.contacts, function (contact) {
+          Contacts.check(contact.phone);
+        });
+      }else{
+        _.forEach(this.group.contacts, function (contact) {
+          Contacts.uncheck(contact.phone);
+        });
+      }
+    };
+
+    $scope.contact_click= function () {
+      console.log(this.contact.checked);
+    };
+
+    $scope.message={
+      title:'',
+      content:''
+    };
+
 
     $ionicModal.fromTemplateUrl('templates/modal-select-recipients.html', {
       scope: $scope,
@@ -146,10 +170,9 @@ angular.module('shoudao.controllers', [])
     $scope.commit_select_recipients = function() {
       $scope.modal.hide();
     };
-    // Cleanup the modal when we're done with it!
-    $scope.$on('$destroy', function() {
-      $scope.modal.remove();
-    });
+    $scope.clear_check= function () {
+      Contacts.clear_check();
+    }
   })
 
 

@@ -7,15 +7,15 @@
       <div class="list">
         <label class="item item-input item-stacked-label">
           <span class="input-label">通知标题</span>
-          <input type="text" placeholder="二十个字以内…">
+          <input type="text" placeholder="二十个字以内…" ng-model="message.title">
         </label>
         <label class="item item-input item-stacked-label">
           <span class="input-label">通知内容</span>
-          <textarea placeholder="这里输入通知的内容…" style="height: 10em"></textarea>
+          <textarea ng-model="message.content" placeholder="这里输入通知的内容…" style="height: 10em"></textarea>
         </label>
         <label class="item item-input item-stacked-label" style="padding-right: 16px">
-          <span class="input-label">发送给 (共12人)</span>
-          <!--<input type="text" placeholder="john@suhr.com">-->
+          <span class="input-label">发送给 (共{{contacts | checked_count}}人)</span>
+          <span style="display: block;"><span style="display: inline-block;margin-right: 1em" ng-repeat="contact in contacts | filter:{'checked':true}">{{contact.name}}({{contact.phone}})</span></span>
           <button class="button button-stable button-block" style="width: 100%;" ng-click="select_recipients()">点我选择收件人</button>
         </label>
       </div>
