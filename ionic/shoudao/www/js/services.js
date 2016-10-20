@@ -76,6 +76,18 @@ angular.module('shoudao.services', [])
 
 
 
+  .service('groups',function ($rootScope,$http) {
+    this.refresh=function () {
+      $http.get(API_URL+'/groups/all/').then(function (response) {
+        $rootScope.groups=response.data;
+      }, function () {
+        alert("获取联系人分组失败");
+      });
+    };
+  })
+
+
+
 
 
   .filter("object_length",function () {
