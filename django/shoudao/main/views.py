@@ -6,8 +6,8 @@ from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required,permission_required
 from django.http import HttpResponse,JsonResponse
 import json
-
-
+import sms.api
+from django.conf import settings
 
 import logging
 logger = logging.getLogger('django')
@@ -88,7 +88,31 @@ def groups_delete(request):
 
 
 
-
+@require_http_methods(["POST"])
+@login_required
+def message_new(request):
+    # data = json.loads(request.body.decode())
+    res=sms.api.send_sms(sms_param={
+        'recipient':'111',
+        'sender':'hgb',
+        'title':'hahahaha'
+    },phone_num='18143465393',sms_free_sign_name='收道',sms_template_code='SMS_20255031');
+    # req = top.api.AlibabaAliqinFcSmsNumSendRequest()
+    # req.set_app_info(top.appinfo(settings.SMS['appkey'], settings.SMS['secret']))
+    # req.extend = "123456"
+    # req.sms_type = "normal"
+    # req.sms_free_sign_name = "收道"
+    # req.sms_param = "{\"recipient\":\"1234\",\"sender\":\"alidayu\",\"title\":\"aaaaaaa\"}"
+    # req.rec_num = "18143465393"
+    # req.sms_template_code = "SMS_20255031"
+    # try:
+    # resp = req.getResponse()
+    # logger.info(resp)
+    # res='success'
+    # except Exception as e:
+    #     logger.info(e)
+    #     res='发送失败'
+    return JsonResponse(res)
 
 
 

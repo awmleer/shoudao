@@ -119,3 +119,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+
+SMS={
+    'appkey':'23487620',
+    'secret':'1778ded4247a67883bbd8511ce62a3ca'
+}
