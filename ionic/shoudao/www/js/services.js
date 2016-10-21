@@ -42,17 +42,26 @@ angular.module('shoudao.services', [])
     };
 
 
-    self.check=function (phone) {
+    self.check=function (c) {
+      var has_this_contact=false;
       _.forEach($rootScope.contacts, function (contact) {
-        if (contact.phone==phone) {
+        if (contact.phone==c.phone) {
           contact.checked=true;
+          has_this_contact=true;
         }
-      })
+      });
+      if (!has_this_contact) {//如果这个contact不存在
+        $rootScope.contacts.push({
+          name:c.name,
+          phone:c.phone,
+          checked:true
+        })
+      }
     };
 
-    self.uncheck=function (phone) {
+    self.uncheck=function (c) {
       _.forEach($rootScope.contacts, function (contact) {
-        if (contact.phone==phone) {
+        if (contact.phone==c.phone) {
           contact.checked=false;
         }
       })
@@ -68,26 +77,16 @@ angular.module('shoudao.services', [])
     };
 
     self.get_checked_contacts= function () {
-      var contacts=[];
-      for (var i = 0; $rootScope.contacts[i]; i++) {
-        if ($rootScope.contacts[i].checked) {
-          contacts.push({
-            phone:$rootScope.contacts[i].phone,
-            name:$rootScope.contacts[i].name
-          });
-        }
-      }
-      // console.log(contacts);
-      return contacts;
+      return _.filter($rootScope.contacts,{checked: true});
     };
 
     self.get_checked_phones= function () {
       var contacts=[];
-      for (var i = 0; $rootScope.contacts[i]; i++) {
-        if ($rootScope.contacts[i].checked) {
-          contacts.push($rootScope.contacts.phone);
+      _.forEach($rootScope.contacts, function (contact) {
+        if (contact.checked) {
+          contacts.push(contact.phone);
         }
-      }
+      });
       return contacts;
     };
 

@@ -91,28 +91,23 @@ def groups_delete(request):
 @require_http_methods(["POST"])
 @login_required
 def message_new(request):
-    # data = json.loads(request.body.decode())
-    res=sms.api.send_sms(sms_param={
+    data = json.loads(request.body.decode())
+    logger.info(data)
+    if(data['title']==''):return HttpResponse('no title')
+    if(len(data['title'])>15):return HttpResponse('标题过长(十五个字以内)')
+    if(data['content']==''):return HttpResponse('no content')
+    result=sms.api.send_sms(sms_param={
         'recipient':'111',
         'sender':'hgb',
         'title':'hahahaha'
-    },phone_num='18143465393',sms_free_sign_name='收道',sms_template_code='SMS_20255031');
-    # req = top.api.AlibabaAliqinFcSmsNumSendRequest()
-    # req.set_app_info(top.appinfo(settings.SMS['appkey'], settings.SMS['secret']))
-    # req.extend = "123456"
-    # req.sms_type = "normal"
-    # req.sms_free_sign_name = "收道"
-    # req.sms_param = "{\"recipient\":\"1234\",\"sender\":\"alidayu\",\"title\":\"aaaaaaa\"}"
-    # req.rec_num = "18143465393"
-    # req.sms_template_code = "SMS_20255031"
-    # try:
-    # resp = req.getResponse()
-    # logger.info(resp)
-    # res='success'
-    # except Exception as e:
-    #     logger.info(e)
-    #     res='发送失败'
-    return JsonResponse(res)
+    },phone_num='18143465393',sms_free_sign_name='收道',sms_template_code='SMS_20255031')
+    if result['alibaba_aliqin_fc_sms_num_send_response']['success']==True:
+        res='success'
+    else:
+        res='发送失败'
+
+    res = 'test'
+    return HttpResponse(res)
 
 
 

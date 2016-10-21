@@ -123,7 +123,7 @@ angular.module('shoudao.controllers', [])
 
 
 
-  .controller('MessageNewCtrl', function($scope, $rootScope, $ionicModal, Contacts, Groups) {
+  .controller('MessageNewCtrl', function($scope, $rootScope, $ionicModal, $ionicHistory, Contacts, Groups, $http) {
     $scope.$on('$destroy',function(){
       console.log('$destroy');
       Contacts.clear_check();
@@ -135,11 +135,11 @@ angular.module('shoudao.controllers', [])
       console.log(this.group.checked);
       if (this.group.checked) {
         _.forEach(this.group.contacts, function (contact) {
-          Contacts.check(contact.phone);
+          Contacts.check(contact);
         });
       }else{
         _.forEach(this.group.contacts, function (contact) {
-          Contacts.uncheck(contact.phone);
+          Contacts.uncheck(contact);
         });
       }
     };
@@ -172,7 +172,35 @@ angular.module('shoudao.controllers', [])
     };
     $scope.clear_check= function () {
       Contacts.clear_check();
-    }
+    };
+
+
+    $scope.send_message= function () {
+      if ($scope.message.title=='') {
+        alert("请输入标题");
+        return;
+      }
+      if ($scope.message.content=='') {
+        alert("请输入内容");
+        return;
+      }
+      $http.post(API_URL+'/message/new/', {
+        title:$scope.message.title,
+        content:$scope.message.content,
+        contacts:Contacts.get_checked_phones()
+      }).then(function (response) {
+        if (response.data == 'success') {
+          alert("发送成功");
+          Contacts.clear_check();
+          $ionicHistory.goBack();
+        }else {
+          alert(response.data);
+        }
+      }, function () {
+        alert("请求失败");
+      });
+    };
+
   })
 
 
