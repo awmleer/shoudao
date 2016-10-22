@@ -9,6 +9,8 @@ import json
 import sms.juhe
 from sms import shorten
 from django.conf import settings
+import random,string
+
 
 import logging
 logger = logging.getLogger('django')
@@ -35,6 +37,8 @@ def login(request):
     return res
 
 
+
+# todo user_info.name length limit
 
 
 
@@ -95,36 +99,39 @@ def message_new(request):
     data = json.loads(request.body.decode())
     logger.info(data)
     if(data['title']==''):return HttpResponse('no title')
-    # if(len(data['title'])>15):return HttpResponse('标题过长(十五个字以内)')
+    if(len(data['title'])>12):return HttpResponse('标题过长(十二个字以内)')
     if(data['content']==''):return HttpResponse('no content')
     if(len(data['contacts'])==0):return HttpResponse('请选择收件人')
 
     recipients=[]
-
-    # 开始发送短信
-    for contact in data['contacts']:
-        link=shorten.link({})
-        if link=='':#如果获取link失败
-            send_success=False
-        else:
-            # send_success = sms.juhe.send_sms(contact['phone'], 22175,{'#recipient#': contact['name'], '#title#': data['title'],'#sender#': request.user.user_info.get().name + '。请点击查看详情并确认收到:http://s.sparker.top/m/jai3nr23q '})
-            result = sms.juhe.send_sms(contact['phone'], 22175,{'#recipient#': contact['name'], '#title#': data['title'],'#sender#': request.user.user_info.get().name + '。请点击查看详情并确认收到:'+link+' '})
-            # 【收道】#recipient#您好，您有一条通知:#title#，来自#sender#。
-            logger.info(result)
-            send_success=True
-        recipients.append({'name':contact['name'],'phone':contact['phone'],'send_success':send_success,'reaction':False})
-
     message = Message(user=request.user, type='normal', title=data['title'])
-    message.set_recipients(recipients)
-    data_notice = MessageDataNotice(content=data['content'])
-    data_notice.save()
+    data_notice = MessageDataNotice.objects.create(content=data['content'])
     message.data_notice = data_notice
     message.save()
 
+    # 开始发送短信
+    for contact in data['contacts']:
+        token=''.join(random.sample(string.ascii_letters + string.digits, 8))
+        link=Link.objects.create(message=message,recipient=contact['phone'],token=token)
+        short_link=shorten.link({
+            'message_id':message.id,
+            'recipient':contact['phone'],
+            'token':token
+        })
+        if short_link=='':#如果获取link失败
+            send_success=False
+        else:
+            link.short_link=short_link
+            link.save()
+            send_success = sms.juhe.send_sms(contact['phone'], 22175,{'#recipient#': contact['name'], '#title#': data['title'],'#sender#': request.user.user_info.get().name + '。请点击链接确认收到:'+short_link+' '})
+            # 【收道】#recipient#您好，您有一条通知:#title#，来自#sender#。
+            # logger.info(result)
+        recipients.append({'name':contact['name'],'phone':contact['phone'],'send_success':send_success,'reaction':False})
+
+    message.set_recipients(recipients)
+    message.save()
+
     return HttpResponse('success')
-
-
-
 
 
 

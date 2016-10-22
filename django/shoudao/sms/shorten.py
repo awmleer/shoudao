@@ -4,9 +4,10 @@ import json
 
 def link(obj):
     # tpl_value = {'#operate#': '测试', '#code#': '1234'}
-    url_long='http://shoudao.sparker.top/m/2jorfji211'
-    params = parse.urlencode({'source':'3271760578','url_long':url_long})
-    url = 'http://api.t.sina.com.cn/short_url/shorten.json?%s'%params
+    url_long='http://shoudao.sparker.top/m/'+str(obj['message_id'])+'/'+str(obj['recipient'])+'/'+obj['token']
+    # 备用的key：3271760578
+    # params = parse.urlencode({'source':'1681459862','url_long':url_long})
+    url = 'http://api.t.sina.com.cn/short_url/shorten.json?source=3271760578&url_long='+url_long
     url_short=''
     try:
         req = request.urlopen(url)

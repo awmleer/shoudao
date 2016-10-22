@@ -30,7 +30,7 @@ class Message(models.Model):
     type=models.CharField(max_length=20)
     title=models.CharField(max_length=50)
     send_time=models.DateTimeField(auto_now_add=True)
-    recipients=models.CharField(max_length=12000)  #array of phone numbers
+    recipients=models.CharField(max_length=12000,default='[]')
     def set_recipients(self, x):
         self.recipients = json.dumps(x)
     def get_recipients(self):
@@ -50,8 +50,9 @@ class MessageDataNotice(models.Model):
 
 
 class Link(models.Model):
-    message=models.ForeignKey('Message',on_delete=models.CASCADE)
-    receiver=models.CharField(max_length=30)
+    message=models.ForeignKey('Message',on_delete=models.CASCADE,related_name='links')
+    recipient=models.CharField(max_length=30)
     token=models.CharField(max_length=20)
+    short_link=models.CharField(max_length=30,default='')
 
 
