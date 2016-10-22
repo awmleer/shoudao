@@ -4,11 +4,10 @@
       <ion-item>
         <a href="#/tab/message/new" class="button button-block button-positive" style="margin: 0 auto;">群发新消息</a>
       </ion-item>
-      <ion-item class="item-avatar item-icon-right" ng-repeat="chat in chats" type="item-text-wrap" href="#/tab/message/{{chat.id}}">
-        <!--<img ng-src="{{chat.face}}">-->
+      <ion-item class="item-avatar item-icon-right" ng-repeat="message in messages" type="item-text-wrap" ui-sref="tab.message-detail({message_id:message.message_id})">
         <div class="item-number-icon"><span><i class="ion ion-flag"></i></span></div>
-        <h2>明天下午开会统计</h2>
-        <p>14/30</p>
+        <h2>{{message.title}}</h2>
+        <p>{{message.received_count}}/{{message.total_count}}</p>
         <i class="icon ion-chevron-right icon-accessory"></i>
       </ion-item>
     </ion-list>
