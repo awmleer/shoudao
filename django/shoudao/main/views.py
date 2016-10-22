@@ -4,7 +4,7 @@ import django.contrib.auth as auth #用户登录认证
 from main.models import *
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required,permission_required
-from django.http import HttpResponse,JsonResponse,HttpResponseBadRequest
+from django.http import HttpResponse,JsonResponse,HttpResponseBadRequest,HttpResponseForbidden
 import json
 import sms.juhe
 from sms import shorten
@@ -207,4 +207,21 @@ def account_info(request):
         'text_surplus':user_info.get_text_surplus()
     }
     return JsonResponse(res)
+
+
+
+@require_http_methods(['GET'])
+def m(request,message_id,recipient,token):
+    logger.info(message_id)
+    message=Message.objects.get(id=message_id)
+    link=message.links.get(recipient=recipient)
+    if link.token!=token:return HttpResponseForbidden() #403
+
+    context={
+        'message':message,
+        'recipient':recipient,
+        'receive_percent':message.received_count/message.total_count*100
+    }
+    return render(request,'m.html',context)
+
 

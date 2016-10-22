@@ -15,8 +15,10 @@ Including another URLconf
 """
 from django.conf.urls import url,include
 from django.contrib import admin
+from main import views as main_views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^m/(?P<message_id>[0-9]+)/(?P<recipient>[0-9]+)/(?P<token>.+)/$', main_views.m),
     url(r'^', include('main.urls')),
 ]
