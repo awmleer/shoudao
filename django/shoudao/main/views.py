@@ -105,7 +105,7 @@ def message_new(request):
     if(len(data['contacts'])==0):return HttpResponse('请选择收件人')
 
     recipients=[]
-    message = Message(user=request.user, type=data['type'], title=data['title'])
+    message = Message(user=request.user, type=data['type'], title=data['title'],total_count=len(data['contacts']))
     data_notice = MessageDataNotice.objects.create(content=data['content'])
     message.data_notice = data_notice
     message.save()
@@ -148,8 +148,8 @@ def message_all(request):
                 'type':message.type,
                 'title':message.title,
                 'send_time':str(round(message.send_time.timestamp()*1000)),
-                'total_count':len(message.get_recipients()),
-                'received_count':len(message.data_notice.get_received())
+                'total_count':message.total_count,
+                'received_count':message.received_count
             })
     logger.info(res)
     return JsonResponse(res,safe=False)
@@ -169,8 +169,10 @@ def message_detail(request):
         'type':message.type,
         'title': message.title,
         'send_time': str(round(message.send_time.timestamp() * 1000)),
+        'total_count':message.total_count,
+        'received_count':message.received_count,
         'recipients':message.get_recipients()
     }
     if message.type=='notice':
-        res['received']=message.data_notice.get_received()
+        res['content']=message.data_notice.content
     return JsonResponse(res)

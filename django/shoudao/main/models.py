@@ -30,7 +30,15 @@ class Message(models.Model):
     type=models.CharField(max_length=20)
     title=models.CharField(max_length=50)
     send_time=models.DateTimeField(auto_now_add=True)
-    recipients=models.CharField(max_length=12000,default='[]')
+    total_count=models.PositiveIntegerField()
+    received_count=models.PositiveIntegerField(default=0)
+    recipients=models.CharField(max_length=100000,default='[]')#普通通知能承受1k
+    # {
+    #   "send_success": true,
+    #   "phone": 18143465393,
+    #   "name": "小明",
+    #   "reaction": false #收到为true，未收到为false
+    # }
     def set_recipients(self, x):
         self.recipients = json.dumps(x)
     def get_recipients(self):
@@ -41,11 +49,6 @@ class Message(models.Model):
 
 class MessageDataNotice(models.Model):
     content=models.CharField(max_length=1000)
-    received=models.CharField(max_length=12000,default='[]')  #array of phone numbers
-    def set_received(self, x):
-        self.received = json.dumps(x)
-    def get_received(self):
-        return json.loads(self.received)
 
 
 
