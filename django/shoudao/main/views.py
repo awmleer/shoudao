@@ -105,7 +105,7 @@ def message_new(request):
     if(len(data['contacts'])==0):return HttpResponse('请选择收件人')
     #todo title,sender,recipient中非法字符的检查
 
-    if request.user.user_info.get_text_surplus()<len(data['contacts']):return HttpResponse('本月短信剩余量不足，请购买短信包或升级账户')
+    if request.user.user_info.get().get_text_surplus()<len(data['contacts']):return HttpResponse('本月短信剩余量不足，请购买短信包或升级账户')
 
     recipients=[]
     message = Message(user=request.user, type=data['type'], title=data['title'],total_count=len(data['contacts']))

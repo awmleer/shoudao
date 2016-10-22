@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+import flag
+
+DEBUG = flag.DEBUG
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -23,9 +27,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'u*qe^@#k9%iu&hv*#aq&)!8!c056nn1bnwkw%26i9q97nm*aan'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['shoudao.sparker.top']
 
 
 # Application definition
@@ -118,7 +121,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
+
+# Static files 静态文件配置
 STATIC_URL = '/static/'
+STATIC_ROOT='/var/www/shoudao/static'
+if DEBUG:
+    # STATIC_ROOT=os.path.join(BASE_DIR,'../yksx_static/static')
+    STATICFILES_DIRS = (
+        os.path.join(BASE_DIR, 'static/'),
+    )
+
 
 SMS={
     'key':'b32c625ffb38e4ad07f86bb1101548e1'
