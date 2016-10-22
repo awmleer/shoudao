@@ -83,18 +83,20 @@ angular.module('shoudao.controllers', [])
 
   .controller('MessageCtrl', function($scope,$http) {
     $scope.$on('$ionicView.enter', function(e) {
-      $http.get(API_URL+'/message/all/', {}).then(function (response) {
-        $scope.messages=response.data;
-      }, function () {
-        alert("获取消息列表失败");
-      });
+      $scope.doRefresh();
     });
 
-    $http.get(API_URL+'/message/all/', {}).then(function (response) {
-      $scope.messages=response.data;
-    }, function () {
-      alert("获取消息列表失败");
-    });
+    $scope.doRefresh = function() {
+      $http.get(API_URL+'/message/all/', {}).then(function (response) {
+        $scope.messages=response.data;
+        $scope.$broadcast('scroll.refreshComplete');
+      }, function () {
+        alert("获取消息列表失败");
+        $scope.$broadcast('scroll.refreshComplete');
+      });
+    };
+
+
   })
 
 
