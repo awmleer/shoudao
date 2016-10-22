@@ -134,7 +134,7 @@ def message_new(request):
         recipients.append({'name':contact['name'],'phone':contact['phone'],'send_success':send_success,'reaction':False})
         if send_success: send_count+=1
 
-    user_info=UserInfo.objects.get(user=request.user)
+    user_info=request.user.user_info.get()
     user_info.message_sent+=1
     user_info.text_sent+=send_count
     user_info.save()
@@ -188,3 +188,23 @@ def message_detail(request):
     if message.type=='notice':
         res['content']=message.data_notice.content
     return JsonResponse(res)
+
+
+
+
+
+@require_http_methods(['GET'])
+@login_required
+def account_info(request):
+    user_info=request.user.user_info.get()
+    res={
+        'user_id':request.user.id,
+        'name':user_info.name,
+        'type':user_info.type,
+        'message_sent':user_info.message_sent,
+        'text_sent':user_info.text_sent,
+        'text_limit':user_info.text_limit,
+        'text_surplus':user_info.get_text_surplus()
+    }
+    return JsonResponse(res)
+
