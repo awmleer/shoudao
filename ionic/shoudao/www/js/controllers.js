@@ -93,10 +93,6 @@ angular.module('shoudao.controllers', [])
   })
 
   .controller('MessageCtrl', function($scope,$http) {
-    $scope.$on('$ionicView.enter', function(e) {
-      $scope.doRefresh();
-    });
-
     $scope.doRefresh = function() {
       $http.get(API_URL+'/message/all/', {}).then(function (response) {
         $scope.messages=response.data;
@@ -107,6 +103,9 @@ angular.module('shoudao.controllers', [])
       });
     };
 
+    $scope.$on('$ionicView.enter', function(e) {
+      $scope.doRefresh();
+    });
 
   })
 
@@ -227,12 +226,24 @@ angular.module('shoudao.controllers', [])
 
 
 
-  .controller('AccountCtrl', function($scope,$rootScope) {
-    $rootScope.user_info={
-      name:'测试',
-      phone:'1881112222',
-      text_sent:130,
-      text_limit:300,
-      type:'普通用户'
+  .controller('AccountCtrl', function($scope,$rootScope,$http) {
+    $scope.doRefresh= function () {
+      $http.get(API_URL+'/account/info/').then(function (response) {
+        $rootScope.user_info=response.data;
+        $scope.$broadcast('scroll.refreshComplete');
+      }, function () {
+        alert("请求失败");
+        $scope.$broadcast('scroll.refreshComplete');
+      });
     };
+    $scope.$on('$ionicView.enter', function(e) {
+      $scope.doRefresh();
+    });
+    // $rootScope.user_info={
+    //   name:'测试',
+    //   phone:'1881112222',
+    //   text_sent:130,
+    //   text_limit:300,
+    //   type:'普通用户'
+    // };
   });

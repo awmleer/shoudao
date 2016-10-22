@@ -1,5 +1,9 @@
 <ion-view view-title="我的">
   <ion-content>
+    <ion-refresher
+      pulling-text="下拉刷新…"
+      on-refresh="doRefresh()">
+    </ion-refresher>
 
     <div style="background: #001f3e;text-align: center;color:white;" class="padding">
       <div style="background: white;width: 120px;height: 120px;background-size: cover;border-radius: 100%;margin: 10px auto;padding-top: 10px">
@@ -15,6 +19,9 @@
     <ion-list>
       <ion-item class="item-icon-left">
         <i class="icon ion-ios-email"></i> 本月短信<span style="float: right;">已用{{user_info.text_sent}}/共{{user_info.text_limit}}</span>
+      </ion-item>
+      <ion-item class="item-icon-left">
+        <i class="icon ion-paper-airplane"></i> 累计发送信息<span style="float: right;">{{user_info.message_sent}}条</span>
       </ion-item>
       <ion-item ui-sref="tab.account-edit" class="item-icon-left item-icon-right">
         <i class="icon ion-android-arrow-up"></i> 升级账户<i class="icon ion-chevron-right icon-accessory"></i>
