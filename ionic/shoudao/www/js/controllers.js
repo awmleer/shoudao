@@ -1,11 +1,22 @@
 angular.module('shoudao.controllers', [])
 
-  .controller('ContactsCtrl', function($scope, Contacts, $rootScope) {
+  .controller('ContactsCtrl', function($scope, Contacts, $rootScope,$http) {
     // $rootScope.contacts={a:1,b:2};
     $rootScope.contacts=[
       {name:'小明',checked:false,phone:18143465393},
       {name:'小华',checked:false,phone:18867100642}
     ];
+
+    $scope.doRefresh= function () {
+      $http.get(API_URL+'/groups/all/').then(function (response) {
+        $rootScope.groups=response.data;
+        $scope.$broadcast('scroll.refreshComplete');
+      }, function () {
+        alert("获取联系人分组失败");
+        $scope.$broadcast('scroll.refreshComplete');
+      });
+    }
+
   })
 
   .controller('ContactsListCtrl', function($scope, Contacts, $rootScope, $stateParams, $http, $ionicHistory) {

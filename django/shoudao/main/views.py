@@ -103,6 +103,9 @@ def message_new(request):
     if(data['content']==''):return HttpResponse('no content')
     if (len(data['content']) > 2000): return HttpResponse('内容过长(两千个字以内)')
     if(len(data['contacts'])==0):return HttpResponse('请选择收件人')
+    #todo title,sender,recipient中非法字符的检查
+
+    if request.user.user_info.get_text_surplus()<len(data['contacts']):return HttpResponse('本月短信剩余量不足，请购买短信包或升级账户')
 
     recipients=[]
     message = Message(user=request.user, type=data['type'], title=data['title'],total_count=len(data['contacts']))
@@ -111,6 +114,7 @@ def message_new(request):
     message.save()
 
     # 开始发送短信
+    send_count=0
     for contact in data['contacts']:
         token=''.join(random.sample(string.ascii_letters + string.digits, 8))
         link=Link.objects.create(message=message,recipient=contact['phone'],token=token)
@@ -128,11 +132,19 @@ def message_new(request):
             # 【收道】#recipient#您好，您有一条通知:#title#，来自#sender#。
             # logger.info(result)
         recipients.append({'name':contact['name'],'phone':contact['phone'],'send_success':send_success,'reaction':False})
+        if send_success: send_count+=1
+
+    user_info=UserInfo.objects.get(user=request.user)
+    user_info.message_sent+=1
+    user_info.text_sent+=send_count
+    user_info.save()
 
     message.set_recipients(recipients)
     message.save()
 
     return HttpResponse('success')
+
+
 
 
 

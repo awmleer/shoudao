@@ -1,5 +1,9 @@
 <ion-view view-title="联系人">
   <ion-content>
+    <ion-refresher
+      pulling-text="下拉刷新…"
+      on-refresh="doRefresh()">
+    </ion-refresher>
     <div class="list">
       <div class="item item-divider">分组</div>
 
