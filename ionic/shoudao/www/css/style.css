@@ -21,3 +21,9 @@
   background: #f4c297;
   color: #ffffff;
 }
+
+
+
+.item.send-fail{
+  background: #e0e0e0;
+}

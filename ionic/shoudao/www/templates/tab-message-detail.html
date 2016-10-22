@@ -17,17 +17,25 @@
 
       <!--progress bar-->
       <div class="progress" style="margin: 0;border-radius: 0;">
-        <div class="progress-bar progress-bar progress-bar-striped progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="100" ng-style="{'width':message.received.length/message.recipients.length*100+'%'}">
-          <!--<span class="sr-only">{{message.received.length}}人已收到/共{{message.recipients.length}}人</span>-->
+        <div class="progress-bar progress-bar progress-bar-striped progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="100" ng-style="{'width':message.total_count/message.received_count*100+'%'}">
+          <!--<span class="sr-only">人已收到/共人</span>-->
         </div>
       </div>
-      <p>共发送给{{message.recipients.length}}人，已有{{message.received.length}}人确认收到</p>
+      <p>共发送给{{message.total_count}}人，已有{{message.received_count}}人确认收到</p>
 
       <div class="list">
-        <div class="item item-icon-right" ng-repeat="recipient in message.recipients | orderBy:'-received'">
-          {{recipient.name}} ({{recipient.phone}})
-          <i ng-show="!recipient.received" class="icon ion-ios-clock-outline" style="color: #7a7a7a;"></i>
-          <i ng-show="recipient.received" class="icon ion-ios-checkmark-outline" style="color: #5cb85c;"></i>
+        <div class="item item-icon-right" ng-repeat="recipient in message.recipients | orderBy:'-reaction'" ng-class="{'send-fail':!recipient.send_success}">
+          <div ng-if="recipient.send_success">
+            {{recipient.name}} ({{recipient.phone}})
+            <i ng-show="!recipient.reaction" class="icon ion-ios-clock-outline" style="color: #7a7a7a;"></i>
+            <i ng-show="recipient.reaction" class="icon ion-ios-checkmark-outline" style="color: #5cb85c;"></i>
+          </div>
+          <div ng-if="!recipient.send_success">
+            {{recipient.name}} ({{recipient.phone}})
+            <!--<span class="label label-danger">发送失败</span>-->
+            <i ng-show="recipient.reaction" class="icon ion-ios-close-outline" style="color: #b8272d;"></i>
+          </div>
+
         </div>
       </div>
 
