@@ -17,5 +17,3 @@ def link(obj):
         pass
 
     return url_short
-    # is_success=response['error_code']==0
-    # return is_success

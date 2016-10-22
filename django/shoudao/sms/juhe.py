@@ -11,7 +11,7 @@ def send_sms(number,tpl_id,tpl_value):
     req = request.urlopen(url)
     response = json.loads(req.read().decode('utf-8'))
     # response样例: {'error_code': 0, 'reason': '操作成功', 'result': {'count': 1, 'fee': 1, 'sid': '125321477102262424'}}
+    # return response
 
-    return response
-    # is_success=response['error_code']==0
-    # return is_success
+    is_success=response['error_code']==0
+    return is_success
