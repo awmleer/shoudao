@@ -6,7 +6,8 @@ from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required,permission_required
 from django.http import HttpResponse,JsonResponse
 import json
-import sms.api
+import sms.juhe
+from sms import shorten
 from django.conf import settings
 
 import logging
@@ -94,20 +95,33 @@ def message_new(request):
     data = json.loads(request.body.decode())
     logger.info(data)
     if(data['title']==''):return HttpResponse('no title')
-    if(len(data['title'])>15):return HttpResponse('标题过长(十五个字以内)')
+    # if(len(data['title'])>15):return HttpResponse('标题过长(十五个字以内)')
     if(data['content']==''):return HttpResponse('no content')
-    result=sms.api.send_sms(sms_param={
-        'recipient':'111',
-        'sender':'hgb',
-        'title':'hahahaha'
-    },phone_num='18143465393',sms_free_sign_name='收道',sms_template_code='SMS_20255031')
-    if result['alibaba_aliqin_fc_sms_num_send_response']['success']==True:
-        res='success'
-    else:
-        res='发送失败'
+    if(len(data['contacts'])==0):return HttpResponse('请选择收件人')
 
-    res = 'test'
-    return HttpResponse(res)
+    recipients=[]
+
+    # 开始发送短信
+    for contact in data['contacts']:
+        result = sms.juhe.send_sms(contact['phone'],22175,{'#recipient#': contact['name'], '#title#': data['title'],'#sender#':request.user.user_info.get().name+'。请点击查看详情并确认收到:http://s.sparker.top/m/jai3nr23q '})
+        # 【收道】#recipient#您好，您有一条通知:#title#，来自#sender#。
+        logger.info(result)
+
+        # if result['alibaba_aliqin_fc_sms_num_send_response']['result']['success'] == True:
+        #     recipients.append({'name':contact['name'],'phone':contact['phone'],'send_success':True,'reaction':False})
+        # else:
+        #     recipients.append({'name':contact['name'],'phone':contact['phone'],'send_success':False,'reaction':False})
+
+    message = Message(user=request.user, type='normal', title=data['title'])
+    message.set_recipients(recipients)
+    data_notice = MessageDataNotice(content=data['content'])
+    data_notice.save()
+    message.data_notice = data_notice
+    message.save()
+
+    return HttpResponse('success')
+
+
 
 
 

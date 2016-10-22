@@ -3,8 +3,8 @@ angular.module('shoudao.controllers', [])
   .controller('ContactsCtrl', function($scope, Contacts, $rootScope) {
     // $rootScope.contacts={a:1,b:2};
     $rootScope.contacts=[
-      {name:'小明',checked:false,phone:18112345678},
-      {name:'小华',checked:false,phone:18122223333}
+      {name:'小明',checked:false,phone:18143465393},
+      {name:'小华',checked:false,phone:18867100642}
     ];
   })
 
@@ -187,7 +187,7 @@ angular.module('shoudao.controllers', [])
       $http.post(API_URL+'/message/new/', {
         title:$scope.message.title,
         content:$scope.message.content,
-        contacts:Contacts.get_checked_phones()
+        contacts:Contacts.get_checked_contacts()
       }).then(function (response) {
         if (response.data == 'success') {
           alert("发送成功");

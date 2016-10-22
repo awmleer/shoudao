@@ -121,6 +121,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 SMS={
-    'appkey':'23487620',
-    'secret':'1778ded4247a67883bbd8511ce62a3ca'
+    'key':'b32c625ffb38e4ad07f86bb1101548e1'
 }

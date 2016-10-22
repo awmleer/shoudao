@@ -44,15 +44,3 @@ def send_sms(sms_param, phone_num=None, sms_free_sign_name=None, sms_template_co
     return json.loads(r.text)
 
 
-# if __name__ == '__main__':  # 执行方法：python sms.py 13012345678 123456
-#     r = send_sms(json.loads('{"code":"' + sys.argv[2] + '","product":"' + PRODUCT + '"}'),
-#                  phone_num=sys.argv[1],
-#                  sms_free_sign_name="身份验证",
-#                  sms_template_code="SMS_5960109")
-#     ret = "Fail"
-#     try:
-#         if r['alibaba_aliqin_fc_sms_num_send_response']['result']['success'] == True:
-#             ret = "Success"
-#     except:
-#         ret = "Fail"
-#     print(ret)
