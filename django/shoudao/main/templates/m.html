@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
     <link rel="stylesheet" href="//cdn.bootcss.com/flat-ui/2.3.0/css/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="//cdn.bootcss.com/flat-ui/2.3.0/css/flat-ui.min.css">
+    <script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
 </head>
 <body>
 <div class="container" style="padding-bottom: 30px">
@@ -17,11 +18,37 @@
         <div class="panel-body">{{message.data_notice.content}}</div>
     </div>
 
-    <div class="progress">
+    <div class="progress" style="margin-bottom: 0">
         <div class="progress-bar" style="width: {{ receive_percent }}%;"></div>
     </div>
-    <p>共发送给{{message.total_count}}人，已有{{message.received_count}}人确认收到</p>
-    <a href="#fakelink" class="btn btn-block btn-lg btn-success">点我确认收到</a>
+    <p style="margin-bottom: 10px;font-size: 12px">共发送给{{message.total_count}}人，已有{{message.received_count}}人确认收到</p>
+    {% if i_received %}
+        <button id="btn_submit" class="btn btn-block btn-lg btn-success disabled">已确认收到</button>
+    {% else %}
+        <button id="btn_submit" onclick="submit()" class="btn btn-block btn-lg btn-success">点我确认收到</button>
+    {% endif %}
 </div>
+
+<script>
+    function submit () {
+        $.ajax({
+            url: 'submit/',
+            type: "post",
+            headers: {'Content-Type': 'application/json'},
+            data: {
+
+            }
+        }).done(function (data) {
+            if (data == 'success') {
+                alert("确认成功");
+                $("#btn_submit").addClass('disabled').text('已确认收到');
+            }else {
+                alert(data);
+            }
+        }).fail(function () {
+            alert("提交失败，请稍后或刷新重试");
+        });
+    }
+</script>
 </body>
 </html>

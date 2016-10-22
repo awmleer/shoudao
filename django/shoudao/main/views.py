@@ -216,12 +216,35 @@ def m(request,message_id,recipient,token):
     message=Message.objects.get(id=message_id)
     link=message.links.get(recipient=recipient)
     if link.token!=token:return HttpResponseForbidden() #403
-
+    recipients=message.get_recipients()
+    i_received=False
+    for r in recipients:
+        if r['phone']==recipient:
+            if r['reaction']==True: i_received=True
+            break
     context={
         'message':message,
         'recipient':recipient,
-        'receive_percent':message.received_count/message.total_count*100
+        'receive_percent':message.received_count/message.total_count*100,
+        'i_received':i_received
     }
     return render(request,'m.html',context)
 
 
+
+
+@require_http_methods(['POST'])
+def m_submit(request,message_id,recipient,token):
+    # data = json.loads(request.body.decode())
+    message=Message.objects.get(id=message_id)
+    link=message.links.get(recipient=recipient)
+    if link.token!=token:return HttpResponseForbidden() #403
+    recipients=message.get_recipients()
+    for r in recipients:
+        if r['phone']==recipient:
+            r['reaction']=True
+            break
+    message.set_recipients(recipients)
+    message.received_count+=1
+    message.save()
+    return HttpResponse('success')
