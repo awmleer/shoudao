@@ -4,7 +4,7 @@ import django.contrib.auth as auth #用户登录认证
 from main.models import *
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required,permission_required
-from django.http import HttpResponse,JsonResponse
+from django.http import HttpResponse,JsonResponse,HttpResponseBadRequest
 import json
 import sms.juhe
 from sms import shorten
@@ -104,7 +104,7 @@ def message_new(request):
     if(len(data['contacts'])==0):return HttpResponse('请选择收件人')
 
     recipients=[]
-    message = Message(user=request.user, type='normal', title=data['title'])
+    message = Message(user=request.user, type=data['type'], title=data['title'])
     data_notice = MessageDataNotice.objects.create(content=data['content'])
     message.data_notice = data_notice
     message.save()
@@ -141,7 +141,7 @@ def message_all(request):
     messages=request.user.messages.all()
     res=[]
     for message in messages:
-        if message.type=='normal':
+        if message.type=='notice':
             res.append({
                 'message_id':message.id,
                 'type':message.type,
@@ -154,3 +154,18 @@ def message_all(request):
     return JsonResponse(res,safe=False)
 
 
+def message_detail(request):
+    message_id=request.GET.get('message_id',default='')
+    if message_id=='':
+        return HttpResponseBadRequest()
+    message=Message.objects.get(id=message_id)
+    res={
+        'message_id':message.id,
+        'type':message.type,
+        'title': message.title,
+        'send_time': str(round(message.send_time.timestamp() * 1000)),
+        'recipients':message.get_recipients()
+    }
+    if message.type=='notice':
+        res['received']=message.data_notice.get_received()
+    return JsonResponse(res)

@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^groups/delete/$',views.groups_delete),
     url(r'^message/new/$',views.message_new),
     url(r'^message/all/$',views.message_all),
+    url(r'^message/detail/$',views.message_detail),
     # url(r'^$',views.index,name='index'),
     # url(r'^index/$',views.index,name='index'),
     # url(r'^story/add/$',views.story_add,name='story_add'),
