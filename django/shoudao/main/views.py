@@ -135,3 +135,22 @@ def message_new(request):
 
 
 
+@require_http_methods(['GET'])
+@login_required
+def message_all(request):
+    messages=request.user.messages.all()
+    res=[]
+    for message in messages:
+        if message.type=='normal':
+            res.append({
+                'message_id':message.id,
+                'type':message.type,
+                'title':message.title,
+                'send_time':str(round(message.send_time.timestamp()*1000)),
+                'total_count':len(message.get_recipients()),
+                'received_count':len(message.data_notice.get_received())
+            })
+    logger.info(res)
+    return JsonResponse(res,safe=False)
+
+
