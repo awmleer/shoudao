@@ -5,7 +5,9 @@
         <a href="#/tab/message/new" class="button button-block button-positive" style="margin: 0 auto;">群发新消息</a>
       </ion-item>
       <ion-item class="item-avatar item-icon-right" ng-repeat="message in messages" type="item-text-wrap" ui-sref="tab.message-detail({message_id:message.message_id})">
-        <div class="item-number-icon"><span><i class="ion ion-flag"></i></span></div>
+        <div class="item-number-icon message-icon-block" ng-class="{'normal':message.type=='normal'}">
+          <span ng-if="message.type=='normal'"><i class="ion ion-ios-paperplane" style="font-size: 32px"></i></span>
+        </div>
         <h2>{{message.title}}</h2>
         <p>{{message.received_count}}/{{message.total_count}}</p>
         <i class="icon ion-chevron-right icon-accessory"></i>
