@@ -99,26 +99,33 @@ angular.module('shoudao.controllers', [])
 
 
 
-  .controller('MessageDetailCtrl', function($scope, $stateParams, Chats) {
+  .controller('MessageDetailCtrl', function($scope, $stateParams,$http,$ionicHistory) {
     $scope.message_id=$stateParams.message_id;
-    $scope.message={
-      id:1235324324,
-      title:'明天开会统计',
-      send_time:'2016-1-23 12:43',
-      recipients:[
-        {name:'小明',phone:18112345678},
-        {name:'小华',phone:18122223333}
-        ],
-      content:'这是通知的内容这是通知的内容这是通知的内容这是通知的内容这是通知的内容这是通知的内容这是通知的内容这是通知的内容这是通知的内容这是通知的内容这是通知的内容这是通知的内容',
-      received:[18122223333]
-    };
-    for (var i = 0;$scope.message.received[i]; i++) {
-      for (var j  = 0;$scope.message.recipients[j]; j++) {
-        if ($scope.message.recipients[j].phone == $scope.message.received[i]) {
-          $scope.message.recipients[j].received=true;
+    // $scope.message={
+    //   id:1235324324,
+    //   title:'明天开会统计',
+    //   send_time:'1477107481158',
+    //   recipients:[
+    //     {name:'小明',phone:18112345678},
+    //     {name:'小华',phone:18122223333}
+    //     ],
+    //   content:'这是通知的内容这是通知的内容这是通知的内容这是通知的内容这是通知的内容这是通知的内容这是通知的内容这是通知的内容这是通知的内容这是通知的内容这是通知的内容这是通知的内容',
+    //   received:[18122223333]
+    // };
+    $http.get(API_URL+'/message/detail/?message_id='+$scope.message_id).then(function (response) {
+      $scope.message=response.data;
+      for (var i = 0;$scope.message.received[i]; i++) {
+        for (var j  = 0;$scope.message.recipients[j]; j++) {
+          if ($scope.message.recipients[j].phone == $scope.message.received[i]) {
+            $scope.message.recipients[j].received=true;
+          }
         }
       }
-    }
+    }, function () {
+      alert("获取消息详情失败");
+      $ionicHistory.goBack();
+    });
+
 
   })
 
@@ -186,6 +193,7 @@ angular.module('shoudao.controllers', [])
         return;
       }
       $http.post(API_URL+'/message/new/', {
+        type:'notice',
         title:$scope.message.title,
         content:$scope.message.content,
         contacts:Contacts.get_checked_contacts()
