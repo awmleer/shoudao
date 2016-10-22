@@ -103,14 +103,16 @@ def message_new(request):
 
     # 开始发送短信
     for contact in data['contacts']:
-        result = sms.juhe.send_sms(contact['phone'],22175,{'#recipient#': contact['name'], '#title#': data['title'],'#sender#':request.user.user_info.get().name+'。请点击查看详情并确认收到:http://s.sparker.top/m/jai3nr23q '})
-        # 【收道】#recipient#您好，您有一条通知:#title#，来自#sender#。
-        logger.info(result)
-
-        # if result['alibaba_aliqin_fc_sms_num_send_response']['result']['success'] == True:
-        #     recipients.append({'name':contact['name'],'phone':contact['phone'],'send_success':True,'reaction':False})
-        # else:
-        #     recipients.append({'name':contact['name'],'phone':contact['phone'],'send_success':False,'reaction':False})
+        link=shorten.link({})
+        if link=='':#如果获取link失败
+            send_success=False
+        else:
+            # send_success = sms.juhe.send_sms(contact['phone'], 22175,{'#recipient#': contact['name'], '#title#': data['title'],'#sender#': request.user.user_info.get().name + '。请点击查看详情并确认收到:http://s.sparker.top/m/jai3nr23q '})
+            result = sms.juhe.send_sms(contact['phone'], 22175,{'#recipient#': contact['name'], '#title#': data['title'],'#sender#': request.user.user_info.get().name + '。请点击查看详情并确认收到:'+link+' '})
+            # 【收道】#recipient#您好，您有一条通知:#title#，来自#sender#。
+            logger.info(result)
+            send_success=True
+        recipients.append({'name':contact['name'],'phone':contact['phone'],'send_success':send_success,'reaction':False})
 
     message = Message(user=request.user, type='normal', title=data['title'])
     message.set_recipients(recipients)
