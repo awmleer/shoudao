@@ -101,6 +101,7 @@ def message_new(request):
     if(data['title']==''):return HttpResponse('no title')
     if(len(data['title'])>12):return HttpResponse('标题过长(十二个字以内)')
     if(data['content']==''):return HttpResponse('no content')
+    if (len(data['content']) > 2000): return HttpResponse('内容过长(两千个字以内)')
     if(len(data['contacts'])==0):return HttpResponse('请选择收件人')
 
     recipients=[]
@@ -154,6 +155,10 @@ def message_all(request):
     return JsonResponse(res,safe=False)
 
 
+
+
+@require_http_methods(['GET'])
+@login_required
 def message_detail(request):
     message_id=request.GET.get('message_id',default='')
     if message_id=='':
