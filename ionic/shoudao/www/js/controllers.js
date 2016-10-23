@@ -31,18 +31,27 @@ angular.module('shoudao.controllers', [])
     //   {name:'哈哈哈',checked:false,phone:18122223333}
     // ];
     $scope.delete_group= function () {
-      //todo confirm dialog
-      var group_id=$scope.group.group_id;
-      console.log($scope.group);
-      $http.get(API_URL+'/groups/delete/?group_id='+group_id).then(function (response) {
-        if (response.data == 'success') {
-          $rootScope.groups=_.reject($rootScope.groups,{group_id:group_id});
-          $ionicHistory.goBack();
-        }else {
-          alert(response.data);
+      var confirmPopup = $ionicPopup.confirm({
+        title: '删除',
+        template: '确定要删除该分组吗？',
+        okText: '确定',
+        cancelText: '取消'
+      });
+      confirmPopup.then(function(res) {
+        if (res) {
+          var group_id=$scope.group.group_id;
+          console.log($scope.group);
+          $http.get(API_URL+'/groups/delete/?group_id='+group_id).then(function (response) {
+            if (response.data == 'success') {
+              $rootScope.groups=_.reject($rootScope.groups,{group_id:group_id});
+              $ionicHistory.goBack();
+            }else {
+              alert(response.data);
+            }
+          }, function () {
+            alert("请求失败");
+          });
         }
-      }, function () {
-        alert("请求失败");
       });
     };
 
