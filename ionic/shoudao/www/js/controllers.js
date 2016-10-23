@@ -143,7 +143,7 @@ angular.module('shoudao.controllers', [])
 
 
 
-  .controller('MessageNewCtrl', function($scope, $rootScope, $ionicModal, $ionicHistory, Contacts, Groups, $http) {
+  .controller('MessageNewCtrl', function($scope, $rootScope, $ionicModal, $ionicHistory, Contacts, Groups, $http,$ionicLoading) {
     $scope.$on('$destroy',function(){
       console.log('$destroy');
       Contacts.clear_check();
@@ -204,12 +204,16 @@ angular.module('shoudao.controllers', [])
         alert("请输入内容");
         return;
       }
+      $ionicLoading.show({
+        template: '<i class="fa fa-spinner fa-spin fa-3x" style="margin-bottom: 6px" ></i><br>发送中…'
+      });
       $http.post(API_URL+'/message/new/', {
         type:'notice',
         title:$scope.message.title,
         content:$scope.message.content,
         contacts:Contacts.get_checked_contacts()
       }).then(function (response) {
+        $ionicLoading.hide();
         if (response.data == 'success') {
           alert("发送成功");
           Contacts.clear_check();
@@ -219,6 +223,7 @@ angular.module('shoudao.controllers', [])
         }
       }, function () {
         alert("请求失败");
+        $ionicLoading.hide();
       });
     };
 
