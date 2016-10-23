@@ -38,6 +38,23 @@ def login(request):
 
 
 
+@require_http_methods(['GET'])
+def logout(request):
+    auth.logout(request)
+    return HttpResponse('success')
+
+
+
+
+
+@login_required
+def is_logged_in(request):
+    # logger.info(request.user.user_info.get())
+    return HttpResponse('success')
+
+
+
+
 # todo user_info.name length limit
 
 

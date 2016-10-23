@@ -4,12 +4,47 @@
   <meta charset="UTF-8">
   <title>加载中</title>
   <script src="js/config.js"></script>
+  <script src="lib/store.min.js"></script>
+  <script src="lib/jquery.min.js"></script>
 
 </head>
 <body>
 <script>
-  //todo 判断是否已经登录 & auto login
-  location.href='login.html';
+  $.ajax({
+    url: API_URL+"/account/is_logged_in/",
+    type: "get"
+  }).done(function (data) {
+    if (data == 'success') {
+      location.href='main.html';
+    }else {
+//      location.href='login.html';
+    }
+  }).fail(function () {
+    var phone=store.get('phone');
+    var password=store.get('password');
+    if (phone == '' || password == '') {
+      location.href='login.html';
+    }
+    $.ajax({
+      url: API_URL+"/account/login/",
+      type: "post",
+      headers: {'Content-Type': 'application/json'},
+      data: JSON.stringify({
+        phone:phone,
+        password:password
+      })
+    }).done(function (data) {
+      if (data == 'success') {
+        location.href='main.html';
+      }else {
+        location.href='login.html';
+      }
+    }).fail(function () {
+      location.href='login.html';
+    });
+  });
+
+
 </script>
 </body>
 </html>

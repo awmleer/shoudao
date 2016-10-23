@@ -19,7 +19,7 @@ angular.module('shoudao.controllers', [])
 
   })
 
-  .controller('ContactsListCtrl', function($scope, Contacts, $rootScope, $stateParams, $http, $ionicHistory) {
+  .controller('ContactsListCtrl', function($scope, Contacts, $rootScope, $stateParams, $http, $ionicHistory,$ionicPopup) {
     if ($stateParams.group_index == 'all') {
       $scope.all=true;
     }else{
@@ -270,7 +270,7 @@ angular.module('shoudao.controllers', [])
 
 
 
-  .controller('AccountCtrl', function($scope,$rootScope,$http) {
+  .controller('AccountCtrl', function($scope,$rootScope,$http,$ionicPopup) {
     $scope.doRefresh= function () {
       $http.get(API_URL+'/account/info/').then(function (response) {
         $rootScope.user_info=response.data;
@@ -283,6 +283,31 @@ angular.module('shoudao.controllers', [])
     $scope.$on('$ionicView.enter', function(e) {
       $scope.doRefresh();
     });
+
+
+    $scope.logout= function () {
+      var confirmPopup = $ionicPopup.confirm({
+        title: '退出登录',
+        template: '确定要退出登录吗？',
+        okText: '确定',
+        cancelText: '取消'
+      });
+      confirmPopup.then(function(res) {
+        if (res) {
+          $http.get(API_URL+'/account/logout/').then(function (response) {
+            if (response.data == 'success') {
+              store.set('phone','');
+              store.set('password','');
+              location.href='login.html';
+            }else {
+              alert(response.data);
+            }
+          }, function () {
+            alert("退出登录失败，请检查网络连接");
+          });
+        }
+      });
+    };
     // $rootScope.user_info={
     //   name:'测试',
     //   phone:'1881112222',
