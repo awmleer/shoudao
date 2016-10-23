@@ -143,7 +143,7 @@ angular.module('shoudao.controllers', [])
 
 
 
-  .controller('MessageNewCtrl', function($scope, $rootScope, $ionicModal, $ionicHistory, Contacts, Groups, $http,$ionicLoading) {
+  .controller('MessageNewCtrl', function($scope, $rootScope, $ionicModal, $ionicHistory, Contacts, Groups, $http,$ionicLoading,$ionicPopup) {
     $scope.$on('$destroy',function(){
       console.log('$destroy');
       Contacts.clear_check();
@@ -197,34 +197,64 @@ angular.module('shoudao.controllers', [])
 
     $scope.send_message= function () {
       if ($scope.message.title=='') {
-        alert("请输入标题");
+        $ionicPopup.alert({
+          okText: '好的',
+          title: '请输入标题',
+          template: '通知标题不能为空'
+        });
         return;
       }
       if ($scope.message.content=='') {
-        alert("请输入内容");
+        $ionicPopup.alert({
+          okText: '好的',
+          title: '请输入内容',
+          template: '通知内容不能为空'
+        });
         return;
       }
-      $ionicLoading.show({
-        template: '<i class="fa fa-spinner fa-spin fa-3x" style="margin-bottom: 6px" ></i><br>发送中…'
+
+      var confirmPopup = $ionicPopup.confirm({
+        title: '发送消息',
+        template: '确定要现在群发消息吗？',
+        okText: '发送',
+        cancelText: '取消'
       });
-      $http.post(API_URL+'/message/new/', {
-        type:'notice',
-        title:$scope.message.title,
-        content:$scope.message.content,
-        contacts:Contacts.get_checked_contacts()
-      }).then(function (response) {
-        $ionicLoading.hide();
-        if (response.data == 'success') {
-          alert("发送成功");
-          Contacts.clear_check();
-          $ionicHistory.goBack();
-        }else {
-          alert(response.data);
+
+      confirmPopup.then(function(res) {
+        if(res) {
+          $ionicLoading.show({
+            template: '<i class="fa fa-spinner fa-spin fa-3x" style="margin-bottom: 6px" ></i><br>发送中…'
+          });
+          $http.post(API_URL+'/message/new/', {
+            type:'notice',
+            title:$scope.message.title,
+            content:$scope.message.content,
+            contacts:Contacts.get_checked_contacts()
+          }).then(function (response) {
+            $ionicLoading.hide();
+            if (response.data == 'success') {
+              $ionicPopup.alert({
+                okText: '好的',
+                title: '发送成功',
+                template: '消息已经成功发送'
+              });
+              Contacts.clear_check();
+              $ionicHistory.goBack();
+            }else {
+              alert(response.data);
+            }
+          }, function () {
+            $ionicPopup.alert({
+              okText: '好的',
+              title: '失败',
+              template: '消息发送失败，请检查网络连接'
+            });
+            $ionicLoading.hide();
+          });
         }
-      }, function () {
-        alert("请求失败");
-        $ionicLoading.hide();
       });
+
+
     };
 
   })
