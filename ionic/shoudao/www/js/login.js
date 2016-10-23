@@ -1,9 +1,12 @@
 angular.module('login',['ionic'])
   .controller('LoginCtrl', function ($scope,$http,$rootScope) {
     //for DEBUG
-    $scope.phone="18811112222";
-    $scope.password="sparker1113";
+    // $scope.phone="18811112222";
+    // $scope.password="sparker1113";
 
+
+    $scope.phone="";
+    $scope.password="";
 
     $scope.login=function () {
       $http.post(API_URL+'/account/login/',{

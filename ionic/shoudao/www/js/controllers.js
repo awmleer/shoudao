@@ -2,10 +2,14 @@ angular.module('shoudao.controllers', [])
 
   .controller('ContactsCtrl', function($scope, Contacts, $rootScope,$http) {
     // $rootScope.contacts={a:1,b:2};
-    $rootScope.contacts=[
-      {name:'小明',checked:false,phone:18143465393},
-      {name:'小华',checked:false,phone:18867100642}
-    ];
+    //for DEBUG
+    // $rootScope.contacts=[
+    //   {name:'小明',checked:false,phone:18143465393},
+    //   {name:'哈哈哈',checked:false,phone:18143465393},
+    //   {name:'安',checked:false,phone:18143465393},
+    //   {name:'哈哈了',checked:false,phone:18143465393},
+    //   {name:'小华',checked:false,phone:18867100642}
+    // ];
 
     $scope.doRefresh= function () {
       $http.get(API_URL+'/groups/all/').then(function (response) {
@@ -67,6 +71,13 @@ angular.module('shoudao.controllers', [])
       group_name:'',
       contacts:[]
     };
+
+    //search box
+    $scope.search={text:''};
+    $scope.clear_search_text= function () {
+      $scope.search.text='';
+    };
+
     $scope.new_group=function () {
       if ($scope.group.group_name=='') {
         alert("请输入分组名");
@@ -159,6 +170,13 @@ angular.module('shoudao.controllers', [])
       Groups.clear_check();
       $scope.modal.remove();// Cleanup the modal
     });
+
+    //search box
+    $scope.search={text:''};
+    $scope.clear_search_text= function () {
+      $scope.search.text='';
+    };
+
 
     $scope.group_click=function () {
       console.log(this.group.checked);

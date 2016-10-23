@@ -136,6 +136,7 @@ SMS={
     'key':'b32c625ffb38e4ad07f86bb1101548e1'
 }
 
+LOGIN_URL='/403/'
 
 # 日志
 LOGGING = {
