@@ -219,8 +219,8 @@ def m(request,message_id,recipient,token):
     recipients=message.get_recipients()
     i_received=False
     for r in recipients:
-        if r['phone']==recipient:
-            if r['reaction']==True: i_received=True
+        if str(r['phone'])==str(recipient):
+            i_received=r['reaction']
             break
     context={
         'message':message,
@@ -241,7 +241,7 @@ def m_submit(request,message_id,recipient,token):
     if link.token!=token:return HttpResponseForbidden() #403
     recipients=message.get_recipients()
     for r in recipients:
-        if r['phone']==recipient:
+        if str(r['phone'])==str(recipient):
             r['reaction']=True
             break
     message.set_recipients(recipients)

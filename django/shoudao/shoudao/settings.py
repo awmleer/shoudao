@@ -135,3 +135,21 @@ if DEBUG:
 SMS={
     'key':'b32c625ffb38e4ad07f86bb1101548e1'
 }
+
+
+# 日志
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+    },
+}
