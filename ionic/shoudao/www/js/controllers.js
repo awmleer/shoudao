@@ -311,10 +311,13 @@ angular.module('shoudao.controllers', [])
     // };
   })
 
+  .controller('UpgradeCtrl', function($scope,$rootScope,$http,$ionicPopup) {
+
+  })
 
 
 
-.controller('SettingCtrl', function($scope,$rootScope,$http,$ionicPopup) {
+    .controller('SettingCtrl', function($scope,$rootScope,$http,$ionicPopup) {
   $scope.change_name= function () {
     $ionicPopup.prompt({
       title: '修改名字',

@@ -135,6 +135,16 @@ angular.module('shoudao', ['ionic', 'shoudao.controllers', 'shoudao.services'])
         }
       })
 
+      .state('tab.upgrade', {
+        url: '/upgrade',
+        views: {
+          'tab-account': {
+            templateUrl: 'templates/tab-upgrade.html',
+            controller: 'UpgradeCtrl'
+          }
+        }
+      })
+
       .state('tab.setting', {
         url: '/setting',
         views: {
