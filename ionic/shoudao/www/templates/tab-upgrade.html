@@ -1,5 +1,12 @@
 <ion-view view-title="升级账户">
   <ion-content>
+    <div class="padding" style="width: 100%;">
+      <div style="width: 100%;border-radius: 4px;background: rgb(221, 221, 221)" class="padding">
+        <span>您现在是{{user_info.type}}</span><br>
+        <span ng-if="user_info.type!='普通账户'">将于{{user_info.expiration}}过期</span>
+      </div>
+    </div>
+
     <!--todo 内容的动态加载-->
     <div class="card">
       <div class="item item-divider">
