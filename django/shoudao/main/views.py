@@ -154,6 +154,7 @@ def message_new(request):
     user_info=request.user.user_info.get()
     user_info.message_sent+=1
     user_info.text_sent+=send_count
+    user_info.text_surplus+=(-send_count)
     user_info.save()
 
     message.set_recipients(recipients)
@@ -218,6 +219,7 @@ def account_info(request):
         'user_id':request.user.id,
         'name':user_info.name,
         'type':user_info.type,
+        'expiration':user_info.expiration,
         'message_sent':user_info.message_sent,
         'text_sent':user_info.text_sent,
         'text_surplus':user_info.text_surplus
