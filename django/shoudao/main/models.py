@@ -10,9 +10,9 @@ class UserInfo(models.Model):
     # avatar = models.ImageField(upload_to='avatars', default='avatar_default.png')
     message_sent=models.PositiveIntegerField(default=0)
     text_sent=models.PositiveIntegerField(default=0)
-    text_limit=models.PositiveIntegerField(default=0)
-    def get_text_surplus(self):
-        return self.text_limit-self.text_sent
+    text_surplus=models.PositiveIntegerField(default=0)
+    # def get_text_surplus(self):
+    #     return self.text_limit-self.text_sent
 
 
 class ContactGroup(models.Model):
