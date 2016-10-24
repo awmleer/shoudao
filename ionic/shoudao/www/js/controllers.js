@@ -312,7 +312,10 @@ angular.module('shoudao.controllers', [])
   })
 
   .controller('UpgradeCtrl', function($scope,$rootScope,$http,$ionicPopup) {
-
+    $scope.buy_upgrade= function () {
+      var ref = window.open('http://www.baidu.com', '_system', 'location=no');
+      console.log(ref);
+    }
   })
 
 

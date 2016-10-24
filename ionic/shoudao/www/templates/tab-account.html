@@ -18,10 +18,10 @@
 
     <ion-list>
       <ion-item class="item-icon-left">
-        <i class="icon ion-ios-email"></i> 本月短信<span style="float: right;">已用{{user_info.text_sent}}/共{{user_info.text_limit}}</span>
+        <i class="icon ion-ios-email"></i> 剩余短信<span style="float: right;">{{user_info.text_surplus}}条</span>
       </ion-item>
       <ion-item class="item-icon-left">
-        <i class="icon ion-paper-airplane"></i> 累计发送信息<span style="float: right;">{{user_info.message_sent}}条</span>
+        <i class="icon ion-paper-airplane"></i> 累计发送<span style="float: right;">{{user_info.message_sent}}条通知/{{user_info.text_sent}}条短信</span>
       </ion-item>
       <ion-item ui-sref="tab.upgrade" class="item-icon-left item-icon-right">
         <i class="icon ion-android-arrow-up"></i> 升级账户<i class="icon ion-chevron-right icon-accessory"></i>
