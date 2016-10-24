@@ -8,7 +8,7 @@
       <ion-item>
         <a href="#/tab/message/new" class="button button-block button-positive" style="margin: 0 auto;">群发新消息</a>
       </ion-item>
-      <ion-item class="item-avatar item-icon-right" ng-repeat="message in messages" type="item-text-wrap" ui-sref="tab.message-detail({message_id:message.message_id})">
+      <ion-item class="item-avatar item-icon-right" ng-repeat="message in messages | orderBy:'-send_time'" type="item-text-wrap" ui-sref="tab.message-detail({message_id:message.message_id})">
         <div class="item-number-icon message-icon-block" ng-class="{'notice':message.type=='notice'}">
           <span ng-if="message.type=='notice'"><i class="ion ion-ios-paperplane" style="font-size: 32px"></i></span>
         </div>

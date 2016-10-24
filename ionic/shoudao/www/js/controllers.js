@@ -333,4 +333,30 @@ angular.module('shoudao.controllers', [])
     //   text_limit:300,
     //   type:'普通用户'
     // };
-  });
+  })
+
+
+
+
+.controller('SettingCtrl', function($scope,$rootScope,$http,$ionicPopup) {
+  $scope.change_name= function () {
+    $ionicPopup.prompt({
+      title: '修改名字',
+      // template: '请输入你的名字',
+      inputType: 'text',
+      inputPlaceholder: '四个字以内…',
+      cancelText:'取消',
+      okText:'确定'
+    }).then(function(res) {
+      console.log('Your password is', res);
+    });
+  };
+
+  $scope.about= function () {
+    $ionicPopup.alert({
+      okText: '好的',
+      title: '关于',
+      template: '版本号：v'+VERSION.major+'.'+VERSION.minor+'.'+VERSION.revision
+    });
+  };
+});

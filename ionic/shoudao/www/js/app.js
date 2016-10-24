@@ -10,6 +10,8 @@ angular.module('shoudao', ['ionic', 'shoudao.controllers', 'shoudao.services'])
   .run(function($ionicPlatform, $rootScope, Contacts, Groups) {
     contacts_service=Contacts;
 
+    $rootScope.version=VERSION;
+
     if (typeof ($rootScope.contacts) == undefined || $rootScope.contacts==null) {
       $rootScope.contacts=[];
       console.log('contacts init ');
@@ -129,6 +131,16 @@ angular.module('shoudao', ['ionic', 'shoudao.controllers', 'shoudao.services'])
           'tab-account': {
             templateUrl: 'templates/tab-account.html',
             controller: 'AccountCtrl'
+          }
+        }
+      })
+
+      .state('tab.setting', {
+        url: '/setting',
+        views: {
+          'tab-account': {
+            templateUrl: 'templates/tab-setting.html',
+            controller: 'SettingCtrl'
           }
         }
       });
