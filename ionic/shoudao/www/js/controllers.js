@@ -302,30 +302,6 @@ angular.module('shoudao.controllers', [])
       $scope.doRefresh();
     });
 
-
-    $scope.logout= function () {
-      var confirmPopup = $ionicPopup.confirm({
-        title: '退出登录',
-        template: '确定要退出登录吗？',
-        okText: '确定',
-        cancelText: '取消'
-      });
-      confirmPopup.then(function(res) {
-        if (res) {
-          $http.get(API_URL+'/account/logout/').then(function (response) {
-            if (response.data == 'success') {
-              store.set('phone','');
-              store.set('password','');
-              location.href='login.html';
-            }else {
-              alert(response.data);
-            }
-          }, function () {
-            alert("退出登录失败，请检查网络连接");
-          });
-        }
-      });
-    };
     // $rootScope.user_info={
     //   name:'测试',
     //   phone:'1881112222',
@@ -349,6 +325,43 @@ angular.module('shoudao.controllers', [])
       okText:'确定'
     }).then(function(res) {
       console.log('Your password is', res);
+    });
+  };
+
+  $scope.change_password= function () {
+    $ionicPopup.prompt({
+      title: '修改密码',
+      template: '请输入新密码',
+      inputType: 'password',
+      inputPlaceholder: '至少8位…',
+      cancelText:'取消',
+      okText:'确定'
+    }).then(function(res) {
+      console.log('Your password is', res);
+    });
+  };
+
+  $scope.logout= function () {
+    var confirmPopup = $ionicPopup.confirm({
+      title: '退出登录',
+      template: '确定要退出登录吗？',
+      okText: '确定',
+      cancelText: '取消'
+    });
+    confirmPopup.then(function(res) {
+      if (res) {
+        $http.get(API_URL+'/account/logout/').then(function (response) {
+          if (response.data == 'success') {
+            store.set('phone','');
+            store.set('password','');
+            location.href='login.html';
+          }else {
+            alert(response.data);
+          }
+        }, function () {
+          alert("退出登录失败，请检查网络连接");
+        });
+      }
     });
   };
 
