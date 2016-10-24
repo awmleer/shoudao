@@ -136,6 +136,11 @@ SMS={
     'key':'b32c625ffb38e4ad07f86bb1101548e1'
 }
 
+PASSPAY={
+    'pid':'792396002760742',
+    'key':'ZjuICnxewMS3KVBbhYd68eKXKAq5HbEM'
+}
+
 LOGIN_URL='/403/'
 
 # 日志

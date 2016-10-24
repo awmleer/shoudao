@@ -10,7 +10,8 @@ import sms.juhe
 from sms import shorten
 from django.conf import settings
 import random,string
-
+import  urllib.request,urllib.parse
+import hashlib
 
 import logging
 logger = logging.getLogger('django')
@@ -241,6 +242,35 @@ def change_name(request):
     user_info.save()
     return HttpResponse('success')
 
+
+
+@require_http_methods(['POST'])
+@login_required
+def buy(request):
+    # data=json.loads(request.body.decode())
+    req_obj={'partner':settings.PASSPAY['pid'],'user_seller':'126173','out_order_no':'3','subject':'aaaa','total_fee':'0.1','body':'Hello world','notify_url':'http://shoudao.sparker.top/account/buy_done/','return_url':'http://www.sparker.top/pay_done.html'}
+    m = hashlib.md5()
+    m.update(('body='+req_obj['body']+'&notify_url='+req_obj['notify_url']+'&out_order_no='+req_obj['out_order_no']+'&partner='+req_obj['partner']+'&return_url='+req_obj['return_url']+'&subject='+req_obj['subject']+'&total_fee='+req_obj['total_fee']+'&user_seller='+req_obj['user_seller']+settings.PASSPAY['key']).encode('utf-8'))
+    sign=m.hexdigest()
+    logger.info(sign)
+    req_obj['sign']=sign
+    params = urllib.parse.urlencode(req_obj)
+    res={
+        'status':'success',
+        'url':"http://www.sparker.top/pay.html?%s"%params
+    }
+    return JsonResponse(res)
+
+
+
+def buy_done(request):
+    logger.info(request.method)
+    if request.method=='GET':
+        logger.info(request.GET)
+    else:
+        logger.info(request.POST)
+    # logger.info(request.body.decode())
+    return HttpResponse('success')
 
 
 

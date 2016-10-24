@@ -306,16 +306,28 @@ angular.module('shoudao.controllers', [])
 
   .controller('UpgradeCtrl', function($scope,$rootScope,$http,$ionicPopup) {
     $scope.buy_upgrade= function () {
-      $ionicPopup.prompt({
-        title: '升级账户',
-        template: '请输入购买的月数',
-        inputType: 'number',
-        defaultText:0,
-        cancelText:'取消',
-        okText:'确定'
-      }).then(function(res) {
-        console.log('Your password is', res);
+      //fake!!
+      $http.post(API_URL+'/account/buy/', {
+        some:'a'
+      }).then(function (response) {
+        if (response.data.status == 'success') {
+          window.open(response.data.url, '_system', 'location=no');
+        }else{
+          alert(response.data.message);
+        }
+      }, function () {
+        alert("请求失败");
       });
+      // $ionicPopup.prompt({
+      //   title: '升级账户',
+      //   template: '请输入购买的月数',
+      //   inputType: 'number',
+      //   defaultText:0,
+      //   cancelText:'取消',
+      //   okText:'确定'
+      // }).then(function(res) {
+      //   console.log('Your password is', res);
+      // });
       // var ref = window.open('http://www.baidu.com', '_system', 'location=no');
       // console.log(ref);
     }

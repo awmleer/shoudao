@@ -9,6 +9,8 @@ urlpatterns = [
     url(r'^account/info/$',views.account_info),
     url(r'^account/change_name/$',views.change_name),
     url(r'^account/is_logged_in/$',views.is_logged_in),
+    url(r'^account/buy/$',views.buy),
+    url(r'^account/buy_done/$',views.buy_done),
     url(r'^groups/all/$',views.groups_all),
     url(r'^groups/new/$',views.groups_new),
     url(r'^groups/delete/$',views.groups_delete),
