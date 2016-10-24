@@ -228,6 +228,23 @@ def account_info(request):
 
 
 
+
+@require_http_methods(['GET'])
+@login_required
+def change_name(request):
+    new_name=request.GET['new_name']
+    if new_name=='':return HttpResponse('名字不能为空')
+    if len(new_name)>4:return HttpResponse('名字过长（4个字以内）')
+    if '[' in new_name or ']' in new_name or '【' in new_name or '】' in new_name or '.' in new_name or '/' in new_name:return HttpResponse('名字中不能含有[ ] 【 】 . / 等特殊字符')
+    user_info=request.user.user_info.get()
+    user_info.name=new_name
+    user_info.save()
+    return HttpResponse('success')
+
+
+
+
+
 @require_http_methods(['GET'])
 def m(request,message_id,recipient,token):
     logger.info(message_id)

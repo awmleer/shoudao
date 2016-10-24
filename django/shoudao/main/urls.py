@@ -7,6 +7,7 @@ urlpatterns = [
     url(r'^account/login/$',views.login),
     url(r'^account/logout/$',views.logout),
     url(r'^account/info/$',views.account_info),
+    url(r'^account/change_name/$',views.change_name),
     url(r'^account/is_logged_in/$',views.is_logged_in),
     url(r'^groups/all/$',views.groups_all),
     url(r'^groups/new/$',views.groups_new),
