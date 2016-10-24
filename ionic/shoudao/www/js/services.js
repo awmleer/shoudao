@@ -22,7 +22,7 @@ angular.module('shoudao.services', [])
         if (contacts[i].phoneNumbers.length) {
           for (var j = 0;  j < contacts[i].phoneNumbers.length; j++) {
             $rootScope.contacts.push({
-              phone:contacts[i].phoneNumbers[j].value.replace(/ /g,'').replace(/-/g,''),//去除掉空格和-
+              phone:contacts[i].phoneNumbers[j].value.replace(/ /g,'').replace(/-/g,'').replace(/\+86/g,'').replace(/\(/g,'').replace(/\)/g,''),//去除掉空格 - +86 ( )
               name:contacts[i].displayName,
               checked:false
             });
@@ -108,6 +108,14 @@ angular.module('shoudao.services', [])
         group.checked=false;
       })
     }
+  })
+
+  .service('Account',function ($rootScope,$http) {
+    this.refresh_user_info= function () {
+      $http.get(API_URL+'/account/info/').then(function (response) {
+        $rootScope.user_info=response.data;
+      });
+    };
   })
 
 

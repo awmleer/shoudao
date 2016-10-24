@@ -298,17 +298,10 @@ angular.module('shoudao.controllers', [])
         $scope.$broadcast('scroll.refreshComplete');
       });
     };
+
     $scope.$on('$ionicView.enter', function(e) {
       $scope.doRefresh();
     });
-
-    // $rootScope.user_info={
-    //   name:'测试',
-    //   phone:'1881112222',
-    //   text_sent:130,
-    //   text_limit:300,
-    //   type:'普通用户'
-    // };
   })
 
   .controller('UpgradeCtrl', function($scope,$rootScope,$http,$ionicPopup) {
@@ -330,7 +323,7 @@ angular.module('shoudao.controllers', [])
 
 
 
-    .controller('SettingCtrl', function($scope,$rootScope,$http,$ionicPopup) {
+    .controller('SettingCtrl', function($scope,$rootScope,$http,$ionicPopup,Account) {
   $scope.change_name= function () {
     $ionicPopup.prompt({
       title: '修改名字',
@@ -340,7 +333,16 @@ angular.module('shoudao.controllers', [])
       cancelText:'取消',
       okText:'确定'
     }).then(function(res) {
-      console.log('Your password is', res);
+      $http.get(API_URL+'/account/change_name/?new_name='+res).then(function (response) {
+        if (response.data == 'success') {
+          Account.refresh_user_info();
+          alert("名字修改成功");
+        }else {
+          alert(response.data);
+        }
+      }, function () {
+        alert("修改失败");
+      });
     });
   };
 
