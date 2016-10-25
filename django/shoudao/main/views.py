@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.utils import timezone
+from datetime import datetime, timedelta
 import django.contrib.auth as auth #用户登录认证
 from main.models import *
 from django.views.decorators.http import require_http_methods
@@ -248,8 +249,7 @@ def change_name(request):
 @login_required
 def buy(request): #发起支付
     data=json.loads(request.body.decode())
-    # todo price
-    price=0.1
+    price=Item.objects.get(item_id=data['item']).price
     order=Order(user=request.user,item=data['item'],amount=data['amount'],price=price,total_fee=price*data['amount'])
     order.save()
     req_obj={'partner':settings.PASSPAY['pid'],'user_seller':settings.PASSPAY['seller'],'out_order_no':str(order.id),'subject':'收道','total_fee':str(price*data['amount']),'body':'收道 账户升级/短信包购买','notify_url':'http://shoudao.sparker.top/account/buy_done/','return_url':'http://www.sparker.top/pay_done.html'}
@@ -262,6 +262,7 @@ def buy(request): #发起支付
     params = urllib.parse.urlencode(req_obj)
     res={
         'status':'success',
+        'order_id':order.id,
         'url':"http://www.sparker.top/pay.html?%s"%params
     }
     return JsonResponse(res)
@@ -290,6 +291,15 @@ def buy_done(request): #云通付回调
 
     order.status='paid'
     #todo
+    user_info = request.user.user_info.get()
+    if order.item=='account_standard':
+        if user_info.type=='免费账户':
+            user_info.type='标准账户'
+            if user_info.expiration: #续费
+                user_info.expiration+=timedelta(days=30)
+            else: #新购
+                user_info.expiration=timezone.now()+timedelta(days=30)
+        user_info.save()
     order.save()
     return HttpResponse('success')
 

@@ -71,4 +71,20 @@ class Order(models.Model):
     status=models.CharField(max_length=10,default='not_paid')
 
 
+class Item(models.Model):
+    item_id=models.CharField(max_length=20)
+    title=models.CharField(max_length=30)
+    content=models.CharField(max_length=2000)
+    can_buy=models.BooleanField(default=True)
+    price=models.DecimalField(max_digits=20,decimal_places=2)
+    footer=models.CharField(max_length=500)
+    footer_style=models.CharField(max_length=30)
+    # item_id:'account_standard',
+    # title:'标准账户',
+    # content:'这里是内容',
+    # can_buy:true,
+    # price:5,
+    # footer:'￥5 /月<span class="float-right">现在购买</span>',
+    # footer_style:'calm'
+
 
