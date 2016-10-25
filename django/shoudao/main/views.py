@@ -246,9 +246,14 @@ def change_name(request):
 
 @require_http_methods(['POST'])
 @login_required
-def buy(request):
-    # data=json.loads(request.body.decode())
-    req_obj={'partner':settings.PASSPAY['pid'],'user_seller':'126173','out_order_no':'3','subject':'aaaa','total_fee':'0.1','body':'Hello world','notify_url':'http://shoudao.sparker.top/account/buy_done/','return_url':'http://www.sparker.top/pay_done.html'}
+def buy(request): #发起支付
+    data=json.loads(request.body.decode())
+    # todo price
+    price=0.1
+    order=Order(user=request.user,item=data['item'],amount=data['amount'],price=price,total_fee=price*data['amount'])
+    order.save()
+    req_obj={'partner':settings.PASSPAY['pid'],'user_seller':settings.PASSPAY['seller'],'out_order_no':str(order.id),'subject':'收道','total_fee':str(price*data['amount']),'body':'收道 账户升级/短信包购买','notify_url':'http://shoudao.sparker.top/account/buy_done/','return_url':'http://www.sparker.top/pay_done.html'}
+    logger.info(req_obj)
     m = hashlib.md5()
     m.update(('body='+req_obj['body']+'&notify_url='+req_obj['notify_url']+'&out_order_no='+req_obj['out_order_no']+'&partner='+req_obj['partner']+'&return_url='+req_obj['return_url']+'&subject='+req_obj['subject']+'&total_fee='+req_obj['total_fee']+'&user_seller='+req_obj['user_seller']+settings.PASSPAY['key']).encode('utf-8'))
     sign=m.hexdigest()
@@ -263,14 +268,45 @@ def buy(request):
 
 
 
-def buy_done(request):
+def buy_done(request): #云通付回调
     logger.info(request.method)
-    if request.method=='GET':
-        logger.info(request.GET)
+    if request.method=='POST':
+        data=request.POST
     else:
-        logger.info(request.POST)
-    # logger.info(request.body.decode())
+        data=request.GET
+    logger.info(data)
+    m = hashlib.md5()
+    # 顺序：out_order_no、total_fee、trade_status、云通付PID、云通付KEY
+    m.update((data['out_order_no']+data['total_fee']+data['trade_status']+settings.PASSPAY['pid']+settings.PASSPAY['key']).encode('utf-8'))
+    sign=m.hexdigest()
+    if sign!=data['sign']: #签名异常
+        return HttpResponseForbidden()
+
+    order=Order.objects.get(id=data['out_order_no'])
+    if data['trade_status']!='TRADE_SUCCESS': #如果支付没有成功
+        order.status=data['trade_status']
+        order.save()
+        return HttpResponse('get')
+
+    order.status='paid'
+    #todo
+    order.save()
     return HttpResponse('success')
+
+
+
+@require_http_methods(['GET'])
+@login_required
+def buy_done_check(request): #用户自查订单是否支付成功
+    order=Order.objects.get(id=request.GET['order_id'])
+    if order.user!=request.user:
+        return HttpResponseForbidden()
+    else:
+        if order.status=='paid':
+            return HttpResponse('success')
+        else:
+            return HttpResponse('fail')
+
 
 
 

@@ -138,6 +138,7 @@ SMS={
 
 PASSPAY={
     'pid':'792396002760742',
+    'seller':'126173',
     'key':'ZjuICnxewMS3KVBbhYd68eKXKAq5HbEM'
 }
 

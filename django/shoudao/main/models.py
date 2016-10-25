@@ -61,3 +61,14 @@ class Link(models.Model):
     short_link=models.CharField(max_length=30,default='')
 
 
+
+class Order(models.Model):
+    user=models.ForeignKey('auth.User',related_name='orders')
+    item=models.CharField(max_length=20)
+    amount=models.PositiveIntegerField()
+    price=models.DecimalField(max_digits=20,decimal_places=2)
+    total_fee=models.DecimalField(max_digits=20,decimal_places=2)
+    status=models.CharField(max_length=10,default='not_paid')
+
+
+
