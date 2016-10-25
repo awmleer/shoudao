@@ -304,7 +304,7 @@ angular.module('shoudao.controllers', [])
     });
   })
 
-  .controller('UpgradeCtrl', function($scope,$rootScope,$http,$ionicPopup) {
+  .controller('UpgradeCtrl', function($scope,$rootScope,$http,$ionicPopup,$ionicHistory) {
     $scope.items=[
       {
         item_id:'',
@@ -394,8 +394,10 @@ angular.module('shoudao.controllers', [])
           $http.get(API_URL+'/account/buy_done_check/?order_id='+order_id).then(function (response) {
             if (response.data == 'success') {
               alert("支付成功");
+            }else {
+              alert("支付似乎出了一点问题，若遇到问题可以联系客服");
             }
-          //  支付失败的话目前是没有任何提示的。。
+            $ionicHistory.goBack();
           }, function () {
             alert("请求失败");
           });
@@ -406,7 +408,113 @@ angular.module('shoudao.controllers', [])
 
 
 
-    .controller('SettingCtrl', function($scope,$rootScope,$http,$ionicPopup,Account) {
+
+  .controller('PacksCtrl', function($scope,$rootScope,$http,$ionicPopup,$ionicHistory) {
+    $scope.items=[
+      {
+        item_id:'',
+        title:'100条短信包',
+        content:'这里是内容',
+        can_buy:true,
+        price:0,
+        footer:'￥3<span class="float-right">现在购买</span>',
+        footer_style:'energized'
+      },
+      {
+        item_id:'account_standard',
+        title:'300条短信包',
+        content:'这里是内容',
+        can_buy:true,
+        price:5,
+        footer:'￥5<span class="float-right">现在购买</span>',
+        footer_style:'calm'
+      },
+      {
+        item_id:'account_advance',
+        title:'500条短信包',
+        content:'这里是内容',
+        can_buy:true,
+        price:15,
+        footer:'￥15<span class="float-right">现在购买</span>',
+        footer_style:'positive'
+      }
+    ];
+
+
+
+    $scope.buy_pack= function () {
+      if (this.item.can_buy == false) {
+        return;
+      }
+      $scope.buy_obj_tmp={
+        amount:1,
+        price:this.item.price,
+        item:this.item.item_id
+      };
+      $ionicPopup.show({
+        template: '<p style="text-align: center">请输入购买的数量</p><input type="number" ng-model="buy_obj_tmp.amount" style="text-align: center;margin-bottom: 5px" ><p><span>共计</span><span style="float: right;">￥{{buy_obj_tmp.price*buy_obj_tmp.amount}}</span></p>',
+        title: '购买',
+        // subTitle: '请输入购买的月数',
+        scope: $scope,
+        buttons: [
+          { text: '取消' },
+          {
+            text: '<b>确定</b>',
+            type: 'button-positive',
+            onTap: function(e) {
+              if (!$scope.buy_obj_tmp.amount) {
+                //不允许用户关闭
+                e.preventDefault();
+              } else {
+                return 'start_pay';
+              }
+            }
+          }
+        ]
+      }).then(function(res) {
+        if (res != 'start_pay') {
+          return;
+        }
+        $http.post(API_URL+'/account/buy/', {
+          item:$scope.buy_obj_tmp.item,
+          amount:$scope.buy_obj_tmp.amount
+        }).then(function (response) {
+          if (response.data.status == 'success') {
+            confirm_pay_done(response.data.order_id);
+            window.open(response.data.url, '_system', 'location=no');
+          }else{
+            alert(response.data.message);
+          }
+        }, function () {
+          alert("请求失败");
+        });
+      });
+
+      function confirm_pay_done(order_id) {
+        $ionicPopup.alert({
+          title: '请在网页中完成支付',
+          template: '完成支付后，请点击下面的确认按钮',
+          okText:'我已完成支付'
+        }).then(function(res) {
+          $http.get(API_URL+'/account/buy_done_check/?order_id='+order_id).then(function (response) {
+            if (response.data == 'success') {
+              alert("支付成功");
+            }else {
+              alert("支付似乎出了一点问题，若遇到问题可以联系客服");
+            }
+            $ionicHistory.goBack();
+          }, function () {
+            alert("请求失败");
+          });
+        });
+      }
+    }
+  })
+
+
+
+
+  .controller('SettingCtrl', function($scope,$rootScope,$http,$ionicPopup,Account) {
   $scope.change_name= function () {
     $ionicPopup.prompt({
       title: '修改名字',

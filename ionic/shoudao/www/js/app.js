@@ -145,6 +145,16 @@ angular.module('shoudao', ['ionic', 'shoudao.controllers', 'shoudao.services'])
         }
       })
 
+      .state('tab.packs', {
+        url: '/packs',
+        views: {
+          'tab-account': {
+            templateUrl: 'templates/tab-packs.html',
+            controller: 'PacksCtrl'
+          }
+        }
+      })
+
       .state('tab.setting', {
         url: '/setting',
         views: {

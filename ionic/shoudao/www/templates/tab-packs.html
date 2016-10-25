@@ -1,0 +1,19 @@
+<ion-view view-title="购买短信包">
+  <ion-content>
+    <div class="padding" style="width: 100%;">
+      <div style="width: 100%;border-radius: 4px;background: rgb(221, 221, 221)" class="padding">
+        <span>您现在剩余短信{{user_info.text_surplus}}条</span>
+      </div>
+    </div>
+
+
+    <div class="card" ng-repeat="item in items">
+      <div class="item item-divider">
+        {{item.title}}
+      </div>
+      <div class="item item-text-wrap" ng-bind-html="item.content"></div>
+      <div class="item item-divider" ng-class="{'item-calm':item.footer_style=='calm','item-light':item.footer_style=='light','item-stable':item.footer_style=='stable','item-positive':item.footer_style=='positive','item-balanced':item.footer_style=='balanced','item-assertive':item.footer_style=='assertive','item-dark':item.footer_style=='dark','item-royal':item.footer_style=='royal','item-energized':item.footer_style=='energized'}" ng-bind-html="item.footer" ng-click="buy_pack()"></div>
+    </div>
+
+  </ion-content>
+</ion-view>
