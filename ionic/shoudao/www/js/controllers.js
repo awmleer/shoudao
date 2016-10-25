@@ -514,7 +514,7 @@ angular.module('shoudao.controllers', [])
 
 
 
-  .controller('SettingCtrl', function($scope,$rootScope,$http,$ionicPopup,Account) {
+  .controller('SettingCtrl', function($scope,$rootScope,$http,$ionicPopup,Account,$ionicHistory) {
   $scope.change_name= function () {
     $ionicPopup.prompt({
       title: '修改名字',
@@ -538,15 +538,45 @@ angular.module('shoudao.controllers', [])
   };
 
   $scope.change_password= function () {
-    $ionicPopup.prompt({
+    $scope.req_obj={
+      new_password:''
+    };
+    $ionicPopup.show({
+      template: '<p style="text-align: center">长度需大于等于八位</p><input type="password" ng-model="req_obj.new_password" style="text-align: center;margin-bottom: 5px" >',
       title: '修改密码',
-      template: '请输入新密码',
-      inputType: 'password',
-      inputPlaceholder: '至少8位…',
-      cancelText:'取消',
-      okText:'确定'
-    }).then(function(res) {
-      console.log('Your password is', res);
+      subTitle: '请输入新密码',
+      scope: $scope,
+      buttons: [
+        { text: '取消' },
+        {
+          text: '<b>确定</b>',
+          type: 'button-positive',
+          onTap: function(e) {
+            if (!$scope.req_obj.new_password) {
+              //不允许用户关闭
+              e.preventDefault();
+            } else {
+              $http.post(API_URL+'/account/change_password/', {
+                new_password:$scope.req_obj.new_password
+              }).then(function (response) {
+                if (response.data == 'success') {
+                  alert("修改成功，请重新登录");
+                  $http.get(API_URL+'/account/logout/').then(function (response) {
+                    store.set('password','');
+                    location.href='login.html';
+                  }, function () {
+                    location.href='login.html';
+                  });
+                }else {
+                  alert(response.data);
+                }
+              }, function () {
+                alert("请求失败");
+              });
+            }
+          }
+        }
+      ]
     });
   };
 
@@ -561,7 +591,6 @@ angular.module('shoudao.controllers', [])
       if (res) {
         $http.get(API_URL+'/account/logout/').then(function (response) {
           if (response.data == 'success') {
-            store.set('phone','');
             store.set('password','');
             location.href='login.html';
           }else {

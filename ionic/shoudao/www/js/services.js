@@ -10,13 +10,9 @@ angular.module('shoudao.services', [])
       navigator.contacts.find(fields, self.get_contacts_success, self.get_contacts_error, options);
     };
 
-
     self.get_contacts_success= function (contacts) {
-
-      // $rootScope.contacts=contacts;
       console.log(contacts);
       // $rootScope.contacts=JSON.stringify(contacts);//for DEBUG
-      // var aResult = [];
       $rootScope.contacts=[];
       for (var i = 0; i<contacts.length; i++) {
         if (contacts[i].phoneNumbers.length) {
@@ -39,6 +35,12 @@ angular.module('shoudao.services', [])
 
     self.get_contacts_error= function () {
       alert("获取联系人失败");
+    };
+
+    self.create_contact= function () {
+      //todo contacts还是放到云端吧。。
+      // var new_contact=navigator.contacts.create({"displayName": "Test User"});
+      // new_contact.save();
     };
 
 
