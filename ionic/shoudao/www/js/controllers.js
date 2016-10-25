@@ -305,31 +305,95 @@ angular.module('shoudao.controllers', [])
   })
 
   .controller('UpgradeCtrl', function($scope,$rootScope,$http,$ionicPopup) {
+    $scope.items=[
+      {
+        item_id:'',
+        title:'免费账户',
+        content:'这里是内容',
+        can_buy:false,
+        price:0,
+        footer:'￥0 /月<span class="float-right">免费使用</span>',
+        footer_style:''
+      },
+      {
+        item_id:'account_standard',
+        title:'标准账户',
+        content:'这里是内容',
+        can_buy:true,
+        price:5,
+        footer:'￥5 /月<span class="float-right">现在购买</span>',
+        footer_style:'calm'
+      },
+      {
+        item_id:'account_advance',
+        title:'高级账户',
+        content:'这里是内容',
+        can_buy:true,
+        price:15,
+        footer:'￥15 /月<span class="float-right">现在购买</span>',
+        footer_style:'positive'
+      }
+    ];
+
+
+
     $scope.buy_upgrade= function () {
-      //fake!!
-      $http.post(API_URL+'/account/buy/', {
-        some:'a'
-      }).then(function (response) {
-        if (response.data.status == 'success') {
-          window.open(response.data.url, '_system', 'location=no');
-        }else{
-          alert(response.data.message);
+      if (this.item.can_buy == false) {
+        return;
+      }
+      $scope.buy_obj_tmp={
+        amount:1,
+        price:this.item.price,
+        item:this.item.item_id
+      };
+      $ionicPopup.show({
+        template: '<p style="text-align: center">请输入购买的月数</p><input type="number" ng-model="buy_obj_tmp.amount" style="text-align: center;margin-bottom: 5px" ><p><span>共计</span><span style="float: right;">￥{{buy_obj_tmp.price*buy_obj_tmp.amount}}</span></p>',
+        title: '升级账户',
+        // subTitle: '请输入购买的月数',
+        scope: $scope,
+        buttons: [
+          { text: '取消' },
+          {
+            text: '<b>确定</b>',
+            type: 'button-positive',
+            onTap: function(e) {
+              if (!$scope.buy_obj_tmp.amount) {
+                //不允许用户关闭
+                e.preventDefault();
+              } else {
+                return 'start_pay';
+              }
+            }
+          }
+        ]
+      }).then(function(res) {
+        if (res != 'start_pay') {
+          return;
         }
-      }, function () {
-        alert("请求失败");
+        $http.post(API_URL+'/account/buy/', {
+          item:$scope.buy_obj_tmp.item,
+          amount:$scope.buy_obj_tmp.amount
+        }).then(function (response) {
+          if (response.data.status == 'success') {
+            confirm_pay_done();
+            window.open(response.data.url, '_system', 'location=no');
+          }else{
+            alert(response.data.message);
+          }
+        }, function () {
+          alert("请求失败");
+        });
       });
-      // $ionicPopup.prompt({
-      //   title: '升级账户',
-      //   template: '请输入购买的月数',
-      //   inputType: 'number',
-      //   defaultText:0,
-      //   cancelText:'取消',
-      //   okText:'确定'
-      // }).then(function(res) {
-      //   console.log('Your password is', res);
-      // });
-      // var ref = window.open('http://www.baidu.com', '_system', 'location=no');
-      // console.log(ref);
+
+      function confirm_pay_done() {
+        $ionicPopup.alert({
+          title: '请在网页中完成支付',
+          template: '完成支付后，请点击下面的确认按钮',
+          okText:'我已完成支付'
+        }).then(function(res) {
+
+        });
+      }
     }
   })
 

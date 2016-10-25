@@ -27,3 +27,7 @@
 .item.send-fail{
   background: #e0e0e0;
 }
+
+.float-right{
+  float: right;
+}
