@@ -245,6 +245,23 @@ def change_name(request):
 
 
 
+
+@require_http_methods(['POST'])
+@login_required
+def change_password(request):
+    data = json.loads(request.body.decode())
+    new_password=data['new_password']
+    if new_password=='':return HttpResponse('密码不能为空')
+    if len(new_password)<8:return HttpResponse('密码长度过短')
+    request.user.set_password(new_password)
+    request.user.save()
+    auth.logout(request)
+    return HttpResponse('success')
+
+
+
+
+
 @require_http_methods(['POST'])
 @login_required
 def buy(request): #发起支付

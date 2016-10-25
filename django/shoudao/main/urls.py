@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'^account/logout/$',views.logout),
     url(r'^account/info/$',views.account_info),
     url(r'^account/change_name/$',views.change_name),
+    url(r'^account/change_password/$',views.change_password),
     url(r'^account/is_logged_in/$',views.is_logged_in),
     url(r'^account/buy/$',views.buy),
     url(r'^account/buy_done/$',views.buy_done),
