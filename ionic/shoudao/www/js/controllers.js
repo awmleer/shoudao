@@ -375,7 +375,7 @@ angular.module('shoudao.controllers', [])
           amount:$scope.buy_obj_tmp.amount
         }).then(function (response) {
           if (response.data.status == 'success') {
-            confirm_pay_done();
+            confirm_pay_done(response.data.order_id);
             window.open(response.data.url, '_system', 'location=no');
           }else{
             alert(response.data.message);
@@ -385,13 +385,20 @@ angular.module('shoudao.controllers', [])
         });
       });
 
-      function confirm_pay_done() {
+      function confirm_pay_done(order_id) {
         $ionicPopup.alert({
           title: '请在网页中完成支付',
           template: '完成支付后，请点击下面的确认按钮',
           okText:'我已完成支付'
         }).then(function(res) {
-
+          $http.get(API_URL+'/account/buy_done_check/?order_id='+order_id).then(function (response) {
+            if (response.data == 'success') {
+              alert("支付成功");
+            }
+          //  支付失败的话目前是没有任何提示的。。
+          }, function () {
+            alert("请求失败");
+          });
         });
       }
     }
