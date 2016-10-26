@@ -64,13 +64,9 @@
             function submit_comment() {
                 var text=$("#comment_input").val();
                 console.log(text);
-                $.ajax({
-                    url: 'submit/',
-                    type: "post",
-                    data: {
-                        type:'comment',
-                        text:text
-                    }
+                $.post("submit/", {
+                    type: 'comment',
+                    text: text
                 }).done(function (data) {
                     if (data == 'success') {
                         alert("发表成功");
@@ -89,13 +85,8 @@
 
 <script>
     function confirm_receive () {
-        $.ajax({
-            url: 'submit/',
-            type: "post",
-            headers: {'Content-Type': 'application/json'},
-            data: {
-                type:'confirm'
-            }
+        $.post("submit/", {
+            type:'confirm'
         }).done(function (data) {
             if (data == 'success') {
                 alert("确认成功");
