@@ -9,7 +9,7 @@
       <div class="item item-divider">分组</div>
       <ion-checkbox ng-model="group.checked" ng-click="group_click()" ng-repeat="group in groups">{{group.group_name}}<span class="badge badge-dark">{{group.contacts.length}}</span></ion-checkbox>
 
-      <div class="item item-divider">全部联系人</div>
+      <div class="item item-divider">搜索联系人</div>
       <div class="item item-input-inset">
         <label class="item-input-wrapper">
           <i class="icon ion-ios-search placeholder-icon"></i>
@@ -17,7 +17,7 @@
         </label>
         <button class="button button-small" ng-click="clear_search_text()">清空</button>
       </div>
-      <ion-checkbox ng-repeat="contact in contacts | filter:search.text" ng-model="contact.checked" ng-click="contact_click()">{{contact.name}} ({{contact.phone}})</ion-checkbox>
+      <ion-checkbox ng-if="search.text" ng-repeat="contact in contacts | filter:search.text" ng-model="contact.checked" ng-click="contact_click()">{{contact.name}} ({{contact.phone}})</ion-checkbox>
       <!--todo lazy load -->
 
 

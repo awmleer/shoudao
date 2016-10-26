@@ -116,20 +116,20 @@ angular.module('shoudao', ['ionic', 'shoudao.controllers', 'shoudao.services'])
         }
       })
       .state('tab.message-new-notice', {
-        url: '/message/new/notice',
+        url: '/message/new/notice/:type',
         views: {
           'tab-message': {
             templateUrl: 'templates/tab-message-new-notice.html',
-            controller: 'MessageNewNoticeCtrl'
+            controller: 'MessageNewSendCtrl'
           }
         }
       })
       .state('tab.message-new-noticep', {
-        url: '/message/new/noticep',
+        url: '/message/new/noticep/:type',
         views: {
           'tab-message': {
             templateUrl: 'templates/tab-message-new-noticep.html',
-            controller: 'MessageNewNoticePCtrl'
+            controller: 'MessageNewSendCtrl'
           }
         }
       })
