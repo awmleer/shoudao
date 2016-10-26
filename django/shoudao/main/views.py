@@ -203,8 +203,11 @@ def message_detail(request):
         'send_time': str(round(message.send_time.timestamp() * 1000)),
         'total_count':message.total_count,
         'received_count':message.received_count,
-        'recipients':message.get_recipients()
+        'recipients':message.get_recipients(),
+        'comment_able':message.comment_able
     }
+    if message.comment_able:
+        res['comments']=message.data_notice.get_comments()
     if message.type=='notice':
         res['content']=message.data_notice.content
     return JsonResponse(res)
