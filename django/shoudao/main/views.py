@@ -352,6 +352,7 @@ def m(request,message_id,recipient,token):
             break
     context={
         'message':message,
+        'comments':message.data_notice.get_comments(),
         'recipient':recipient,
         'receive_percent':message.received_count/message.total_count*100,
         'i_received':i_received
@@ -367,12 +368,30 @@ def m_submit(request,message_id,recipient,token):
     message=Message.objects.get(id=message_id)
     link=message.links.get(recipient=recipient)
     if link.token!=token:return HttpResponseForbidden() #403
-    recipients=message.get_recipients()
-    for r in recipients:
-        if str(r['phone'])==str(recipient):
-            r['reaction']=True
-            break
-    message.set_recipients(recipients)
-    message.received_count+=1
-    message.save()
-    return HttpResponse('success')
+
+    if request.POST['type']=='confirm':
+        recipients = message.get_recipients()
+        for r in recipients:
+            if str(r['phone']) == str(recipient):
+                r['reaction'] = True
+                break
+        message.set_recipients(recipients)
+        message.received_count += 1
+        message.save()
+        return HttpResponse('success')
+
+    if request.POST['type']=='comment':
+        if not message.comment_able:return HttpResponseForbidden()
+        text=request.POST['text']
+        if text=='': return HttpResponse('评论内容不能为空')
+        if len(text)>200:return HttpResponse('评论内容过长')
+        recipients = message.get_recipients()
+        for r in recipients:
+            if str(r['phone']) == str(recipient):
+                commenter=r
+        data_notice=message.data_notice
+        comments=data_notice.get_comments()
+        comments.append({'phone':commenter['phone'],'name':commenter['name'],'text':text,'time':timezone.now().strftime('%Y-%m-%d %H:%M %a')})
+        data_notice.set_comments(comments)
+        data_notice.save()
+        return HttpResponse('success')
