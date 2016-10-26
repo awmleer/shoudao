@@ -1,5 +1,24 @@
 <ion-view view-title="请选择消息种类">
-  <ion-content>
-    la
+  <ion-content class="padding">
+    <div class="row row-wrap">
+      <div class="col-50 padding">
+        <div class="card message-select-card" ui-sref="tab.message-new-notice">
+          <i class="icon ion-ios-email-outline"></i>
+          <p>通知</p>
+        </div>
+      </div>
+      <div class="col-50 padding">
+        <div class="card message-select-card" ui-sref="tab.message-new-noticep">
+          <i class="icon ion-ios-paper-outline"></i>
+          <p>回执</p>
+        </div>
+      </div>
+      <div class="col-50 padding">
+        <div class="dotted-box">
+          <i class="icon ion-ios-help-outline"></i>
+          <p style="font-size: 16px;color: #434343;">更多类型<br>正在开发</p>
+        </div>
+      </div>
+    </div>
   </ion-content>
 </ion-view>

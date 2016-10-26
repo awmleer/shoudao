@@ -272,7 +272,7 @@ angular.module('shoudao.controllers', [])
                 template: '消息已经成功发送'
               });
               Contacts.clear_check();
-              $ionicHistory.goBack();
+              $ionicHistory.goBack(-2);
             }else {
               alert(response.data);
             }
