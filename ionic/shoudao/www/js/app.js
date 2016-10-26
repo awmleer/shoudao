@@ -124,6 +124,15 @@ angular.module('shoudao', ['ionic', 'shoudao.controllers', 'shoudao.services'])
           }
         }
       })
+      .state('tab.message-new-noticep', {
+        url: '/message/new/noticep',
+        views: {
+          'tab-message': {
+            templateUrl: 'templates/tab-message-new-noticep.html',
+            controller: 'MessageNewNoticePCtrl'
+          }
+        }
+      })
       .state('tab.message-detail', {
         url: '/message/:message_id',
         views: {
