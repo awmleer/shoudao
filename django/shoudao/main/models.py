@@ -30,16 +30,25 @@ class ContactGroup(models.Model):
 class Message(models.Model):
     user=models.ForeignKey('auth.User',related_name='messages')
     type=models.CharField(max_length=20)
+    # type: notice notice_p
     title=models.CharField(max_length=50)
     send_time=models.DateTimeField(auto_now_add=True)
     total_count=models.PositiveIntegerField()
     received_count=models.PositiveIntegerField(default=0)
     recipients=models.CharField(max_length=100000,default='[]')#普通通知能承受1k
+    # for notice:
     # {
     #   "send_success": true,
     #   "phone": 18143465393,
     #   "name": "小明",
     #   "reaction": false #收到为true，未收到为false
+    # }
+    # for notice_p:
+    # {
+    #   "send_success": true,
+    #   "phone": 18143465393,
+    #   "name": "小明",
+    #   "reaction": ""
     # }
     def set_recipients(self, x):
         self.recipients = json.dumps(x)
@@ -51,6 +60,18 @@ class Message(models.Model):
 
 class MessageDataNotice(models.Model):
     content=models.CharField(max_length=1000)
+    comments=models.CharField(max_length=10000,default='[]')
+    # comment:
+    # {
+    #   "phone": 18143465393,
+    #   "name": "小明",
+    #   "text": "some word",
+    #   "time":""
+    # }
+    def set_comments(self, x):
+        self.comments = json.dumps(x)
+    def get_comments(self):
+        return json.loads(self.comments)
 
 
 

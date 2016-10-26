@@ -163,7 +163,13 @@ angular.module('shoudao.controllers', [])
 
 
 
-  .controller('MessageNewCtrl', function($scope, $rootScope, $ionicModal, $ionicHistory, Contacts, Groups, $http,$ionicLoading,$ionicPopup) {
+  .controller('MessageNewCtrl', function($scope, $stateParams,$http,$ionicHistory){
+
+  })
+
+
+
+  .controller('MessageNewNoticeCtrl', function($scope, $rootScope, $ionicModal, $ionicHistory, Contacts, Groups, $http,$ionicLoading,$ionicPopup) {
     $scope.$on('$destroy',function(){
       console.log('$destroy');
       Contacts.clear_check();
