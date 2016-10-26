@@ -146,13 +146,6 @@ angular.module('shoudao.controllers', [])
     // };
     $http.get(API_URL+'/message/detail/?message_id='+$scope.message_id).then(function (response) {
       $scope.message=response.data;
-      // for (var i = 0;$scope.message.received[i]; i++) {
-      //   for (var j  = 0;$scope.message.recipients[j]; j++) {
-      //     if ($scope.message.recipients[j].phone == $scope.message.received[i]) {
-      //       $scope.message.recipients[j].received=true;
-      //     }
-      //   }
-      // }
     }, function () {
       alert("获取消息详情失败");
       $ionicHistory.goBack();

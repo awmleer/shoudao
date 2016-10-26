@@ -41,5 +41,16 @@
 
       <button class="button button-balanced button-block" style="margin-top: 20px">一键提醒尚未确认的成员</button>
 
+      <div ng-if="message.comment_able" style="padding-top: 10px;padding-bottom: 20px">
+        <hr>
+        <h5>评论</h5>
+        <p ng-repeat="comment in message.comments"><small>{{ comment.name }}</small><small style="float: right;">{{ comment.time }}</small><br>{{ comment.text }}</p>
+        <p ng-if="message.comments.length==0" style="text-align: center">暂无评论</p>
+
+      </div>
+
+
+
+
     </ion-content>
 </ion-view>
