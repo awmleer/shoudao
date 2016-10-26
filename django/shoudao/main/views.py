@@ -127,7 +127,7 @@ def message_new(request):
     if request.user.user_info.get().text_surplus<len(data['contacts']):return HttpResponse('短信剩余量不足，请购买短信包或升级账户')
 
     recipients=[]
-    message = Message(user=request.user, type=data['type'], title=data['title'],total_count=len(data['contacts']))
+    message = Message(user=request.user, type=data['type'], title=data['title'],comment_able=data['comment_able'],total_count=len(data['contacts']))
     data_notice = MessageDataNotice.objects.create(content=data['content'])
     message.data_notice = data_notice
     message.save()

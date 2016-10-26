@@ -35,6 +35,7 @@ class Message(models.Model):
     send_time=models.DateTimeField(auto_now_add=True)
     total_count=models.PositiveIntegerField()
     received_count=models.PositiveIntegerField(default=0)
+    comment_able=models.BooleanField(default=True)
     recipients=models.CharField(max_length=100000,default='[]')#普通通知能承受1k
     # for notice:
     # {
