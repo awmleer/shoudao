@@ -5,7 +5,7 @@ angular.module('login',['ionic'])
     // $scope.password="sparker1113";
 
 
-    $scope.phone="";
+    $scope.phone=store.get('phone');
     $scope.password="";
 
     $scope.login=function () {

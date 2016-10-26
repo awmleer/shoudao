@@ -123,7 +123,7 @@ angular.module('shoudao.services', [])
 
 
 
-
+// && /[a-z]/.test(search.text)
   .filter("object_length",function () {
     return function (input) {
       // console.log(input);
@@ -132,6 +132,12 @@ angular.module('shoudao.services', [])
       }
       var array_tmp=Object.keys(input);
       return array_tmp.length;
+    }
+  })
+
+  .filter("search_valid",function () {
+    return function (input) {
+      return !(typeof (input) == undefined || input == null || input=='' || /[a-z]/.test(input))
     }
   })
 
