@@ -358,7 +358,6 @@ angular.module('shoudao.controllers', [])
     };
 
     $scope.add_button= function () {
-      console.log(123);
       if ($scope.buttons.length>=5) {
         $ionicPopup.alert({
           okText: '好的',
@@ -371,7 +370,9 @@ angular.module('shoudao.controllers', [])
         title: '增加按钮',
         template: '请输入选项按钮的标题',
         inputType: 'text',
-        inputPlaceholder: '10个字以内'
+        inputPlaceholder: '10个字以内',
+        okText:'取消',
+        cancelText:'确定'
       }).then(function(res) {
         if (_.isUndefined(res)) return;
         console.log('Your password is', res);

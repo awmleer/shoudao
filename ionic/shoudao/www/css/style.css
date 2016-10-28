@@ -17,11 +17,6 @@
     font-size: 24px;
 }
 
-.message-icon-block.notice{
-  background: #f4c297;
-  color: #ffffff;
-}
-
 
 
 .item.send-fail{
@@ -68,3 +63,11 @@
 
 
 
+.message-icon-block.notice{
+  background: #f4c297;
+  color: #ffffff;
+}
+.message-icon-block.notice_p{
+  background: #dee69e;
+  color: #ffffff;
+}

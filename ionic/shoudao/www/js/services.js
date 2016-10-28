@@ -25,7 +25,7 @@ angular.module('shoudao.services', [])
           }
         }
       }
-      Contacts.history.init();
+      self.history.init();
       $rootScope.$apply();
     };
 
@@ -87,7 +87,7 @@ angular.module('shoudao.services', [])
     self.add_contact= function (checked) {
       $rootScope.new_contact={name:'',phone:''};
       $ionicPopup.show({
-        template: '<input ng-model="new_contact.name" placeholder="姓名" style="margin-bottom: 12px"><input ng-model="new_contact.phone" placeholder="电话号码">',
+        template: '<input type="text" ng-model="new_contact.name" placeholder="姓名" style="margin-bottom: 12px"><input type="number" ng-model="new_contact.phone" placeholder="电话号码">',
         title: '创建联系人',
         scope: $rootScope,
         buttons: [
@@ -96,8 +96,9 @@ angular.module('shoudao.services', [])
             text: '<b>确定</b>',
             type: 'button-positive',
             onTap: function(e) {
+              //todo bug! popup didn't hide
               if (!$rootScope.new_contact.name || !$rootScope.new_contact.phone) {
-                //不允许用户关闭
+              //   不允许用户关闭
                 e.preventDefault();
               } else {
                 var contact_tmp={name:$rootScope.new_contact.name,phone:$rootScope.new_contact.phone,checked:checked};
