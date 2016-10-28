@@ -33,71 +33,58 @@
 
     {% ifequal message.type 'notice' %}
         {% if i_received %}
-            <button id="btn_submit" class="btn btn-block btn-lg btn-success disabled">已确认收到</button>
+            <button class="btn_submit btn btn-block btn-lg btn-success disabled">已确认收到</button>
         {% else %}
-            <button id="btn_submit" onclick="confirm_receive()" class="btn btn-block btn-lg btn-success">点我确认收到</button>
+            <button onclick="submit()" class="btn_submit btn btn-block btn-lg btn-success">点我确认收到</button>
+            <script>
+                function submit () {
+                    $.post("submit/", {
+                        type:'confirm'
+                    }).done(function (data) {
+                        if (data == 'success') {
+                            alert("确认成功");
+                            $(".btn_submit").addClass('disabled').text('已确认收到');
+                        }else {
+                            alert(data);
+                        }
+                    }).fail(function () {
+                        alert("提交失败，请稍后或刷新重试");
+                    });
+                }
+            </script>
         {% endif %}
     {% endifequal %}
 
     {% ifequal message.type 'notice_p' %}
-        {% if i_received %}
-            <button id="btn_submit" class="btn btn-block btn-lg btn-success disabled">已确认收到</button>
-        {% else %}
-            <button id="btn_submit" onclick="confirm_receive()" class="btn btn-block btn-lg btn-success">点我确认收到</button>
-        {% endif %}
+        {% for button in buttons %}
+            <button class="btn_submit btn btn-block btn-lg {% if forloop.counter == 1 %}btn-success{% endif %} {% if i_received %}disabled{% endif %}" onclick="submit('{{ button.button_name }}')">{% if i_reaction == button.button_name %}<i class="fui-check"></i> {% endif %}{{ button.button_name }}</button>
+        {% endfor %}
+        <script>
+            function submit (choice) {
+                $.post("submit/", {
+                    type:'confirm',
+                    choice:choice
+                }).done(function (data) {
+                    if (data == 'success') {
+                        alert("确认成功");
+                        location.reload();
+                    }else {
+                        alert(data);
+                    }
+                }).fail(function () {
+                    alert("提交失败，请稍后或刷新重试");
+                });
+            }
+        </script>
     {% endifequal %}
 
 
     {% if message.comment_able %}
-        <hr>
-        <h6>评论</h6>
-        <div>
-            {% for comment in comments %}
-                <p><small>{{ comment.name }}</small><small style="float: right;">{{ comment.time }}</small><br>{{ comment.text }}</p>
-            {% endfor %}
-        </div>
-
-
-        <input id="comment_input" type="text" placeholder="请输入评论内容…" class="form-control">
-        <button onclick="submit_comment()" class="btn btn-block btn-lg btn-inverse" style="margin-top: 14px">发表</button>
-        <script>
-            function submit_comment() {
-                var text=$("#comment_input").val();
-                console.log(text);
-                $.post("submit/", {
-                    type: 'comment',
-                    text: text
-                }).done(function (data) {
-                    if (data == 'success') {
-                        alert("发表成功");
-                        location.reload();
-                    }else{
-                        alert(data);
-                    }
-                }).fail(function () {
-                    alert("请求失败");
-                });
-            }
-        </script>
+        {% include 'partials/comment.html' %}
     {% endif %}
 
 </div>
 
-<script>
-    function confirm_receive () {
-        $.post("submit/", {
-            type:'confirm'
-        }).done(function (data) {
-            if (data == 'success') {
-                alert("确认成功");
-                $("#btn_submit").addClass('disabled').text('已确认收到');
-            }else {
-                alert(data);
-            }
-        }).fail(function () {
-            alert("提交失败，请稍后或刷新重试");
-        });
-    }
-</script>
+
 </body>
 </html>

@@ -74,6 +74,12 @@ class MessageDataNotice(models.Model):
         self.comments = json.dumps(x)
     def get_comments(self):
         return json.loads(self.comments)
+    buttons=models.CharField(max_length=500,default='[]')
+    # [{'button_name':''lorem'}]
+    def set_buttons(self, x):
+        self.buttons = json.dumps(x)
+    def get_buttons(self):
+        return json.loads(self.buttons)
 
 
 

@@ -117,18 +117,22 @@ def groups_delete(request):
 def message_new(request):
     data = json.loads(request.body.decode())
     logger.info(data)
-    if(data['title']==''):return HttpResponse('no title')
-    if(len(data['title'])>12):return HttpResponse('标题过长(十二个字以内)')
-    if(data['content']==''):return HttpResponse('no content')
-    if (len(data['content']) > 2000): return HttpResponse('内容过长(两千个字以内)')
-    if(len(data['contacts'])==0):return HttpResponse('请选择收件人')
+    if data['title']=='':return HttpResponse('no title')
+    if len(data['title'])>12:return HttpResponse('标题过长(十二个字以内)')
+    if data['content']=='':return HttpResponse('no content')
+    if len(data['content'])>2000: return HttpResponse('内容过长(两千个字以内)')
+    if len(data['contacts'])==0:return HttpResponse('请选择收件人')
     #todo title,sender,recipient中非法字符的检查
+    if data['type']=='notice_p':
+        if len(data['buttons'])==0: return HttpResponse('no buttons')
 
     if request.user.user_info.get().text_surplus<len(data['contacts']):return HttpResponse('短信剩余量不足，请购买短信包或升级账户')
 
     recipients=[]
     message = Message(user=request.user, type=data['type'], title=data['title'],comment_able=data['comment_able'],total_count=len(data['contacts']))
-    data_notice = MessageDataNotice.objects.create(content=data['content'])
+    data_notice = MessageDataNotice(content=data['content'])
+    if data['type']=='notice_p': data_notice.set_buttons(data['buttons'])
+    data_notice.save()
     message.data_notice = data_notice
     message.save()
 
@@ -171,7 +175,7 @@ def message_new(request):
 @login_required
 def message_remind_all(request):
     message=Message.objects.get(id=request.GET['message_id'])
-    if message.user!=request.user:return HttpResponseForbidden
+    if message.user!=request.user:return HttpResponseForbidden()
     recipients=message.get_recipients()
     send_count=0
     for recipient in recipients:
@@ -376,14 +380,17 @@ def m(request,message_id,recipient,token):
     for r in recipients:
         if str(r['phone'])==str(recipient):
             i_received=r['received']
+            if message.type=='notice_p':i_reaction=r['reaction']
             break
     context={
         'message':message,
         'comments':message.data_notice.get_comments(),
+        'buttons':message.data_notice.get_buttons(),
         'recipient':recipient,
         'receive_percent':message.received_count/message.total_count*100,
         'i_received':i_received
     }
+    if message.type=='notice_p':context['i_reaction']=i_reaction
     return render(request,'m.html',context)
 
 
@@ -391,21 +398,35 @@ def m(request,message_id,recipient,token):
 
 @require_http_methods(['POST'])
 def m_submit(request,message_id,recipient,token):
-    # data = json.loads(request.body.decode())
     message=Message.objects.get(id=message_id)
     link=message.links.get(recipient=recipient)
     if link.token!=token:return HttpResponseForbidden() #403
 
     if request.POST['type']=='confirm':
-        recipients = message.get_recipients()
-        for r in recipients:
-            if str(r['phone']) == str(recipient):
-                r['received'] = True
-                break
-        message.set_recipients(recipients)
-        message.received_count += 1
-        message.save()
-        return HttpResponse('success')
+        if message.type=='notice':
+            recipients = message.get_recipients()
+            for r in recipients:
+                if str(r['phone']) == str(recipient):
+                    if r['received']: return HttpResponse('您已经确认过了')
+                    r['received'] = True
+                    break
+            message.set_recipients(recipients)
+            message.received_count += 1
+            message.save()
+            return HttpResponse('success')
+        if message.type=='notice_p':
+            recipients = message.get_recipients()
+            for r in recipients:
+                if str(r['phone']) == str(recipient):
+                    if r['received']: return HttpResponse('您已经提交过了') #目前是不允许重复提交的
+                    r['received']=True
+                    r['reaction']=request.POST['choice']
+                    break
+            message.set_recipients(recipients)
+            message.received_count += 1
+            message.save()
+            return HttpResponse('success')
+
 
     if request.POST['type']=='comment':
         if not message.comment_able:return HttpResponseForbidden()
