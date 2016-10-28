@@ -257,7 +257,7 @@ angular.module('shoudao.controllers', [])
       if ($scope.message.title=='') {
         $ionicPopup.alert({
           okText: '好的',
-          title: '请输入标题',
+          title: '注意',
           template: '标题不能为空'
         });
         return;
@@ -265,11 +265,21 @@ angular.module('shoudao.controllers', [])
       if ($scope.message.content=='') {
         $ionicPopup.alert({
           okText: '好的',
-          title: '请输入内容',
+          title: '注意',
           template: '内容不能为空'
         });
         return;
       }
+      if ($scope.message.type=='notice_p') {
+        if ($scope.buttons.length==0) {
+          $ionicPopup.alert({
+            okText: '好的',
+            title: '注意',
+            template: '选项按钮不能一个都没有'
+          });
+          return;
+        }
+      };
       $ionicPopup.confirm({
         title: '发送消息',
         template: '确定要现在群发消息吗？',
@@ -280,13 +290,15 @@ angular.module('shoudao.controllers', [])
           $ionicLoading.show({
             template: '<i class="fa fa-spinner fa-spin fa-3x" style="margin-bottom: 6px" ></i><br>发送中…'
           });
-          $http.post(API_URL+'/message/new/', {
+          var obj={
             type:$scope.message.type,
             title:$scope.message.title,
             content:$scope.message.content,
             comment_able:$scope.message.comment_able,
             contacts:Contacts.get_checked_contacts()
-          }).then(function (response) {
+          };
+          obj.buttons=$scope.buttons;
+          $http.post(API_URL+'/message/new/', obj).then(function (response) {
             $ionicLoading.hide();
             if (response.data == 'success') {
               $ionicPopup.alert({
@@ -316,29 +328,63 @@ angular.module('shoudao.controllers', [])
       scope: $scope,
       animation: 'slide-in-up'
     }).then(function(modal) {
-      $scope.modal_select_recipients = modal;
+      $scope.modal_set_buttons = modal;
     });
+    // $scope.buttons=[
+    //   {button_name:'啊啊啊啊啊啊啊'},
+    //   {button_name:'啊啊啊啊啊'},
+    //   {button_name:'啊啊啊啊啊啊啊啊啊啊啊'},
+    //   {button_name:'啊啊啊啊啊啊啊啊啊e'}
+    // ];//for DEBUG
+
+    $scope.buttons=[];
     $scope.set_buttons= function () { //设置按钮
-      $scope.modal_select_recipients.show();
+      $scope.modal_set_buttons.show();
     };
     $scope.commit_set_buttons = function() {
-      $scope.modal_select_recipients.hide();
+      $scope.modal_set_buttons.hide();
     };
 
 
   })
 
-  .controller('SetButtonsCtrl', function ($scope,$rootScope) {
-    $scope.buttons=[
-      {button_name:'aaa'},
-      {button_name:'bbb'}
-    ];
+  .controller('SetButtonsCtrl', function ($scope,$ionicPopup) {
     $scope.reorder_buttons= function (button, fromIndex, toIndex) {
       console.log(button);
       console.log(fromIndex);
       console.log(toIndex);
       $scope.buttons.splice(fromIndex, 1);
       $scope.buttons.splice(toIndex, 0, button);
+    };
+
+    $scope.add_button= function () {
+      console.log(123);
+      if ($scope.buttons.length>=5) {
+        $ionicPopup.alert({
+          okText: '好的',
+          title: '添加失败',
+          template: '最多只能创建5个按钮'
+        });
+        return;
+      }
+      $ionicPopup.prompt({
+        title: '增加按钮',
+        template: '请输入选项按钮的标题',
+        inputType: 'text',
+        inputPlaceholder: '10个字以内'
+      }).then(function(res) {
+        if (_.isUndefined(res)) return;
+        console.log('Your password is', res);
+        if (res == '') {
+          alert("请输入标题");
+          return;
+        }
+        if (res.length > 10) {
+          alert("按钮的标题过长");
+          return;
+        }
+        $scope.buttons.push({'button_name':res});
+      });
     };
   })
 
