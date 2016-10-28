@@ -202,15 +202,18 @@ def message_all(request):
     messages=request.user.messages.all()
     res=[]
     for message in messages:
+        obj = {
+            'message_id': message.id,
+            'type': message.type,
+            'title': message.title,
+            'send_time': str(round(message.send_time.timestamp() * 1000)),
+            'total_count': message.total_count,
+            'received_count': message.received_count
+        }
         if message.type=='notice':
-            res.append({
-                'message_id':message.id,
-                'type':message.type,
-                'title':message.title,
-                'send_time':str(round(message.send_time.timestamp()*1000)),
-                'total_count':message.total_count,
-                'received_count':message.received_count
-            })
+            res.append(obj)
+        if message.type=='notice_p':
+            res.append(obj)
     logger.info(res)
     return JsonResponse(res,safe=False)
 
@@ -377,10 +380,11 @@ def m(request,message_id,recipient,token):
     if link.token!=token:return HttpResponseForbidden() #403
     recipients=message.get_recipients()
     i_received=False
+    i_reaction=''
     for r in recipients:
         if str(r['phone'])==str(recipient):
             i_received=r['received']
-            if message.type=='notice_p':i_reaction=r['reaction']
+            if i_received and message.type=='notice_p':i_reaction=r['reaction']
             break
     context={
         'message':message,
