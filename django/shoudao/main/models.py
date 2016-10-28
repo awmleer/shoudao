@@ -42,13 +42,14 @@ class Message(models.Model):
     #   "send_success": true,
     #   "phone": 18143465393,
     #   "name": "小明",
-    #   "reaction": false #收到为true，未收到为false
+    #   "received":false,
     # }
     # for notice_p:
     # {
     #   "send_success": true,
     #   "phone": 18143465393,
     #   "name": "小明",
+    #   "received":false,
     #   "reaction": ""
     # }
     def set_recipients(self, x):

@@ -150,7 +150,7 @@ def message_new(request):
             send_success = sms.juhe.send_sms(contact['phone'], 22175,{'#recipient#': contact['name'], '#title#': data['title'],'#sender#': request.user.user_info.get().name + '。请点击链接确认收到:'+short_link+' '})
             # 【收道】#recipient#您好，您有一条通知:#title#，来自#sender#。
             # logger.info(result)
-        recipients.append({'name':contact['name'],'phone':contact['phone'],'send_success':send_success,'reaction':False})
+        recipients.append({'name':contact['name'],'phone':contact['phone'],'send_success':send_success,'received':False})
         if send_success: send_count+=1
 
     user_info=request.user.user_info.get()
@@ -161,6 +161,30 @@ def message_new(request):
 
     message.set_recipients(recipients)
     message.save()
+
+    return HttpResponse('success')
+
+
+
+
+@require_http_methods(['GET'])
+@login_required
+def message_remind_all(request):
+    message=Message.objects.get(id=request.GET['message_id'])
+    if message.user!=request.user:return HttpResponseForbidden
+    recipients=message.get_recipients()
+    send_count=0
+    for recipient in recipients:
+        if not recipient['received']:
+            link=message.links.get(recipient=recipient['phone'])
+            send_success = sms.juhe.send_sms(recipient['phone'], 22175,{'#recipient#': recipient['name'], '#title#': message.title,'#sender#': request.user.user_info.get().name + '。请点击链接确认收到:' + link.short_link + ' '})
+            if send_success: send_count += 1
+
+    user_info=request.user.user_info.get()
+    user_info.message_sent+=1
+    user_info.text_sent+=send_count
+    user_info.text_surplus+=(-send_count)
+    user_info.save()
 
     return HttpResponse('success')
 
@@ -351,7 +375,7 @@ def m(request,message_id,recipient,token):
     i_received=False
     for r in recipients:
         if str(r['phone'])==str(recipient):
-            i_received=r['reaction']
+            i_received=r['received']
             break
     context={
         'message':message,
@@ -376,7 +400,7 @@ def m_submit(request,message_id,recipient,token):
         recipients = message.get_recipients()
         for r in recipients:
             if str(r['phone']) == str(recipient):
-                r['reaction'] = True
+                r['received'] = True
                 break
         message.set_recipients(recipients)
         message.received_count += 1

@@ -17,6 +17,7 @@ urlpatterns = [
     url(r'^groups/new/$',views.groups_new),
     url(r'^groups/delete/$',views.groups_delete),
     url(r'^message/new/$',views.message_new),
+    url(r'^message/remind/all/$',views.message_remind_all),
     url(r'^message/all/$',views.message_all),
     url(r'^message/detail/$',views.message_detail),
     # url(r'^$',views.index,name='index'),
