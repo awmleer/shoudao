@@ -131,7 +131,7 @@ angular.module('shoudao.controllers', [])
 
 
 
-  .controller('MessageDetailCtrl', function($scope, $stateParams,$http,$ionicHistory) {
+  .controller('MessageDetailCtrl', function($scope, $stateParams,$http,$ionicHistory,$ionicPopup) {
     $scope.message_id=$stateParams.message_id;
     // $scope.message={
     //   id:1235324324,
@@ -150,6 +150,33 @@ angular.module('shoudao.controllers', [])
       alert("获取消息详情失败");
       $ionicHistory.goBack();
     });
+
+    $scope.remind_all= function () {
+      var message_count=0;
+      _.forEach($scope.message.recipients, function (recipient) {
+        if (!recipient.received) {
+          message_count++;
+        }
+      });
+      $ionicPopup.confirm({
+        title: '发送消息',
+        template: '确定要提醒所有未收到的成员吗？这将消耗'+message_count+'条短信余量。',
+        okText: '发送',
+        cancelText: '取消'
+      }).then(function(res) {
+        if(res) {
+          $http.get(API_URL+'/message/remind/all/?message_id='+$scope.message_id).then(function (response) {
+            if (response.data == 'success') {
+              alert("提醒成功");
+            }else {
+              alert(response.data);
+            }
+          }, function () {
+            alert("请求失败");
+          });
+        }
+      });
+    };
 
 
   })
@@ -239,14 +266,12 @@ angular.module('shoudao.controllers', [])
         return;
       }
 
-      var confirmPopup = $ionicPopup.confirm({
+      $ionicPopup.confirm({
         title: '发送消息',
         template: '确定要现在群发消息吗？',
         okText: '发送',
         cancelText: '取消'
-      });
-
-      confirmPopup.then(function(res) {
+      }).then(function(res) {
         if(res) {
           $ionicLoading.show({
             template: '<i class="fa fa-spinner fa-spin fa-3x" style="margin-bottom: 6px" ></i><br>发送中…'

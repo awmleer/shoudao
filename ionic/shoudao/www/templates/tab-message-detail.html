@@ -24,22 +24,22 @@
       <p>共发送给{{message.total_count}}人，已有{{message.received_count}}人确认收到</p>
 
       <div class="list">
-        <div class="item item-icon-right" ng-repeat="recipient in message.recipients | orderBy:'-reaction'" ng-class="{'send-fail':!recipient.send_success}">
+        <div class="item item-icon-right" ng-repeat="recipient in message.recipients | orderBy:'-received'" ng-class="{'send-fail':!recipient.send_success}">
           <div ng-if="recipient.send_success">
             {{recipient.name}} ({{recipient.phone}})
-            <i ng-show="!recipient.reaction" class="icon ion-ios-clock-outline" style="color: #7a7a7a;"></i>
-            <i ng-show="recipient.reaction" class="icon ion-ios-checkmark-outline" style="color: #5cb85c;"></i>
+            <i ng-show="!recipient.received" class="icon ion-ios-clock-outline" style="color: #7a7a7a;"></i>
+            <i ng-show="recipient.received" class="icon ion-ios-checkmark-outline" style="color: #5cb85c;"></i>
           </div>
           <div ng-if="!recipient.send_success">
             {{recipient.name}} ({{recipient.phone}})
             <!--<span class="label label-danger">发送失败</span>-->
-            <i ng-show="recipient.reaction" class="icon ion-ios-close-outline" style="color: #b8272d;"></i>
+            <i ng-show="recipient.received" class="icon ion-ios-close-outline" style="color: #b8272d;"></i>
           </div>
 
         </div>
       </div>
 
-      <button class="button button-balanced button-block" style="margin-top: 20px">一键提醒尚未确认的成员</button>
+      <button ng-click="remind_all()" class="button button-balanced button-block" style="margin-top: 20px">一键提醒尚未确认的成员</button>
 
       <div ng-if="message.comment_able" style="padding-top: 10px;padding-bottom: 20px">
         <hr>
