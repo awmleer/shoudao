@@ -249,6 +249,11 @@ angular.module('shoudao.controllers', [])
     };
 
 
+    $scope.add_contact= function () {
+      Contacts.add_contact(true);
+    };
+
+
     $scope.send_message= function () {
       if ($scope.message.title=='') {
         $ionicPopup.alert({

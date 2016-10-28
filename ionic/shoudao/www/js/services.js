@@ -1,6 +1,6 @@
 angular.module('shoudao.services', [])
 
-  .service('Contacts',function ($rootScope) {
+  .service('Contacts',function ($rootScope,$ionicPopup) {
     var self=this;
     self.get_contacts= function () {
       var fields = ["displayName", "name", "phoneNumbers"];
@@ -92,6 +92,32 @@ angular.module('shoudao.services', [])
         }
       });
       return contacts;
+    };
+
+    self.add_contact= function (checked) {
+      $rootScope.new_contact={name:'',phone:''};
+      $ionicPopup.show({
+        template: '<input ng-model="new_contact.name" placeholder="姓名" style="margin-bottom: 12px"><input ng-model="new_contact.phone" placeholder="电话号码">',
+        title: '创建联系人',
+        scope: $rootScope,
+        buttons: [
+          { text: '取消' },
+          {
+            text: '<b>确定</b>',
+            type: 'button-positive',
+            onTap: function(e) {
+              if (!$rootScope.new_contact.name || !$rootScope.new_contact.phone) {
+                //不允许用户关闭
+                e.preventDefault();
+              } else {
+                var contact_tmp={name:$rootScope.new_contact.name,phone:$rootScope.new_contact.phone,checked:checked};
+                $rootScope.contacts.push(contact_tmp);
+                self.history.enqueue(contact_tmp);
+              }
+            }
+          }
+        ]
+      });
     };
 
     self.history={
