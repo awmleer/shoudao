@@ -110,6 +110,11 @@ angular.module('shoudao.controllers', [])
       console.log('$destroy');
       Contacts.clear_check();
     });
+
+    $scope.add_contact= function () {
+      Contacts.add_contact(true);
+    };
+
   })
 
   .controller('MessageCtrl', function($scope,$http) {

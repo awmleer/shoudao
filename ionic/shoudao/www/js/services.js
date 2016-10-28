@@ -22,14 +22,9 @@ angular.module('shoudao.services', [])
               name:contacts[i].displayName,
               checked:false
             });
-            // $rootScope.contacts[contacts[i].phoneNumbers[j].value]={
-            //   name:contacts[i].displayName,
-            //   checked:false
-            // };
           }
         }
       }
-      console.log($rootScope.contacts);
       Contacts.history.init();
       $rootScope.$apply();
     };
@@ -200,7 +195,7 @@ angular.module('shoudao.services', [])
   .filter("object_length",function () {
     return function (input) {
       // console.log(input);
-      if (typeof (input) == undefined || input == null) {
+      if (_.isUndefined(input) || input == null) {
         return '';
       }
       var array_tmp=Object.keys(input);
@@ -210,7 +205,7 @@ angular.module('shoudao.services', [])
 
   .filter("search_valid",function () {
     return function (input) {
-      return !(typeof (input) == undefined || input == null || input=='' || /[a-z]/.test(input))
+      return !(_.isUndefined(input) || input == null || input=='' || /[a-z]/.test(input))
     }
   })
 
@@ -232,7 +227,7 @@ angular.module('shoudao.services', [])
   .filter("checked_count",function () {
     return function (input) {
       // console.log(input);
-      if (typeof (input) == undefined || input == null) {
+      if (_.isUndefined(input) || input == null) {
         return '';
       }
       var count=0;
