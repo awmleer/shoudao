@@ -224,6 +224,7 @@ angular.module('shoudao.controllers', [])
     };
 
     $scope.contact_click= function () {
+      if(this.contact.checked)Contacts.history.enqueue(this.contact);
       console.log(this.contact.checked);
     };
 

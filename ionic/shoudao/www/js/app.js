@@ -21,6 +21,7 @@ angular.module('shoudao', ['ionic', 'shoudao.controllers', 'shoudao.services'])
       console.log('groups init ');
     }
 
+
     Groups.refresh();//刷新联系人分组
 
     $ionicPlatform.ready(function() {

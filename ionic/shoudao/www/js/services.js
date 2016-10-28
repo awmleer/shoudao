@@ -30,15 +30,17 @@ angular.module('shoudao.services', [])
         }
       }
       console.log($rootScope.contacts);
+      Contacts.history.init();
       $rootScope.$apply();
     };
 
     self.get_contacts_error= function () {
+      Contacts.history.init();
+      $rootScope.$apply();
       alert("获取联系人失败");
     };
 
     self.create_contact= function () {
-      //todo contacts还是放到云端吧。。
       // var new_contact=navigator.contacts.create({"displayName": "Test User"});
       // new_contact.save();
     };
@@ -92,6 +94,51 @@ angular.module('shoudao.services', [])
       return contacts;
     };
 
+    self.history={
+      init: function () {
+        $rootScope.contacts_history=store.get('contacts_history');
+        if ($rootScope.contacts_history == '' || _.isUndefined($rootScope.contacts_history)) {
+          $rootScope.contacts_history=[];
+        }
+        this.unfreeze();
+        console.log($rootScope.contacts_history);
+      },
+      enqueue:function (contact) {
+        //先判断是不是已经存在队列里了
+        var existence=false;
+        for (var i = 0; $rootScope.contacts_history[i]; i++) {
+          if($rootScope.contacts_history[i].phone==contact.phone){ //如果是存在的话
+            for (var j = i; j>0 ; j--) {
+              $rootScope.contacts_history[j]=$rootScope.contacts_history[j-1];
+            }
+            $rootScope.contacts_history[0]={phone:contact.phone,name:contact.name};
+            existence=true;
+          }
+        }
+        if (!existence) {
+          $rootScope.contacts_history.unshift({phone:contact.phone,name:contact.name});
+          while ($rootScope.contacts_history.length>20){
+            $rootScope.contacts_history.pop();
+          }
+        }
+       store.set('contacts_history',eval(angular.toJson($rootScope.contacts_history)));
+      },
+      unfreeze: function () {
+        var existence=false;
+        _.forEach($rootScope.contacts_history, function (h) {
+          existence=false;
+          _.forEach($rootScope.contacts, function (c) {
+            if (c.phone == h.phone)existence=true;
+          });
+          if (!existence) {
+            $rootScope.contacts.push({phone:h.phone,name:h.name,checked:false});
+          }
+        })
+      }
+    };
+
+
+
   })
 
 
@@ -138,6 +185,21 @@ angular.module('shoudao.services', [])
   .filter("search_valid",function () {
     return function (input) {
       return !(typeof (input) == undefined || input == null || input=='' || /[a-z]/.test(input))
+    }
+  })
+
+  .filter("contact_in_history",function ($rootScope) {
+    return function (input) {
+      var array=[];
+      _.forEach($rootScope.contacts_history, function (h) {
+        for (var i = 0; i < input.length; i++) {
+          if (h.phone == input[i].phone) {
+            array.push(input[i]);
+            break;
+          }
+        }
+      });
+      return array;
     }
   })
 

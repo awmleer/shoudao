@@ -17,8 +17,9 @@
         </label>
         <button class="button button-small" ng-click="clear_search_text()">清空</button>
       </div>
-      <ion-checkbox ng-if="search.text | search_valid" ng-repeat="contact in contacts | filter:search.text" ng-model="contact.checked" ng-click="contact_click()">{{contact.name}} ({{contact.phone}})</ion-checkbox>
-      <!--todo lazy load -->
+      <ion-checkbox ng-if="search.text | search_valid" ng-repeat="contact in contacts | filter:search.text as results" ng-model="contact.checked" ng-click="contact_click()">{{contact.name}} ({{contact.phone}})</ion-checkbox>
+      <div ng-if="search.text!='' && results.length==0" style="text-align: center;padding-top: 15px">无查询结果</div>
+      <ion-checkbox ng-if="search.text==''" ng-repeat="contact in contacts | contact_in_history" ng-model="contact.checked" ng-click="contact_click()">{{contact.name}} ({{contact.phone}})</ion-checkbox>
 
 
     </ion-list>

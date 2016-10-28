@@ -1,7 +1,10 @@
 /*CHANGE this before building*/
+var DEBUG=true;
 
-// var API_URL='http://shoudao.sparker.top';
-var API_URL='/api';
+var API_URL='http://shoudao.sparker.top';
+if (DEBUG) {
+  API_URL='/api';
+}
 
 var VERSION={
   major:0,
