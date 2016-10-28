@@ -1,4 +1,4 @@
-<ion-view view-title="创建回执">
+<ion-view view-title="创建统计">
     <ion-content class="padding">
         <!--<img ng-src="{{chat.face}}" style="width: 64px; height: 64px">-->
         <!--<p>-->
@@ -14,6 +14,11 @@
           <textarea ng-model="message.content" placeholder="这里输入消息的内容…" style="height: 10em"></textarea>
         </label>
         <ion-toggle ng-model="message.comment_able" toggle-class="toggle-balanced">评论功能</ion-toggle>
+        <label class="item item-input item-stacked-label" style="padding-right: 16px">
+          <span class="input-label">选项按钮</span>
+          <span style="display: block;width: 100%;white-space: normal;font-size: 14px"><span style="display: inline-block;margin-right: 1em" ng-repeat="contact in contacts | filter:{'checked':true}">{{contact.name}}({{contact.phone}})</span></span>
+          <button class="button button-stable button-block" style="width: 100%;" ng-click="set_buttons()">点我设置按钮</button>
+        </label>
         <label class="item item-input item-stacked-label" style="padding-right: 16px">
           <span class="input-label">发送给 (共{{contacts | checked_count}}人)</span>
           <span style="display: block;width: 100%;white-space: normal;font-size: 14px"><span style="display: inline-block;margin-right: 1em" ng-repeat="contact in contacts | filter:{'checked':true}">{{contact.name}}({{contact.phone}})</span></span>

@@ -1,0 +1,25 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <!--<button class="button button-clear button-assertive" ng-click="clear_check()">清空</button>-->
+    <h1 class="title" style="font-weight: normal">设置选项按钮</h1>
+    <button class="button button-clear button-positive" ng-click="commit_set_buttons()"><b>确定</b></button>
+  </ion-header-bar>
+  <ion-content>
+    <ion-list>
+      <ion-list ng-controller="SetButtonsCtrl" show-delete="true" show-reorder="true">
+        <ion-item ng-repeat="button in buttons track by $index">
+
+          <!--<img ng-src="{{button.img}}">-->
+          <h2>{{button.button_name}}</h2>
+          <!--<p>{{button.description}}</p>-->
+          <ion-delete-button class="ion-minus-circled" ng-click="buttons.splice($index, 1)">
+          </ion-delete-button>
+          <ion-reorder-button class="ion-navicon" on-reorder="reorder_buttons(button, $fromIndex, $toIndex)">
+          </ion-reorder-button>
+
+        </ion-item>
+      </ion-list>
+
+    </ion-list>
+  </ion-content>
+</ion-modal-view>

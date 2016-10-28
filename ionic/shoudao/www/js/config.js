@@ -1,5 +1,6 @@
 /*CHANGE this before building*/
-var DEBUG=true;
+// var DEBUG=true;
+var DEBUG=false;
 
 var API_URL='http://shoudao.sparker.top';
 if (DEBUG) {

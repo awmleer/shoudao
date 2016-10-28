@@ -35,11 +35,6 @@ angular.module('shoudao.services', [])
       alert("获取联系人失败");
     };
 
-    self.create_contact= function () {
-      // var new_contact=navigator.contacts.create({"displayName": "Test User"});
-      // new_contact.save();
-    };
-
 
     self.check=function (c) {
       var has_this_contact=false;
@@ -238,7 +233,7 @@ angular.module('shoudao.services', [])
       });
       return count;
     }
-  })
+  });
 
 
 

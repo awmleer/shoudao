@@ -206,7 +206,7 @@ angular.module('shoudao.controllers', [])
       console.log('$destroy');
       Contacts.clear_check();
       Groups.clear_check();
-      $scope.modal.remove();// Cleanup the modal
+      $scope.modal_select_recipients.remove();// Cleanup the modal
     });
 
     //search box
@@ -237,27 +237,21 @@ angular.module('shoudao.controllers', [])
       scope: $scope,
       animation: 'slide-in-up'
     }).then(function(modal) {
-      $scope.modal_select_contacts={
-        title:'请勾选收件人',
-        show_group:true
-      };
-      $scope.modal = modal;
+      $scope.modal_select_recipients = modal;
     });
     $scope.select_recipients = function() {
-      $scope.modal.show();
+      $scope.modal_select_recipients.show();
     };
     $scope.commit_select_recipients = function() {
-      $scope.modal.hide();
+      $scope.modal_select_recipients.hide();
     };
     $scope.clear_check= function () {
       Contacts.clear_check();
     };
 
-
     $scope.add_contact= function () {
       Contacts.add_contact(true);
     };
-
 
     $scope.send_message= function () {
       if ($scope.message.title=='') {
@@ -276,7 +270,6 @@ angular.module('shoudao.controllers', [])
         });
         return;
       }
-
       $ionicPopup.confirm({
         title: '发送消息',
         template: '确定要现在群发消息吗？',
@@ -316,138 +309,38 @@ angular.module('shoudao.controllers', [])
           });
         }
       });
-
-
     };
+
+
+    $ionicModal.fromTemplateUrl('templates/modal-set-buttons.html', {
+      scope: $scope,
+      animation: 'slide-in-up'
+    }).then(function(modal) {
+      $scope.modal_select_recipients = modal;
+    });
+    $scope.set_buttons= function () { //设置按钮
+      $scope.modal_select_recipients.show();
+    };
+    $scope.commit_set_buttons = function() {
+      $scope.modal_select_recipients.hide();
+    };
+
 
   })
 
-  //
-  // .controller('MessageNewNoticePCtrl', function($scope, $rootScope, $ionicModal, $ionicHistory, Contacts, Groups, $http,$ionicLoading,$ionicPopup) {
-  //
-  //   $scope.message={
-  //     title:'',
-  //     content:'',
-  //     comment_able:true
-  //   };
-  //
-  //   $scope.$on('$destroy',function(){
-  //     console.log('$destroy');
-  //     Contacts.clear_check();
-  //     Groups.clear_check();
-  //     $scope.modal.remove();// Cleanup the modal
-  //   });
-  //
-  //   //search box
-  //   $scope.search={text:''};
-  //   $scope.clear_search_text= function () {
-  //     $scope.search.text='';
-  //   };
-  //
-  //   $scope.group_click=function () {
-  //     console.log(this.group.checked);
-  //     if (this.group.checked) {
-  //       _.forEach(this.group.contacts, function (contact) {
-  //         Contacts.check(contact);
-  //       });
-  //     }else{
-  //       _.forEach(this.group.contacts, function (contact) {
-  //         Contacts.uncheck(contact);
-  //       });
-  //     }
-  //   };
-  //
-  //   $scope.contact_click= function () {
-  //     console.log(this.contact.checked);
-  //   };
-  //
-  //   $ionicModal.fromTemplateUrl('templates/modal-select-recipients.html', {
-  //     scope: $scope,
-  //     animation: 'slide-in-up'
-  //   }).then(function(modal) {
-  //     $scope.modal_select_contacts={
-  //       title:'请勾选收件人',
-  //       show_group:true
-  //     };
-  //     $scope.modal = modal;
-  //   });
-  //   $scope.select_recipients = function() {
-  //     $scope.modal.show();
-  //   };
-  //   $scope.commit_select_recipients = function() {
-  //     $scope.modal.hide();
-  //   };
-  //   $scope.clear_check= function () {
-  //     Contacts.clear_check();
-  //   };
-  //
-  //
-  //   $scope.send_message= function () {
-  //     if ($scope.message.title=='') {
-  //       $ionicPopup.alert({
-  //         okText: '好的',
-  //         title: '请输入标题',
-  //         template: '通知标题不能为空'
-  //       });
-  //       return;
-  //     }
-  //     if ($scope.message.content=='') {
-  //       $ionicPopup.alert({
-  //         okText: '好的',
-  //         title: '请输入内容',
-  //         template: '通知内容不能为空'
-  //       });
-  //       return;
-  //     }
-  //
-  //     var confirmPopup = $ionicPopup.confirm({
-  //       title: '发送消息',
-  //       template: '确定要现在群发消息吗？',
-  //       okText: '发送',
-  //       cancelText: '取消'
-  //     });
-  //
-  //     confirmPopup.then(function(res) {
-  //       if(res) {
-  //         $ionicLoading.show({
-  //           template: '<i class="fa fa-spinner fa-spin fa-3x" style="margin-bottom: 6px" ></i><br>发送中…'
-  //         });
-  //         $http.post(API_URL+'/message/new/', {
-  //           type:'notice',
-  //           title:$scope.message.title,
-  //           content:$scope.message.content,
-  //           comment_able:$scope.message.comment_able,
-  //           contacts:Contacts.get_checked_contacts()
-  //         }).then(function (response) {
-  //           $ionicLoading.hide();
-  //           if (response.data == 'success') {
-  //             $ionicPopup.alert({
-  //               okText: '好的',
-  //               title: '发送成功',
-  //               template: '消息已经成功发送'
-  //             });
-  //             Contacts.clear_check();
-  //             $ionicHistory.goBack(-2);
-  //           }else {
-  //             alert(response.data);
-  //           }
-  //         }, function () {
-  //           $ionicPopup.alert({
-  //             okText: '好的',
-  //             title: '失败',
-  //             template: '消息发送失败，请检查网络连接'
-  //           });
-  //           $ionicLoading.hide();
-  //         });
-  //       }
-  //     });
-  //
-  //
-  //   };
-  //
-  // })
-
-
+  .controller('SetButtonsCtrl', function ($scope,$rootScope) {
+    $scope.buttons=[
+      {button_name:'aaa'},
+      {button_name:'bbb'}
+    ];
+    $scope.reorder_buttons= function (button, fromIndex, toIndex) {
+      console.log(button);
+      console.log(fromIndex);
+      console.log(toIndex);
+      $scope.buttons.splice(fromIndex, 1);
+      $scope.buttons.splice(toIndex, 0, button);
+    };
+  })
 
   .controller('AccountCtrl', function($scope,$rootScope,$http,$ionicPopup) {
     $scope.doRefresh= function () {
