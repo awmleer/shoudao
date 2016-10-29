@@ -369,7 +369,14 @@ def buy_done(request): #云通付回调
 
 
 def redeem(request,code):
-    # item_handle(request)
+    redeem_codes=RedeemCode.objects.filter(code=code)
+    if len(redeem_codes)==0:return HttpResponse('兑换码无效，请检查是否输错')
+    redeem_code=redeem_codes[0]
+    if redeem_code.used:return HttpResponse('该兑换码已经使用过了')
+    item_handle(request,redeem_code.item)
+    redeem_code.used=True
+    redeem_code.save()
+
     return HttpResponse('success')
 
 

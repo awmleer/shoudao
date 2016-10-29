@@ -403,7 +403,35 @@ angular.module('shoudao.controllers', [])
     $scope.$on('$ionicView.enter', function(e) {
       $scope.doRefresh();
     });
+    $scope.redeem= function () {
+      $ionicPopup.prompt({
+        title: '兑换',
+        template: '请输入兑换码',
+        inputType: 'text',
+        inputPlaceholder: '',
+        okText:'确定',
+        cancelText:'取消'
+      }).then(function(res) {
+        if (_.isUndefined(res) || res=='') return;
+        $http.get(API_URL+'/account/redeem/'+res+'/', {}).then(function (response) {
+          if (response.data == 'success') {
+            $ionicPopup.alert({
+              okText: '好的',
+              title: '成功',
+              template: '恭喜，兑换成功'
+            });
+            $scope.doRefresh();
+          }else {
+            alert(response.data);
+          }
+        }, function () {
+          alert("兑换失败，请检查网络连接或稍后再试");
+        });
+      });
+    };
+
   })
+
 
   .controller('UpgradeCtrl', function($scope,$rootScope,$http,$ionicPopup,$ionicHistory) {
     // $scope.items=[

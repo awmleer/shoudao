@@ -118,6 +118,11 @@ class Item(models.Model):
     # footer_style:'calm'
 
 
+class RedeemCode(models.Model):
+    code=models.CharField(max_length=30)
+    item=models.CharField(max_length=20)
+    used=models.BooleanField(default=False)
+
 
 
 class Information(models.Model):
