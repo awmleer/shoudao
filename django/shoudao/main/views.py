@@ -468,3 +468,21 @@ def m_submit(request,message_id,recipient,token):
         data_notice.set_comments(comments)
         data_notice.save()
         return HttpResponse('success')
+
+
+
+
+@require_http_methods(['GET'])
+def get_information(request,key,type):
+    info=Information.objects.get(key=key)
+    if type=='json':
+        res=JsonResponse(info.get_value())
+    elif type=='text':
+        res=HttpResponse(info.value)
+    else:
+        res=HttpResponse('error')
+    return res
+
+
+
+

@@ -118,3 +118,12 @@ class Item(models.Model):
     # footer_style:'calm'
 
 
+
+
+class Information(models.Model):
+    key=models.CharField(max_length=20)
+    value=models.CharField(max_length=50000)
+    def set_value(self, x):
+        self.value = json.dumps(x)
+    def get_value(self):
+        return json.loads(self.value)

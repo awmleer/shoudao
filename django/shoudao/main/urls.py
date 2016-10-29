@@ -4,6 +4,10 @@ from . import views
 
 app_name = 'main'
 urlpatterns = [
+    url(r'^message/new/$',views.message_new),
+    url(r'^message/remind/all/$',views.message_remind_all),
+    url(r'^message/all/$',views.message_all),
+    url(r'^message/detail/$',views.message_detail),
     url(r'^account/login/$',views.login),
     url(r'^account/logout/$',views.logout),
     url(r'^account/info/$',views.account_info),
@@ -17,10 +21,7 @@ urlpatterns = [
     url(r'^groups/all/$',views.groups_all),
     url(r'^groups/new/$',views.groups_new),
     url(r'^groups/delete/$',views.groups_delete),
-    url(r'^message/new/$',views.message_new),
-    url(r'^message/remind/all/$',views.message_remind_all),
-    url(r'^message/all/$',views.message_all),
-    url(r'^message/detail/$',views.message_detail),
+    url(r'^information/(?P<key>.+)/(?P<type>.+)/',views.get_information),
     # url(r'^$',views.index,name='index'),
     # url(r'^index/$',views.index,name='index'),
     # url(r'^story/add/$',views.story_add,name='story_add'),
