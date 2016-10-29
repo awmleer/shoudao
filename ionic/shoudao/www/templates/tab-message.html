@@ -6,7 +6,7 @@
     </ion-refresher>
     <ion-list>
       <ion-item>
-        <a ui-sref="tab.message-new" class="button button-block button-positive" style="margin: 0 auto;">群发新消息</a>
+        <a ui-sref="tab.message-new" class="button button-block button-positive" style="margin: 0 auto;"><i class="icon ion-compose"></i> 群发新消息</a>
       </ion-item>
       <ion-item class="item-avatar item-icon-right" ng-repeat="message in messages | orderBy:'-send_time'" type="item-text-wrap" ui-sref="tab.message-detail({message_id:message.message_id})">
         <div class="item-number-icon message-icon-block" ng-class="{'notice':message.type=='notice','notice_p':message.type=='notice_p'}">

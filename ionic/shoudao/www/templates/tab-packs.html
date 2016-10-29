@@ -1,9 +1,10 @@
 <ion-view view-title="购买短信包">
   <ion-content>
     <div class="padding" style="width: 100%;">
-      <div style="width: 100%;border-radius: 4px;background: rgb(221, 221, 221)" class="padding">
+      <div class="radius-gray padding">
         <span>您现在剩余短信{{user_info.text_surplus}}条</span>
       </div>
+      <div class="radius-gray padding" style="margin-top: 20px" ng-if="notice" ng-bind-html="notice"></div>
     </div>
 
 

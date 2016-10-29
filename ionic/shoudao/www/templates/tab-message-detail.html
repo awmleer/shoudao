@@ -13,7 +13,7 @@
       <h2 style="margin-bottom: 0">{{message.title}}</h2>
       <p><small>发送于{{message.send_time | date:'yyyy-M-d H:mm'}}</small></p>
 
-      <p class="message-content">{{message.content}}</p>
+      <p class="radius-gray padding" style="margin-top: 14px;margin-bottom: 30px;">{{message.content}}</p>
 
       <!--progress bar-->
       <div class="progress" style="margin: 0;border-radius: 0;">
@@ -39,7 +39,7 @@
         </div>
       </div>
 
-      <button ng-click="remind_all()" class="button button-balanced button-block" ng-class="{'disabled':message.received_count==message.total_count}" style="margin-top: 20px">{{message.received_count==message.total_count?'已全部确认收到':'一键提醒尚未确认的成员'}}</button>
+      <button ng-click="remind_all()" class="button button-balanced button-block" ng-class="{'disabled':message.received_count==message.total_count}" style="margin-top: 20px"><i ng-if="message.received_count<message.total_count" class="icon ion-ios-bell"></i> {{message.received_count==message.total_count?'已全部确认收到':'一键提醒尚未确认的成员'}}</button>
 
 
       <div ng-if="message.type=='notice_p'" style="padding-top: 10px;padding-bottom: 10px">

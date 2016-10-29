@@ -441,6 +441,9 @@ angular.module('shoudao.controllers', [])
       alert("获取列表失败，请检查网络连接或稍后再试");
     });
 
+    $http.get(API_URL+'/information/upgrade_notice/text/', {}).then(function (response) {
+      $scope.notice=response.data;
+    }, function () {});
 
 
     $scope.buy_upgrade= function () {
@@ -551,6 +554,9 @@ angular.module('shoudao.controllers', [])
       alert("获取列表失败，请检查网络连接或稍后再试");
     });
 
+    $http.get(API_URL+'/information/packs_notice/text/', {}).then(function (response) {
+      $scope.notice=response.data;
+    }, function () {});
 
 
     $scope.buy_pack= function () {
