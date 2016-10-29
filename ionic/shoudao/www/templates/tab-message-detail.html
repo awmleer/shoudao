@@ -45,7 +45,7 @@
       <div ng-if="message.type=='notice_p'" style="padding-top: 10px;padding-bottom: 10px">
         <hr>
         <h5>反馈</h5>
-        <p ng-repeat="button in message.buttons"><span class="label" ng-class="{'label-success':$index==0,'label-default':$index!=0}" style="margin-right: 10px;white-space: normal;display: inline-block;font-size: 14px">{{button.button_name}}</span><span ng-repeat="r in message.recipients | filter:{'reaction':button.button_name}:true">{{r.name}}</span></p>
+        <p ng-repeat="button in message.buttons"><span class="label" ng-class="{'label-success':$index==0,'label-default':$index!=0}" style="margin-right: 10px;white-space: normal;display: inline-block;font-size: 13px">{{button.button_name}}</span><span ng-repeat="r in message.recipients | filter:{'reaction':button.button_name}:true">{{r.name}}</span></p>
         <p ng-if="message.received_count==0" style="text-align: center">暂无反馈</p>
       </div>
 

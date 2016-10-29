@@ -186,7 +186,6 @@ def message_remind_all(request):
             if send_success: send_count += 1
 
     user_info=request.user.user_info.get()
-    user_info.message_sent+=1
     user_info.text_sent+=send_count
     user_info.text_surplus+=(-send_count)
     user_info.save()
@@ -236,12 +235,13 @@ def message_detail(request):
         'total_count':message.total_count,
         'received_count':message.received_count,
         'recipients':message.get_recipients(),
-        'comment_able':message.comment_able
+        'comment_able':message.comment_able,
+        'content':message.data_notice.content
     }
     if message.comment_able:
         res['comments']=message.data_notice.get_comments()
-    if message.type=='notice':
-        res['content']=message.data_notice.content
+    if message.type=='notice_p':
+        res['buttons']=message.data_notice.get_buttons()
     return JsonResponse(res)
 
 
