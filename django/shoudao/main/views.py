@@ -362,18 +362,36 @@ def buy_done(request): #云通付回调
         return HttpResponse('get')
 
     order.status='paid'
-    #todo
-    user_info = request.user.user_info.get()
-    if order.item=='account_standard':
-        if user_info.type=='免费账户':
-            user_info.type='标准账户'
-            if user_info.expiration: #续费
-                user_info.expiration+=timedelta(days=30)
-            else: #新购
-                user_info.expiration=timezone.now()+timedelta(days=30)
-        user_info.save()
     order.save()
+    #todo
+    item_handle(request,order.item)
     return HttpResponse('success')
+
+
+def redeem(request,code):
+    # item_handle(request)
+    return HttpResponse('success')
+
+
+def item_handle(request,item):
+    user_info = request.user.user_info.get()
+    # if item=='account_standard':
+    #     if user_info.type=='免费账户': #新购
+    #         user_info.type='标准账户'
+    #         user_info.expiration=timezone.now()+timedelta(days=30)
+    #     else: #续费
+    #         user_info.expiration+=timedelta(days=30)
+    #     user_info.save()
+    if item=='account_advance':
+        if user_info.type=='免费账户': #新购
+            user_info.type='高级账户'
+            user_info.expiration=timezone.now()+timedelta(days=30)
+        else: #续费
+            user_info.expiration+=timedelta(days=30)
+    if item=='packs_100':
+        user_info.text_surplus+=100
+
+    user_info.save()
 
 
 
