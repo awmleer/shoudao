@@ -406,35 +406,40 @@ angular.module('shoudao.controllers', [])
   })
 
   .controller('UpgradeCtrl', function($scope,$rootScope,$http,$ionicPopup,$ionicHistory) {
-    $scope.items=[
-      {
-        item_id:'',
-        title:'免费账户',
-        content:'这里是内容',
-        can_buy:false,
-        price:0,
-        footer:'￥0 /月<span class="float-right">免费使用</span>',
-        footer_style:''
-      },
-      {
-        item_id:'account_standard',
-        title:'标准账户',
-        content:'这里是内容',
-        can_buy:true,
-        price:5,
-        footer:'￥5 /月<span class="float-right">现在购买</span>',
-        footer_style:'calm'
-      },
-      {
-        item_id:'account_advance',
-        title:'高级账户',
-        content:'这里是内容',
-        can_buy:true,
-        price:15,
-        footer:'￥15 /月<span class="float-right">现在购买</span>',
-        footer_style:'positive'
-      }
-    ];
+    // $scope.items=[
+    //   {
+    //     item_id:'',
+    //     title:'免费账户',
+    //     content:'这里是内容',
+    //     can_buy:false,
+    //     price:0,
+    //     footer:'￥0 /月<span class="float-right">免费使用</span>',
+    //     footer_style:''
+    //   },
+    //   {
+    //     item_id:'account_standard',
+    //     title:'标准账户',
+    //     content:'这里是内容',
+    //     can_buy:true,
+    //     price:5,
+    //     footer:'￥5 /月<span class="float-right">现在购买</span>',
+    //     footer_style:'calm'
+    //   },
+    //   {
+    //     item_id:'account_advance',
+    //     title:'高级账户',
+    //     content:'这里是内容',
+    //     can_buy:true,
+    //     price:15,
+    //     footer:'￥15 /月<span class="float-right">现在购买</span>',
+    //     footer_style:'positive'
+    //   }
+    // ];
+    $http.get(API_URL+'/items/upgrade/').then(function (response) {
+      $scope.items=response.data;
+    }, function () {
+      alert("获取列表失败，请检查网络连接或稍后再试");
+    });
 
 
 
@@ -511,35 +516,40 @@ angular.module('shoudao.controllers', [])
 
 
   .controller('PacksCtrl', function($scope,$rootScope,$http,$ionicPopup,$ionicHistory) {
-    $scope.items=[
-      {
-        item_id:'',
-        title:'100条短信包',
-        content:'这里是内容',
-        can_buy:true,
-        price:0,
-        footer:'￥3<span class="float-right">现在购买</span>',
-        footer_style:'energized'
-      },
-      {
-        item_id:'account_standard',
-        title:'300条短信包',
-        content:'这里是内容',
-        can_buy:true,
-        price:5,
-        footer:'￥5<span class="float-right">现在购买</span>',
-        footer_style:'calm'
-      },
-      {
-        item_id:'account_advance',
-        title:'500条短信包',
-        content:'这里是内容',
-        can_buy:true,
-        price:15,
-        footer:'￥15<span class="float-right">现在购买</span>',
-        footer_style:'positive'
-      }
-    ];
+    // $scope.items=[
+    //   {
+    //     item_id:'',
+    //     title:'100条短信包',
+    //     content:'这里是内容',
+    //     can_buy:true,
+    //     price:0,
+    //     footer:'￥3<span class="float-right">现在购买</span>',
+    //     footer_style:'energized'
+    //   },
+    //   {
+    //     item_id:'account_standard',
+    //     title:'300条短信包',
+    //     content:'这里是内容',
+    //     can_buy:true,
+    //     price:5,
+    //     footer:'￥5<span class="float-right">现在购买</span>',
+    //     footer_style:'calm'
+    //   },
+    //   {
+    //     item_id:'account_advance',
+    //     title:'500条短信包',
+    //     content:'这里是内容',
+    //     can_buy:true,
+    //     price:15,
+    //     footer:'￥15<span class="float-right">现在购买</span>',
+    //     footer_style:'positive'
+    //   }
+    // ];
+    $http.get(API_URL+'/items/packs/').then(function (response) {
+      $scope.items=response.data;
+    }, function () {
+      alert("获取列表失败，请检查网络连接或稍后再试");
+    });
 
 
 
