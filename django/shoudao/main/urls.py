@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'^account/buy/$',views.buy),
     url(r'^account/buy_done/$',views.buy_done),
     url(r'^account/buy_done_check/$',views.buy_done_check),
+    url(r'^items/(?P<category>.+)/$',views.items_filter),
     url(r'^groups/all/$',views.groups_all),
     url(r'^groups/new/$',views.groups_new),
     url(r'^groups/delete/$',views.groups_delete),

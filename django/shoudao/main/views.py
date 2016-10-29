@@ -296,6 +296,26 @@ def change_password(request):
 
 
 
+@require_http_methods(['GET'])
+@login_required
+def items_filter(request,category):
+    items=Item.objects.filter(category='upgrade')
+    res=[]
+    for item in items:
+        res.append({
+            'category':item.category,
+            'item_id':item.item_id,
+            'title':item.title,
+            'content':item.content,
+            'can_buy':item.can_buy,
+            'price':item.price,
+            'footer':item.footer,
+            'footer_style':item.footer_style
+        })
+    return JsonResponse(res,safe=False)
+
+
+
 
 @require_http_methods(['POST'])
 @login_required
