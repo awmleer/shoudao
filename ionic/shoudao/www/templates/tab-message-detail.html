@@ -1,15 +1,11 @@
-<!--
-  This template loads for the 'tab.friend-detail' state (app.js)
-  'friend' is a $scope variable created in the FriendsCtrl controller (controllers.js)
-  The FriendsCtrl pulls data from the Friends service (service.js)
-  The Friends service returns an array of friend data
--->
 <ion-view view-title="消息详情">
-    <ion-content class="padding" style="padding: 20px;">
-        <!--<img ng-src="{{chat.face}}" style="width: 64px; height: 64px">-->
-        <!--<p>-->
-            <!--{{chat.lastText}}-->
-        <!--</p>-->
+  <ion-content class="padding">
+    <ion-refresher
+      pulling-text="下拉刷新…"
+      on-refresh="doRefresh()">
+    </ion-refresher>
+    <div style="padding: 10px;">
+
       <h2 style="margin-bottom: 0">{{message.title}}</h2>
       <p><small>发送于{{message.send_time | date:'yyyy-M-d H:mm'}}</small></p>
 
@@ -54,10 +50,19 @@
         <h5>评论</h5>
         <p ng-repeat="comment in message.comments"><small>{{ comment.name }}</small><small style="float: right;">{{ comment.time }}</small><br>{{ comment.text }}</p>
         <p ng-if="message.comments.length==0" style="text-align: center">暂无评论</p>
+        <div class="item item-input-inset" style="border: none;margin: -10px -10px 15px;">
+          <label class="item-input-wrapper">
+            <input type="text" placeholder="输入评论…" ng-model="new_comment.text">
+          </label>
+          <button class="button button-small" ng-click="comment()">
+            发表
+          </button>
+        </div>
+
       </div>
 
 
 
-
-    </ion-content>
+    </div>
+  </ion-content>
 </ion-view>
