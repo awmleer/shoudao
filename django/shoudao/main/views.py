@@ -299,7 +299,7 @@ def change_password(request):
 @require_http_methods(['GET'])
 @login_required
 def items_filter(request,category):
-    items=Item.objects.filter(category='upgrade')
+    items=Item.objects.filter(category=category)
     res=[]
     for item in items:
         res.append({
