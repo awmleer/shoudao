@@ -247,6 +247,20 @@ def message_detail(request):
 
 
 
+@require_http_methods(['POST'])
+@login_required
+def message_comment(request):
+    data=json.loads(request.body.decode())
+    message=Message.objects.get(id=data['message_id'])
+    if message.user!=request.user: return HttpResponseForbidden()
+    comments=message.data_notice.get_comments()
+    comments.append({'phone': request.user.username, 'name': request.user.user_info.get().name, 'text': data['text'],'time': timezone.now().strftime('%Y-%m-%d %H:%M %a')})
+    message.data_notice.set_comments(comments)
+    message.data_notice.save()
+    return HttpResponse('success')
+
+
+
 
 @require_http_methods(['GET'])
 @login_required

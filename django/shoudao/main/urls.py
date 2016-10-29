@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'^message/remind/all/$',views.message_remind_all),
     url(r'^message/all/$',views.message_all),
     url(r'^message/detail/$',views.message_detail),
+    url(r'^message/comment/$',views.message_comment),
     url(r'^account/login/$',views.login),
     url(r'^account/logout/$',views.logout),
     url(r'^account/info/$',views.account_info),
