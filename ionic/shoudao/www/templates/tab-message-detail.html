@@ -13,7 +13,7 @@
       <h2 style="margin-bottom: 0">{{message.title}}</h2>
       <p><small>发送于{{message.send_time | date:'yyyy-M-d H:mm'}}</small></p>
 
-      <p style="margin-top: 20px;margin-bottom: 30px">{{message.content}}</p>
+      <p class="message-content">{{message.content}}</p>
 
       <!--progress bar-->
       <div class="progress" style="margin: 0;border-radius: 0;">
@@ -39,14 +39,21 @@
         </div>
       </div>
 
-      <button ng-click="remind_all()" class="button button-balanced button-block" style="margin-top: 20px">一键提醒尚未确认的成员</button>
+      <button ng-click="remind_all()" class="button button-balanced button-block" ng-class="{'disabled':message.received_count==message.total_count}" style="margin-top: 20px">{{message.received_count==message.total_count?'已全部确认收到':'一键提醒尚未确认的成员'}}</button>
+
+
+      <div ng-if="message.type=='notice_p'" style="padding-top: 10px;padding-bottom: 10px">
+        <hr>
+        <h5>反馈</h5>
+        <p ng-repeat="button in message.buttons"><span class="label" ng-class="{'label-success':$index==0,'label-default':$index!=0}" style="margin-right: 10px;white-space: normal;display: inline-block;font-size: 14px">{{button.button_name}}</span><span ng-repeat="r in message.recipients | filter:{'reaction':button.button_name}:true">{{r.name}}</span></p>
+        <p ng-if="message.received_count==0" style="text-align: center">暂无反馈</p>
+      </div>
 
       <div ng-if="message.comment_able" style="padding-top: 10px;padding-bottom: 20px">
         <hr>
         <h5>评论</h5>
         <p ng-repeat="comment in message.comments"><small>{{ comment.name }}</small><small style="float: right;">{{ comment.time }}</small><br>{{ comment.text }}</p>
         <p ng-if="message.comments.length==0" style="text-align: center">暂无评论</p>
-
       </div>
 
 
