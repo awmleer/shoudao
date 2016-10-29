@@ -57,7 +57,7 @@
 
     {% ifequal message.type 'notice_p' %}
         {% for button in buttons %}
-            <button class="btn_submit btn btn-block btn-lg {% if forloop.counter == 1 %}btn-success{% endif %} {% if i_received %}disabled{% endif %}" onclick="submit('{{ button.button_name }}')">{% if i_reaction == button.button_name %}<i class="fui-check"></i> {% endif %}{{ button.button_name }}</button>
+            <button class="btn_submit btn btn-block btn-lg {% if forloop.counter == 1 %}btn-success{% endif %}" onclick="submit('{{ button.button_name }}')">{% if i_reaction == button.button_name %}<i class="fui-check"></i> {% endif %}{{ button.button_name }}</button>
         {% endfor %}
         <script>
             function submit (choice) {

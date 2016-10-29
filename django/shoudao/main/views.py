@@ -125,6 +125,7 @@ def message_new(request):
     #todo title,sender,recipient中非法字符的检查
     if data['type']=='notice_p':
         if len(data['buttons'])==0: return HttpResponse('no buttons')
+        if len(data['buttons'])>5: return HttpResponse('too many buttons')
 
     if request.user.user_info.get().text_surplus<len(data['contacts']):return HttpResponse('短信剩余量不足，请购买短信包或升级账户')
 
@@ -422,12 +423,12 @@ def m_submit(request,message_id,recipient,token):
             recipients = message.get_recipients()
             for r in recipients:
                 if str(r['phone']) == str(recipient):
-                    if r['received']: return HttpResponse('您已经提交过了') #目前是不允许重复提交的
-                    r['received']=True
                     r['reaction']=request.POST['choice']
+                    if not r['received']: #如果是之前还没有提交过
+                        r['received']=True
+                        message.received_count += 1
                     break
             message.set_recipients(recipients)
-            message.received_count += 1
             message.save()
             return HttpResponse('success')
 
