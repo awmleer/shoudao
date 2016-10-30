@@ -21,29 +21,10 @@
 
 
 <script>
-  $.ajax({
-    url: API_URL+"/account/is_logged_in/",
-    type: "get"
-  }).done(function (data) {
-    if (data == 'success') {
-      location.href='main.html';
-    }else {
-      location.href='login.html';
-    }
-  }).fail(function () {
-    var phone=store.get('phone');
-    var password=store.get('password');
-    if (phone == '' || password == '') {
-      location.href='login.html';
-    }
+  function auto_login() {
     $.ajax({
-      url: API_URL+"/account/login/",
-      type: "post",
-      headers: {'Content-Type': 'application/json'},
-      data: JSON.stringify({
-        phone:phone,
-        password:password
-      })
+      url: API_URL+"/account/is_logged_in/",
+      type: "get"
     }).done(function (data) {
       if (data == 'success') {
         location.href='main.html';
@@ -51,9 +32,59 @@
         location.href='login.html';
       }
     }).fail(function () {
-      location.href='login.html';
+      var phone=store.get('phone');
+      var password=store.get('password');
+      if (phone == '' || password == '') {
+        location.href='login.html';
+      }
+      $.ajax({
+        url: API_URL+"/account/login/",
+        type: "post",
+        headers: {'Content-Type': 'application/json'},
+        data: JSON.stringify({
+          phone:phone,
+          password:password
+        })
+      }).done(function (data) {
+        if (data == 'success') {
+          location.href='main.html';
+        }else {
+          location.href='login.html';
+        }
+      }).fail(function () {
+        location.href='login.html';
+      });
     });
+  }
+
+  function bigger_one(v1,v2) {
+    if(v1.major>v2.major)return 1;
+    if(v1.major<v2.major)return 2;
+    if(v1.minor>v2.minor)return 1;
+    if(v1.minor<v2.minor)return 2;
+    if(v1.revision>v2.revision)return 1;
+    if(v1.revision<v2.revision)return 2;
+    return 0;
+  }
+
+  $.ajax({
+    url: API_URL+"/information/versions/json/",
+    type: "get"
+  }).done(function (data) {
+    var versions=data;
+    if(bigger_one(VERSION,versions.oldest)==2){//如果版本号低于oldest 强制更新
+      alert("当前APP版本号过低，为了您的正常使用，请先下载最新版");
+      window.open(data.download_url, '_system', 'location=no');
+    }else if(bigger_one(VERSION,versions.normal)==2){//如果版本号低于normal 建议更新
+      if (confirm("发现新版本，是否立即升级？")) {
+        window.open(data.download_url, '_system', 'location=no');
+      }
+    }else{//如果版本号正常
+      auto_login();
+    }
+  }).fail(function () {
   });
+
 
 
 </script>
