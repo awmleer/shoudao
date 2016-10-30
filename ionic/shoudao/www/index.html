@@ -78,6 +78,8 @@
     }else if(bigger_one(VERSION,versions.normal)==2){//如果版本号低于normal 建议更新
       if (confirm("发现新版本，是否立即升级？")) {
         window.open(data.download_url, '_system', 'location=no');
+      }else{
+        auto_login();
       }
     }else{//如果版本号正常
       auto_login();
