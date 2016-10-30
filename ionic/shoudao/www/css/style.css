@@ -63,6 +63,13 @@
 
 
 
+p small{
+  font-size: 12px;
+}
+.gray-text{
+  color: #727272;
+}
+
 .radius-gray{
   width: 100%;border-radius: 4px;background: #f0f0f0
 }
@@ -73,6 +80,6 @@
   color: #ffffff;
 }
 .message-icon-block.notice_p{
-  background: #dee69e;
+  background: #b3cde6;
   color: #ffffff;
 }

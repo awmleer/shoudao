@@ -136,16 +136,22 @@ angular.module('shoudao.controllers', [])
 
 
 
-  .controller('MessageDetailCtrl', function($scope, $stateParams,$http,$ionicHistory,$ionicPopup) {
+  .controller('MessageDetailCtrl', function($scope, $stateParams,$http,$ionicHistory,$ionicPopup,$ionicLoading) {
     $scope.message_id=$stateParams.message_id;
+
+    $ionicLoading.show({
+      template: '<i class="fa fa-spinner fa-spin fa-3x" style="margin-bottom: 6px" ></i><br>加载中…'
+    });
 
     $scope.doRefresh = function() {
       $http.get(API_URL+'/message/detail/?message_id='+$scope.message_id).then(function (response) {
         $scope.message=response.data;
         $scope.$broadcast('scroll.refreshComplete');
+        $ionicLoading.hide();
       }, function () {
         alert("获取消息详情失败");
         $scope.$broadcast('scroll.refreshComplete');
+        $ionicLoading.hide();
         $ionicHistory.goBack();
       });
     };
