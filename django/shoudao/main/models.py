@@ -14,6 +14,8 @@ class UserInfo(models.Model):
     text_surplus=models.PositiveIntegerField(default=0)
     # def get_text_surplus(self):
     #     return self.text_limit-self.text_sent
+    def __str__(self):
+        return self.name+' | '+str(self.text_surplus)
 
 
 class ContactGroup(models.Model):
@@ -24,7 +26,8 @@ class ContactGroup(models.Model):
         self.contacts = json.dumps(x)
     def get_contacts(self):
         return json.loads(self.contacts)
-
+    def __str__(self):
+        return self.user.user_info.get().name+' 的 '+self.group_name
 
 
 class Message(models.Model):
@@ -57,6 +60,8 @@ class Message(models.Model):
     def get_recipients(self):
         return json.loads(self.recipients)
     data_notice=models.ForeignKey('MessageDataNotice')
+    def __str__(self):
+        return self.title
 
 
 
@@ -88,6 +93,8 @@ class Link(models.Model):
     recipient=models.CharField(max_length=30)
     token=models.CharField(max_length=20)
     short_link=models.CharField(max_length=30,default='')
+    def __str__(self):
+        return self.message.title+' | '+self.recipient
 
 
 
@@ -98,6 +105,8 @@ class Order(models.Model):
     price=models.DecimalField(max_digits=20,decimal_places=2)
     total_fee=models.DecimalField(max_digits=20,decimal_places=2)
     status=models.CharField(max_length=10,default='not_paid')
+    def __str__(self):
+        return self.user.user_info.get().name+' | '+self.item
 
 
 class Item(models.Model):
@@ -116,19 +125,25 @@ class Item(models.Model):
     # price:5,
     # footer:'￥5 /月<span class="float-right">现在购买</span>',
     # footer_style:'calm'
+    def __str__(self):
+        return self.title
 
 
 class RedeemCode(models.Model):
     code=models.CharField(max_length=30)
     item=models.CharField(max_length=20)
     used=models.BooleanField(default=False)
+    def __str__(self):
+        return 'U' if self.used else 'A' +' | '+self.item
 
 
 
 class Information(models.Model):
     key=models.CharField(max_length=20)
-    value=models.CharField(max_length=50000)
+    value=models.CharField(max_length=50000,default='',blank=True)
     def set_value(self, x):
         self.value = json.dumps(x)
     def get_value(self):
         return json.loads(self.value)
+    def __str__(self):
+        return self.key

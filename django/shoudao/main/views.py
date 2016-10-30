@@ -409,7 +409,7 @@ def item_handle(request,item):
             user_info.expiration=timezone.now()+timedelta(days=30)
         else: #续费
             user_info.expiration+=timedelta(days=30)
-    if item=='packs_100':
+    if item=='pack_100':
         user_info.text_surplus+=100
 
     user_info.save()
