@@ -106,7 +106,7 @@ class Order(models.Model):
     total_fee=models.DecimalField(max_digits=20,decimal_places=2)
     status=models.CharField(max_length=10,default='not_paid')
     def __str__(self):
-        return self.user.user_info.get().name+' | '+self.item
+        return ('T' if self.status=='paid' else 'F') +' | '+self.user.user_info.get().name+' | '+self.item
 
 
 class Item(models.Model):
@@ -134,7 +134,7 @@ class RedeemCode(models.Model):
     item=models.CharField(max_length=20)
     used=models.BooleanField(default=False)
     def __str__(self):
-        return 'U' if self.used else 'A' +' | '+self.item
+        return ('U' if self.used else 'A') +' | '+self.item
 
 
 

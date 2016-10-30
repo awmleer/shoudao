@@ -378,7 +378,7 @@ def buy_done(request): #云通付回调
     order.status='paid'
     order.save()
     #todo
-    item_handle(request,order.item)
+    item_handle(order.user,order.item)
     return HttpResponse('success')
 
 
@@ -387,15 +387,15 @@ def redeem(request,code):
     if len(redeem_codes)==0:return HttpResponse('兑换码无效，请检查是否输错')
     redeem_code=redeem_codes[0]
     if redeem_code.used:return HttpResponse('该兑换码已经使用过了')
-    item_handle(request,redeem_code.item)
+    item_handle(request.user,redeem_code.item)
     redeem_code.used=True
     redeem_code.save()
 
     return HttpResponse('success')
 
 
-def item_handle(request,item):
-    user_info = request.user.user_info.get()
+def item_handle(user,item):
+    user_info = user.user_info.get()
     # if item=='account_standard':
     #     if user_info.type=='免费账户': #新购
     #         user_info.type='标准账户'
@@ -409,8 +409,10 @@ def item_handle(request,item):
             user_info.expiration=timezone.now()+timedelta(days=30)
         else: #续费
             user_info.expiration+=timedelta(days=30)
-    if item=='pack_100':
-        user_info.text_surplus+=100
+    if item=='pack_10':user_info.text_surplus+=10
+    if item=='pack_50':user_info.text_surplus+=50
+    if item=='pack_100':user_info.text_surplus+=100
+    if item=='pack_300':user_info.text_surplus+=300
 
     user_info.save()
 
