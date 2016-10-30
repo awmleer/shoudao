@@ -2,13 +2,24 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
   <title>加载中</title>
+  <link rel="stylesheet" href="lib/loader/css/loaders.css">
   <script src="js/config.js"></script>
   <script src="lib/store.min.js"></script>
   <script src="lib/jquery.min.js"></script>
 
 </head>
 <body>
+
+
+<div style="width: 40%;margin: 50% 30% 0;background: #595959;padding: 40px 30px 30px;border-radius: 4px;box-sizing: border-box;text-align: center">
+  <div data-loader="ball-rotate" style="display: inline-block"></div>
+  <div style="color: #ffffff;margin-top: 30px">加载中…</div>
+</div>
+
+
+
 <script>
   $.ajax({
     url: API_URL+"/account/is_logged_in/",
@@ -17,7 +28,7 @@
     if (data == 'success') {
       location.href='main.html';
     }else {
-//      location.href='login.html';
+      location.href='login.html';
     }
   }).fail(function () {
     var phone=store.get('phone');
