@@ -15,15 +15,20 @@ angular.module('shoudao.services', [])
       // $rootScope.contacts=JSON.stringify(contacts);//for DEBUG
       $rootScope.contacts=[];
       for (var i = 0; i<contacts.length; i++) {
-        if (contacts[i].phoneNumbers.length) {
+        if(_.isUndefined(contacts[i].phoneNumbers))continue; //如果是undefined
+        if (!_.isArray(contacts[i].phoneNumbers))continue; //如果不是数组
+        if (contacts[i].phoneNumbers.length)
           for (var j = 0;  j < contacts[i].phoneNumbers.length; j++) {
-            $rootScope.contacts.push({
-              phone:contacts[i].phoneNumbers[j].value.replace(/ /g,'').replace(/-/g,'').replace(/\+86/g,'').replace(/\(/g,'').replace(/\)/g,''),//去除掉空格 - +86 ( )
-              name:contacts[i].displayName,
-              checked:false
-            });
+            try {
+              $rootScope.contacts.push({
+                phone:contacts[i].phoneNumbers[j].value.replace(/ /g,'').replace(/-/g,'').replace(/\+86/g,'').replace(/\(/g,'').replace(/\)/g,''),//去除掉空格 - +86 ( )
+                name:contacts[i].displayName,
+                checked:false
+              });
+            }
+            catch(err) {}
+
           }
-        }
       }
       self.history.init();
       $rootScope.$apply();
@@ -98,7 +103,7 @@ angular.module('shoudao.services', [])
             onTap: function(e) {
               //todo bug! popup didn't hide
               if (!$rootScope.new_contact.name || !$rootScope.new_contact.phone) {
-              //   不允许用户关闭
+                //   不允许用户关闭
                 e.preventDefault();
               } else {
                 var contact_tmp={name:$rootScope.new_contact.name,phone:$rootScope.new_contact.phone,checked:checked};
@@ -138,7 +143,7 @@ angular.module('shoudao.services', [])
             $rootScope.contacts_history.pop();
           }
         }
-       store.set('contacts_history',eval(angular.toJson($rootScope.contacts_history)));
+        store.set('contacts_history',eval(angular.toJson($rootScope.contacts_history)));
       },
       unfreeze: function () {
         var existence=false;
@@ -187,7 +192,7 @@ angular.module('shoudao.services', [])
 
 
 
-// && /[a-z]/.test(search.text)
+  // && /[a-z]/.test(search.text)
   .filter("object_length",function () {
     return function (input) {
       // console.log(input);
