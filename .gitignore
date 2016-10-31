@@ -9,3 +9,4 @@ node_modules/
 .tmp
 .sass-cache
 __pycache__/
+/ionic/shoudao/apk/
