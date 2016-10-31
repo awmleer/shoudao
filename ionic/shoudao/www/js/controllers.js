@@ -274,6 +274,18 @@ angular.module('shoudao.controllers', [])
       Contacts.add_contact(true);
     };
 
+    $scope.make_obj= function () {
+      var obj={
+        type:$scope.message.type,
+        title:$scope.message.title,
+        content:$scope.message.content,
+        comment_able:$scope.message.comment_able,
+        contacts:Contacts.get_checked_contacts()
+      };
+      if($scope.message.type=='notice_p')obj.buttons=$scope.buttons;
+      return obj;
+    };
+
     $scope.send_message= function () {
       if ($scope.message.title=='') {
         $ionicPopup.alert({
@@ -311,14 +323,7 @@ angular.module('shoudao.controllers', [])
           $ionicLoading.show({
             template: '<i class="fa fa-spinner fa-spin fa-3x" style="margin-bottom: 6px" ></i><br>发送中…'
           });
-          var obj={
-            type:$scope.message.type,
-            title:$scope.message.title,
-            content:$scope.message.content,
-            comment_able:$scope.message.comment_able,
-            contacts:Contacts.get_checked_contacts()
-          };
-          obj.buttons=$scope.buttons;
+          var obj=$scope.make_obj();
           $http.post(API_URL+'/message/new/', obj).then(function (response) {
             $ionicLoading.hide();
             if (response.data == 'success') {
@@ -344,30 +349,44 @@ angular.module('shoudao.controllers', [])
       });
     };
 
+    if ($scope.message.type=='notice_p') {
+      $ionicModal.fromTemplateUrl('templates/modal-set-buttons.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+      }).then(function(modal) {
+        $scope.modal_set_buttons = modal;
+      });
+      $scope.buttons=[];
+      $scope.set_buttons= function () { //设置按钮
+        $scope.modal_set_buttons.show();
+      };
+      $scope.commit_set_buttons = function() {
+        $scope.modal_set_buttons.hide();
+      };
+    }
 
-    $ionicModal.fromTemplateUrl('templates/modal-set-buttons.html', {
+
+    $ionicModal.fromTemplateUrl('templates/modal-preview.html', {
       scope: $scope,
       animation: 'slide-in-up'
     }).then(function(modal) {
-      $scope.modal_set_buttons = modal;
-    });
-    // $scope.buttons=[
-    //   {button_name:'啊啊啊啊啊啊啊'},
-    //   {button_name:'啊啊啊啊啊'},
-    //   {button_name:'啊啊啊啊啊啊啊啊啊啊啊'},
-    //   {button_name:'啊啊啊啊啊啊啊啊啊e'}
-    // ];//for DEBUG
+      $scope.modal_preview = modal;
 
-    $scope.buttons=[];
-    $scope.set_buttons= function () { //设置按钮
-      $scope.modal_set_buttons.show();
+    });
+
+    $scope.show_preview= function () {
+      $scope.modal_preview.show();
+      document.getElementById("input_json").value=angular.toJson($scope.make_obj());
+      document.getElementById("form_preview").submit();
     };
-    $scope.commit_set_buttons = function() {
-      $scope.modal_set_buttons.hide();
+    $scope.hide_preview= function () {
+      $scope.modal_preview.hide();
     };
 
 
   })
+
+
 
   .controller('SetButtonsCtrl', function ($scope,$ionicPopup) {
     $scope.reorder_buttons= function (button, fromIndex, toIndex) {
@@ -392,8 +411,8 @@ angular.module('shoudao.controllers', [])
         template: '请输入选项按钮的标题',
         inputType: 'text',
         inputPlaceholder: '10个字以内',
-        okText:'取消',
-        cancelText:'确定'
+        okText:'确定',
+        cancelText:'取消'
       }).then(function(res) {
         if (_.isUndefined(res)) return;
         console.log('Your password is', res);

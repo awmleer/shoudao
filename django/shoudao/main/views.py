@@ -435,6 +435,36 @@ def buy_done_check(request): #用户自查订单是否支付成功
 
 
 
+@require_http_methods(['POST'])
+def m_preview(request):
+    # logger.info(request.POST)
+    data=json.loads(request.POST['json'])
+    print(request.POST['json'])
+    context={
+        'preview':True,
+        'message':{
+            'title':data['title'],
+            'user':request.user,
+            'send_time':timezone.now(),
+            'total_count': len(data['contacts']),
+            'received_count': 0,
+            'type':data['type'],
+            'data_notice':{'content':data['content']},
+            'comment_able':data['comment_able']
+        },
+        'comments':[],
+        # 'buttons':[{'button_name':'aaa'}],
+        'buttons':data['buttons'],
+        'recipient':'18812345678',
+        'receive_percent':0,
+        'i_received':False,
+        'i_reaction':''
+    }
+    return render(request,'m.html',context)
+
+
+
+
 @require_http_methods(['GET'])
 def m(request,message_id,recipient,token):
     logger.info(message_id)
@@ -450,6 +480,7 @@ def m(request,message_id,recipient,token):
             if i_received and message.type=='notice_p':i_reaction=r['reaction']
             break
     context={
+        'preview':False,
         'message':message,
         'comments':message.data_notice.get_comments(),
         'buttons':message.data_notice.get_buttons(),
