@@ -9,22 +9,25 @@
 
 <input id="comment_input" type="text" placeholder="请输入评论内容…" class="form-control">
 <button onclick="submit_comment()" class="btn btn-block btn-lg btn-inverse" style="margin-top: 14px">发表</button>
-<script>
-    function submit_comment() {
-        var text=$("#comment_input").val();
-        console.log(text);
-        $.post("submit/", {
-            type: 'comment',
-            text: text
-        }).done(function (data) {
-            if (data == 'success') {
-                alert("发表成功");
-                location.reload();
-            }else{
-                alert(data);
-            }
-        }).fail(function () {
-            alert("请求失败");
-        });
-    }
-</script>
+
+{% if not preview %}
+    <script>
+        function submit_comment() {
+            var text=$("#comment_input").val();
+            console.log(text);
+            $.post("submit/", {
+                type: 'comment',
+                text: text
+            }).done(function (data) {
+                if (data == 'success') {
+                    alert("发表成功");
+                    location.reload();
+                }else{
+                    alert(data);
+                }
+            }).fail(function () {
+                alert("请求失败");
+            });
+        }
+    </script>
+{% endif %}

@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <title>{{ message.title }}</title>
     <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
-    <link rel="stylesheet" href="//cdn.bootcss.com/flat-ui/2.3.0/css/vendor/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//cdn.bootcss.com/flat-ui/2.3.0/css/flat-ui.min.css">
-    <script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/flat-ui/2.3.0/css/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://cdn.bootcss.com/flat-ui/2.3.0/css/flat-ui.min.css">
+    <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
     <style>
         p{
             font-size: 14px;
@@ -36,14 +36,41 @@
             <button class="btn_submit btn btn-block btn-lg btn-success disabled">已确认收到</button>
         {% else %}
             <button onclick="submit()" class="btn_submit btn btn-block btn-lg btn-success">点我确认收到</button>
+            {% if not preview %}
+                <script>
+                    function submit () {
+                        $.post("submit/", {
+                            type:'confirm'
+                        }).done(function (data) {
+                            if (data == 'success') {
+                                alert("确认成功");
+                                $(".btn_submit").addClass('disabled').text('已确认收到');
+                            }else {
+                                alert(data);
+                            }
+                        }).fail(function () {
+                            alert("提交失败，请稍后或刷新重试");
+                        });
+                    }
+                </script>
+            {% endif %}
+        {% endif %}
+    {% endifequal %}
+
+    {% ifequal message.type 'notice_p' %}
+        {% for button in buttons %}
+            <button class="btn_submit btn btn-block btn-lg {% if forloop.counter == 1 and i_reaction == '' %}btn-success{% endif %}" onclick="submit('{{ button.button_name }}')">{% if i_reaction == button.button_name %}<i class="fui-check"></i> {% endif %}{{ button.button_name }}</button>
+        {% endfor %}
+        {% if not preview %}
             <script>
-                function submit () {
+                function submit (choice) {
                     $.post("submit/", {
-                        type:'confirm'
+                        type:'confirm',
+                        choice:choice
                     }).done(function (data) {
                         if (data == 'success') {
                             alert("确认成功");
-                            $(".btn_submit").addClass('disabled').text('已确认收到');
+                            location.reload();
                         }else {
                             alert(data);
                         }
@@ -53,29 +80,6 @@
                 }
             </script>
         {% endif %}
-    {% endifequal %}
-
-    {% ifequal message.type 'notice_p' %}
-        {% for button in buttons %}
-            <button class="btn_submit btn btn-block btn-lg {% if forloop.counter == 1 and i_reaction == '' %}btn-success{% endif %}" onclick="submit('{{ button.button_name }}')">{% if i_reaction == button.button_name %}<i class="fui-check"></i> {% endif %}{{ button.button_name }}</button>
-        {% endfor %}
-        <script>
-            function submit (choice) {
-                $.post("submit/", {
-                    type:'confirm',
-                    choice:choice
-                }).done(function (data) {
-                    if (data == 'success') {
-                        alert("确认成功");
-                        location.reload();
-                    }else {
-                        alert(data);
-                    }
-                }).fail(function () {
-                    alert("提交失败，请稍后或刷新重试");
-                });
-            }
-        </script>
     {% endifequal %}
 
 

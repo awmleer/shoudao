@@ -376,10 +376,16 @@ angular.module('shoudao.controllers', [])
 
     $scope.show_preview= function () {
       $scope.modal_preview.show();
-      document.getElementById("input_json").value=angular.toJson($scope.make_obj());
-      document.getElementById("form_preview").submit();
+      // document.getElementById("input_json").value=angular.toJson($scope.make_obj());
+      // document.getElementById("form_preview").submit();
+      $http.post(API_URL+'/m/preview/', $scope.make_obj()).then(function (response) {
+        document.getElementById('iframe_preview').srcdoc=response.data;
+      }, function () {
+        alert("请求失败");
+      });
     };
     $scope.hide_preview= function () {
+      document.getElementById('iframe_preview').srcdoc='';
       $scope.modal_preview.hide();
     };
 

@@ -7,5 +7,11 @@
     "src": "icon.png",
     "sizes": "512x512",
     "type": "image/png"
-  }]
+  }],
+  "xwalk_hosts": [
+    "http://shoudao.sparker.top/",
+    "http://*.sparker.top/"
+    "http://*.sparker.xyz/"
+  ],
+  "csp": "frame-ancestors shoudao.sparker.top"
 }
