@@ -437,9 +437,7 @@ def buy_done_check(request): #用户自查订单是否支付成功
 
 @require_http_methods(['POST'])
 def m_preview(request):
-    # logger.info(request.POST)
-    data=json.loads(request.POST['json'])
-    print(request.POST['json'])
+    data=json.loads(request.body.decode())
     context={
         'preview':True,
         'message':{
