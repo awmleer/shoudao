@@ -133,8 +133,9 @@ class RedeemCode(models.Model):
     code=models.CharField(max_length=30)
     item=models.CharField(max_length=20)
     used=models.BooleanField(default=False)
+    who_used=models.ForeignKey('auth.User',default=None,null=True,blank=True)
     def __str__(self):
-        return ('U' if self.used else 'A') +' | '+self.item
+        return ('U' if self.used else 'A') +' | '+self.item+' | '+self.code
 
 
 

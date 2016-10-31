@@ -389,6 +389,7 @@ def redeem(request,code):
     if redeem_code.used:return HttpResponse('该兑换码已经使用过了')
     item_handle(request.user,redeem_code.item)
     redeem_code.used=True
+    redeem_code.who_used=request.user
     redeem_code.save()
 
     return HttpResponse('success')
