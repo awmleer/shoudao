@@ -152,7 +152,7 @@ def message_new(request):
         else:
             link.short_link=short_link
             link.save()
-            send_success = sms.juhe.send_sms(contact['phone'], 22175,{'#recipient#': contact['name'], '#title#': data['title'],'#sender#': request.user.user_info.get().name + '。请点击链接确认收到:'+short_link+' '})
+            send_success = sms.juhe.send_sms(contact['phone'], 22175,{'#recipient#': contact['name'][0:3] if len(contact['name'])>3 else contact['name'], '#title#': data['title'],'#sender#': request.user.user_info.get().name + '。请点击链接确认收到:'+short_link+' '})
             # 【收道】#recipient#您好，您有一条通知:#title#，来自#sender#。
             # logger.info(result)
         recipients.append({'name':contact['name'],'phone':contact['phone'],'send_success':send_success,'received':False})
