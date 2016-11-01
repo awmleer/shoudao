@@ -452,7 +452,7 @@ def m_preview(request):
         },
         'comments':[],
         # 'buttons':[{'button_name':'aaa'}],
-        'buttons':data['buttons'],
+        'buttons':data['buttons'] if data['type']=='notice_p' else [],
         'recipient':'18812345678',
         'receive_percent':0,
         'i_received':False,
