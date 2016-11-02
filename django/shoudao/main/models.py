@@ -7,7 +7,7 @@ class UserInfo(models.Model):
     user=models.ForeignKey('auth.User',on_delete=models.CASCADE,related_name='user_info')
     name = models.CharField(max_length=50, default='新用户')
     type = models.CharField(max_length=20, default='普通账户')
-    expiration=models.DateField(null=True,blank=True)
+    expiration=models.DateField(null=True,blank=True,default='')
     # avatar = models.ImageField(upload_to='avatars', default='avatar_default.png')
     message_sent=models.PositiveIntegerField(default=0)
     text_sent=models.PositiveIntegerField(default=0)
