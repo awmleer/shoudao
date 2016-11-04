@@ -57,8 +57,6 @@ def is_logged_in(request):
 
 
 
-# todo user_info.name length limit
-
 
 
 @require_http_methods(["GET"])

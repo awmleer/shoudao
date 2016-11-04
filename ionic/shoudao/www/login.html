@@ -25,7 +25,7 @@
 </head>
 <body ng-app="login" ng-controller="LoginCtrl">
 <div class="content">
-  <img src="img/logo.png" style="width: 50%;margin: 3rem 25%;">
+  <img src="img/icon.png" style="width: 50%;margin: 3rem 25%;border-radius: 8px">
   <div class="list list-inset">
     <label class="item item-input">
       <i class="icon ion-ios-telephone placeholder-icon"></i>
@@ -38,13 +38,10 @@
   </div>
   <div class="padding">
     <button ng-click="login()" class="button button-positive button-block"><i class="icon ion-log-in"></i> 登录</button>
-    <button onclick="alert('暂未开放注册，请和管理员联系获取内测账号');" class="button button-stable button-block"><i class="icon ion-ios-bolt"></i> 注册</button>
+    <button ng-click="open_signup()" class="button button-stable button-block"><i class="icon ion-ios-bolt"></i> 注册</button>
   </div>
 
-
 </div>
-
-
 
 
 </body>

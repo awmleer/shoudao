@@ -25,5 +25,9 @@ angular.module('login',['ionic'])
       });
     };
 
+    $scope.open_signup=function () {
+      window.open("http://shoudao.sparker.top/signup/signup.html", '_system', 'location=no');
+    }
+
 
   });
