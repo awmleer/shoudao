@@ -11,8 +11,8 @@ angular.module('shoudao.services', [])
     };
 
     self.get_contacts_success= function (contacts) {
-      console.log(contacts);
-      // $rootScope.contacts=JSON.stringify(contacts);//for DEBUG
+      // console.log(contacts);
+      // $rootScope.contacts_raw=JSON.stringify(contacts);//for DEBUG
       $rootScope.contacts=[];
       for (var i = 0; i<contacts.length; i++) {
         if(_.isUndefined(contacts[i].phoneNumbers))continue; //如果是undefined
@@ -22,7 +22,7 @@ angular.module('shoudao.services', [])
             try {
               $rootScope.contacts.push({
                 phone:contacts[i].phoneNumbers[j].value.replace(/ /g,'').replace(/-/g,'').replace(/\+86/g,'').replace(/\(/g,'').replace(/\)/g,''),//去除掉空格 - +86 ( )
-                name:contacts[i].displayName,
+                name:_.isNull(contacts[i].displayName)?contacts[i].name.formatted:contacts[i].displayName,
                 checked:false
               });
             }

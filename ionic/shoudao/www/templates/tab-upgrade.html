@@ -4,6 +4,8 @@
       <div class="radius-gray padding">
         <span>您现在是{{user_info.type}}</span><br>
         <span ng-if="user_info.expiration!=null">将于{{user_info.expiration}}过期</span>
+        <br>
+        <span>{{contacts_raw}}</span>
       </div>
       <div class="radius-gray padding" style="margin-top: 20px" ng-if="notice" ng-bind-html="notice"></div>
     </div>
