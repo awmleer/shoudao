@@ -9,9 +9,8 @@ angular.module('shoudao', ['ionic', 'shoudao.controllers', 'shoudao.services'])
 
   .run(function($ionicPlatform, $rootScope, Contacts, Groups) {
     contacts_service=Contacts;
-
+    $rootScope.pre_release=store.get('pre_release');
     $rootScope.version=VERSION;
-
     if (typeof ($rootScope.contacts) == undefined || $rootScope.contacts==null) {
       $rootScope.contacts=[];
       console.log('contacts init ');

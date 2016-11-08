@@ -4,7 +4,7 @@
   "proxies": [
     {
       "path": "/api",
-      "proxyUrl": "http://shoudao.sparker.top:8000/"
+      "proxyUrl": "http://shoudao.sparker.top/"
     }
   ]
 }

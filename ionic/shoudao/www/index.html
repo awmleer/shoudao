@@ -68,25 +68,45 @@
     return 0;
   }
 
-  $.ajax({
-    url: API_URL+"/information/versions/json/",
-    type: "get"
-  }).done(function (data) {
-    var versions=data;
-    if(bigger_one(VERSION,versions.oldest)==2){//如果版本号低于oldest 强制更新
-      alert("当前APP版本号过低，为了您的正常使用，请先下载最新版");
-      window.open(data.download_url, '_system', 'location=no');
-    }else if(bigger_one(VERSION,versions.normal)==2){//如果版本号低于normal 建议更新
-      if (confirm("发现新版本，是否立即升级？")) {
-        window.open(data.download_url, '_system', 'location=no');
+
+  function onDeviceReady() {
+    $.ajax({
+      url: API_URL+"/information/versions/json/",
+      type: "get"
+    }).done(function (data) {
+      var versions=data;
+      if(bigger_one(VERSION,versions.latest)==1){
+        store.set('pre_release',true);
       }else{
+        store.set('pre_release',false);
+      }
+      if(bigger_one(VERSION,versions.oldest)==2){//如果版本号低于oldest 强制更新
+        if (device.platform == 'Android') {
+          alert("当前APP版本号过低，为了您的正常使用，请先下载最新版");
+          window.open(data.download_url, '_system', 'location=no');
+        }
+        if (device.platform == 'iOS') {
+          alert('当前APP版本号过低，我们已不再支持该版本，强烈建议您去App Store进行更新');
+          navigator.app.exitApp();
+        }
+      }else if(bigger_one(VERSION,versions.normal)==2){//如果版本号低于normal 建议更新
+        if (device.platform == 'Android') { //只有Android才提示升级
+          if (confirm("发现新版本，是否立即升级？")) {
+            window.open(data.download_url, '_system', 'location=no');
+          }
+        }else{
+          auto_login();
+        }
+      }else{//如果版本号正常
         auto_login();
       }
-    }else{//如果版本号正常
-      auto_login();
-    }
-  }).fail(function () {
-  });
+    }).fail(function () {
+      alert('网络异常');
+      navigator.app.exitApp();
+    });
+  }
+
+  document.addEventListener("deviceready", onDeviceReady, false);
 
 
 

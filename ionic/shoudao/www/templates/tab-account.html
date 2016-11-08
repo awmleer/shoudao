@@ -11,7 +11,7 @@
       </div>
 
       <p style="margin: 18px 0 3px;">{{ user_info.name }}</p>
-      <p>
+      <p ng-if="!pre_release">
         <span class="label label-warning" style="">{{user_info.type}}</span>
       </p>
     </div>
@@ -23,13 +23,13 @@
       <ion-item class="item-icon-left">
         <i class="icon ion-paper-airplane"></i> 累计发送<span style="float: right;">{{user_info.message_sent}}条通知/{{user_info.text_sent}}条短信</span>
       </ion-item>
-      <ion-item ui-sref="tab.upgrade" class="item-icon-left item-icon-right">
+      <ion-item ui-sref="tab.upgrade" class="item-icon-left item-icon-right" ng-if="!pre_release">
         <i class="icon ion-android-arrow-up"></i> 升级账户<i class="icon ion-chevron-right icon-accessory"></i>
       </ion-item>
-      <ion-item ui-sref="tab.packs" class="item-icon-left item-icon-right">
+      <ion-item ui-sref="tab.packs" class="item-icon-left item-icon-right" ng-if="!pre_release">
         <i class="icon ion-filing"></i> 购买短信包<i class="icon ion-chevron-right icon-accessory"></i>
       </ion-item>
-      <ion-item ng-click="redeem()" class="item-icon-left item-icon-right">
+      <ion-item ng-click="redeem()" class="item-icon-left item-icon-right" ng-if="!pre_release">
         <i class="icon ion-ios-barcode"></i> 使用兑换码<i class="icon ion-chevron-right icon-accessory"></i>
       </ion-item>
       <ion-item ui-sref="tab.setting" class="item-icon-left item-icon-right">
