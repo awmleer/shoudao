@@ -8,9 +8,9 @@
       <!--<input type="text" name="json" id="input_json">-->
       <!--<input type="submit" value="submit_preview">-->
     <!--</form>-->
-    <div style="position: fixed;top: 150px;left: 0;width: 100%;z-index: 1;text-align: center;font-size: 14px">加载中…</div>
+    <div style="position: fixed;top: 150px;left: 0;width: 100%;z-index: 1;text-align: center;font-size: 14px" ng-show="!iframe_load_done">加载中…</div>
     <!-- when the form is submitted, the server response will appear in this iframe -->
-    <iframe id="iframe_preview" name="iframe_preview" style="width: 100%;height: 100%;position: fixed;top: 0;left: 0;z-index: 10"></iframe>
+    <iframe id="iframe_preview" name="iframe_preview" style="width: 100%;position: fixed;top: 0;left: 0;z-index: 10" ng-style="{'height':iframe_height}"></iframe>
     <!--src="not_submitted_yet.aspx"-->
   </ion-content>
 </ion-modal-view>

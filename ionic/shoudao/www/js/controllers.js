@@ -224,10 +224,10 @@ angular.module('shoudao.controllers', [])
     };
 
     $scope.$on('$destroy',function(){
-      console.log('$destroy');
       Contacts.clear_check();
       Groups.clear_check();
       $scope.modal_select_recipients.remove();// Cleanup the modal
+      $scope.modal_preview.remove();
     });
 
     //search box
@@ -376,10 +376,13 @@ angular.module('shoudao.controllers', [])
 
     $scope.show_preview= function () {
       $scope.modal_preview.show();
+      $scope.iframe_load_done=false;
       // document.getElementById("input_json").value=angular.toJson($scope.make_obj());
       // document.getElementById("form_preview").submit();
+      $scope.iframe_height=window.screen.height-44;
       $http.post(API_URL+'/m/preview/', $scope.make_obj()).then(function (response) {
         document.getElementById('iframe_preview').srcdoc=response.data;
+        $scope.iframe_load_done=true;
       }, function () {
         alert("请求失败");
       });
