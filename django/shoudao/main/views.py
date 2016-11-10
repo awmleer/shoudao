@@ -581,7 +581,7 @@ def m_submit(request,message_id,recipient,token):
                 commenter=r
         data_notice=message.data_notice
         comments=data_notice.get_comments()
-        comments.append({'phone':commenter['phone'],'name':commenter['name'],'text':text,'time':timezone.now().strftime('%Y-%m-%d %H:%M %a')})
+        comments.append({'phone':commenter['phone'],'name':commenter['name'],'text':text,'time':datetime.now().strftime('%Y-%m-%d %H:%M %a')})
         data_notice.set_comments(comments)
         data_notice.save()
         return HttpResponse('success')
