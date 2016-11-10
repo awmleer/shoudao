@@ -124,7 +124,7 @@ USE_TZ = True
 
 # Static files 静态文件配置
 STATIC_URL = '/static/'
-STATIC_ROOT='/var/www/shoudao/static'
+STATIC_ROOT='/var/www/shoudao/'
 if DEBUG:
     # STATIC_ROOT=os.path.join(BASE_DIR,'../yksx_static/static')
     STATICFILES_DIRS = (

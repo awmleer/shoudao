@@ -148,3 +148,10 @@ class Information(models.Model):
         return json.loads(self.value)
     def __str__(self):
         return self.key
+
+
+
+class ShortMessageCode(models.Model):
+    phone=models.CharField(max_length=15)
+    code=models.CharField(max_length=10)
+    create_time=models.DateTimeField(auto_now_add=True)

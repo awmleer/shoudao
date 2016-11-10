@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.utils import timezone
 from datetime import datetime, timedelta
 import django.contrib.auth as auth #用户登录认证
+from django.contrib.auth.models import User
 from main.models import *
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required,permission_required
@@ -37,6 +38,53 @@ def login(request):
         # The username and password were incorrect.
         res = HttpResponse('用户名或密码错误')
     return res
+
+
+
+
+@require_http_methods(['POST'])
+def signup(request):
+
+    return res
+
+
+
+
+@require_http_methods(['GET'])
+def short_message_code(request):
+    req = urllib.request.urlopen(url="https://captcha.luosimao.com/api/site_verify", data=urllib.parse.urlencode({"api_key": "57e4254c30b395edb9bc96da679e5a77", "response": request.GET['token']}).encode('utf-8'))
+    response_dict = json.loads(req.read().decode('utf-8'))
+    logger.info(response_dict)
+    # response_dict = json.loads(responsee.content.decode())
+    if response_dict['res'] == 'failed':
+        return HttpResponse('wrong_token')
+    if len(User.objects.filter(username='18811112222'))>0:
+        return HttpResponse('该手机号已经注册过了')
+    codes=ShortMessageCode.objects.filter(phone=request.GET['phone']).order_by('-create_time')
+    if len(codes)>0:
+        if codes[0].create_time<timezone.now()+timedelta(minutes=2):
+            return HttpResponse('两分钟之内只能发送一次验证码')
+
+    ShortMessageCode.objects.create(phone=request.GET['phone'], code=str(random.randint(1000, 9999)))
+
+    # todo 短信发送code
+
+    # info = verification.objects(phone=phone).first()
+    # code = str(random.randint(1000,9999))
+    # flag = True
+    # if (info == None):
+    #     info_save = verification(phone=phone, last_verify=int(time.time() * 1000), verify_code=code)
+    #     info_save.save()
+    #     info = verification.objects(phone=phone).first()
+    #     flag = False
+    # operate = u'注册用户'
+    # person = u'新用户' + phone
+    # print (sendsms4(operate.encode('utf-8'), code, person.encode('utf-8'), int(phone)))
+    # info['last_verify'] = int(time.time() * 1000)
+    # info['verify_code'] = code
+    # info.save()
+    # resp = make_response('success', 200)
+    return HttpResponse('success')
 
 
 

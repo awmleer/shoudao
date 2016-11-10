@@ -10,6 +10,8 @@ urlpatterns = [
     url(r'^message/detail/$',views.message_detail),
     url(r'^message/comment/$',views.message_comment),
     url(r'^account/login/$',views.login),
+    url(r'^account/signup/$',views.signup),
+    url(r'^account/short_message_code/$',views.short_message_code),
     url(r'^account/logout/$',views.logout),
     url(r'^account/info/$',views.account_info),
     url(r'^account/change_name/$',views.change_name),

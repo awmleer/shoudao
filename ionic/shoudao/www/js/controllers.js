@@ -442,6 +442,11 @@ angular.module('shoudao.controllers', [])
     $scope.doRefresh= function () {
       $http.get(API_URL+'/account/info/').then(function (response) {
         $rootScope.user_info=response.data;
+        if($rootScope.pre_release==false){
+          if (response.data.type == '样例账户') {
+            $rootScope.pre_release=true;
+          }
+        }
         $scope.$broadcast('scroll.refreshComplete');
       }, function () {
         alert("请求失败");
@@ -483,35 +488,6 @@ angular.module('shoudao.controllers', [])
 
 
   .controller('UpgradeCtrl', function($scope,$rootScope,$http,$ionicPopup,$ionicHistory) {
-    // $scope.items=[
-    //   {
-    //     item_id:'',
-    //     title:'免费账户',
-    //     content:'这里是内容',
-    //     can_buy:false,
-    //     price:0,
-    //     footer:'￥0 /月<span class="float-right">免费使用</span>',
-    //     footer_style:''
-    //   },
-    //   {
-    //     item_id:'account_standard',
-    //     title:'标准账户',
-    //     content:'这里是内容',
-    //     can_buy:true,
-    //     price:5,
-    //     footer:'￥5 /月<span class="float-right">现在购买</span>',
-    //     footer_style:'calm'
-    //   },
-    //   {
-    //     item_id:'account_advance',
-    //     title:'高级账户',
-    //     content:'这里是内容',
-    //     can_buy:true,
-    //     price:15,
-    //     footer:'￥15 /月<span class="float-right">现在购买</span>',
-    //     footer_style:'positive'
-    //   }
-    // ];
     $http.get(API_URL+'/items/upgrade/').then(function (response) {
       $scope.items=response.data;
     }, function () {
@@ -596,35 +572,6 @@ angular.module('shoudao.controllers', [])
 
 
   .controller('PacksCtrl', function($scope,$rootScope,$http,$ionicPopup,$ionicHistory) {
-    // $scope.items=[
-    //   {
-    //     item_id:'',
-    //     title:'100条短信包',
-    //     content:'这里是内容',
-    //     can_buy:true,
-    //     price:0,
-    //     footer:'￥3<span class="float-right">现在购买</span>',
-    //     footer_style:'energized'
-    //   },
-    //   {
-    //     item_id:'account_standard',
-    //     title:'300条短信包',
-    //     content:'这里是内容',
-    //     can_buy:true,
-    //     price:5,
-    //     footer:'￥5<span class="float-right">现在购买</span>',
-    //     footer_style:'calm'
-    //   },
-    //   {
-    //     item_id:'account_advance',
-    //     title:'500条短信包',
-    //     content:'这里是内容',
-    //     can_buy:true,
-    //     price:15,
-    //     footer:'￥15<span class="float-right">现在购买</span>',
-    //     footer_style:'positive'
-    //   }
-    // ];
     $http.get(API_URL+'/items/packs/').then(function (response) {
       $scope.items=response.data;
     }, function () {
@@ -718,6 +665,7 @@ angular.module('shoudao.controllers', [])
       cancelText:'取消',
       okText:'确定'
     }).then(function(res) {
+      if (_.isUndefined(res)) return;
       $http.get(API_URL+'/account/change_name/?new_name='+res).then(function (response) {
         if (response.data == 'success') {
           Account.refresh_user_info();
