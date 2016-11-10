@@ -223,6 +223,34 @@ angular.module('shoudao.controllers', [])
       comment_able:true
     };
 
+    $scope.dirty_check= function () {
+      if ($scope.message.title != '' || $scope.message.content != '' || Contacts.get_checked_contacts().length > 0) return true;
+      if ($scope.message.type=='notice_p' && $scope.buttons.length>0) return true;
+      return false;
+    };
+
+    var destory_event_listener=$scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+      console.log(toState);
+      if (toState.name != 'tab.message-new') {
+        return;
+      }
+      if ($scope.dirty_check()==true) {
+        event.preventDefault();
+        $ionicPopup.confirm({
+          title: '注意',
+          template: '您确定要返回吗？输入的内容将不会被保存',
+          okText:'确定',
+          cancelText:'取消'
+        }).then(function (res) {
+          if (res){
+            // $scope.$on('$stateChangeStart',null);
+            destory_event_listener();
+            $ionicHistory.goBack();
+          }
+        });
+      }
+    });
+
     $scope.$on('$destroy',function(){
       Contacts.clear_check();
       Groups.clear_check();
