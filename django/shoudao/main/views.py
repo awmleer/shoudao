@@ -55,36 +55,26 @@ def short_message_code(request):
     req = urllib.request.urlopen(url="https://captcha.luosimao.com/api/site_verify", data=urllib.parse.urlencode({"api_key": "57e4254c30b395edb9bc96da679e5a77", "response": request.GET['token']}).encode('utf-8'))
     response_dict = json.loads(req.read().decode('utf-8'))
     logger.info(response_dict)
-    # response_dict = json.loads(responsee.content.decode())
     if response_dict['res'] == 'failed':
-        return HttpResponse('wrong_token')
-    if len(User.objects.filter(username='18811112222'))>0:
+        return HttpResponse('wrong_token') #人机验证过期
+    if len(User.objects.filter(username=request.GET['phone']))>0:
         return HttpResponse('该手机号已经注册过了')
     codes=ShortMessageCode.objects.filter(phone=request.GET['phone']).order_by('-create_time')
     if len(codes)>0:
-        if codes[0].create_time<timezone.now()+timedelta(minutes=2):
+        if timezone.now()<codes[0].create_time+timedelta(minutes=2):
             return HttpResponse('两分钟之内只能发送一次验证码')
+    #在数据库中创建code记录
+    new_code=str(random.randint(1000, 9999))
+    ShortMessageCode.objects.create(phone=request.GET['phone'], code=new_code)
+    #发送短信验证码
+    send_success = sms.juhe.send_sms(request.GET['phone'], 14869, {
+        '#code#': new_code})
+    if send_success:
+        return HttpResponse('success')
+    else:
+        return HttpResponse('发送失败')
 
-    ShortMessageCode.objects.create(phone=request.GET['phone'], code=str(random.randint(1000, 9999)))
 
-    # todo 短信发送code
-
-    # info = verification.objects(phone=phone).first()
-    # code = str(random.randint(1000,9999))
-    # flag = True
-    # if (info == None):
-    #     info_save = verification(phone=phone, last_verify=int(time.time() * 1000), verify_code=code)
-    #     info_save.save()
-    #     info = verification.objects(phone=phone).first()
-    #     flag = False
-    # operate = u'注册用户'
-    # person = u'新用户' + phone
-    # print (sendsms4(operate.encode('utf-8'), code, person.encode('utf-8'), int(phone)))
-    # info['last_verify'] = int(time.time() * 1000)
-    # info['verify_code'] = code
-    # info.save()
-    # resp = make_response('success', 200)
-    return HttpResponse('success')
 
 
 
