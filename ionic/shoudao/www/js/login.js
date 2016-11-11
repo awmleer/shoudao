@@ -26,7 +26,13 @@ angular.module('login',['ionic'])
     };
 
     $scope.open_signup=function () {
-      window.open("http://shoudao.sparker.top/signup/signup.html", '_system', 'location=no');
+      var ref=window.open("http://shoudao.sparker.top/signup/signup.html", '_blank', 'location=no,toolbar=no,zoom=no');
+      ref.addEventListener('loadstop', function(event) {
+        console.log(event.url);
+        if (event.url.match("signup_close")) {
+          ref.close();
+        }
+      });
     }
 
 
