@@ -44,8 +44,23 @@ def login(request):
 
 @require_http_methods(['POST'])
 def signup(request):
-
-    return res
+    logger.info(request.body)
+    data=json.loads(request.body.decode())
+    codes=ShortMessageCode.objects.filter(phone=data['phone']).order_by('-create_time')
+    if len(codes)==0:
+        return HttpResponse('验证码错误')
+    if codes[0].code!=data['code']:
+        return HttpResponse('验证码错误')
+    if timezone.now() > codes[0].create_time + timedelta(minutes=15):
+        return HttpResponse('短信验证码已过期，请重新获取')
+    if len(data['name'])>4:
+        return HttpResponse('名字过长（四个字以内）')
+    if len(data['password'])<8:
+        return HttpResponse('密码不能小于八位')
+    new_user = User.objects.create_user(username=data['phone'], password=data['password'])
+    default_text_surplus=Information.objects.get(key='default_text_surplus').value
+    UserInfo.objects.create(user=new_user,name=data['name'],text_surplus=default_text_surplus)
+    return HttpResponse('success')
 
 
 

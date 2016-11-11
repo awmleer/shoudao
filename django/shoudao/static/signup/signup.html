@@ -25,7 +25,7 @@
         </label>
         <label class="item item-input item-stacked-label">
             <span class="input-label">密码</span>
-            <input type="text" placeholder="至少八位" id="password">
+            <input type="password" placeholder="至少八位" id="password">
         </label>
         <div class="item item-input item-stacked-label item-button-right">
             <span class="input-label">短信验证码</span>
@@ -84,7 +84,7 @@
         }
         $("#button_code").attr('disabled','');
         $.ajax({
-            url: "/account/short_message_code",
+            url: "/account/short_message_code/",
             type: "get",
             data: {
                 phone: phone,
@@ -124,7 +124,7 @@
             return;
         }
         $.ajax({
-            url: "/account/signup",
+            url: "/account/signup/",
             type: "post",
             contentType : 'application/json',
             data: JSON.stringify({
@@ -135,9 +135,6 @@
             })
         }).done(function (data) {
             if (data == "success") {
-                //存储用户账号密码
-                store.set('phone', phone);
-                store.set('password',password);
                 alert("注册成功");
                 location.href='signup_close.html';//注册成功，跳转到主页面
             } else {
