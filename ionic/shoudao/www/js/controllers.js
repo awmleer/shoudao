@@ -80,9 +80,7 @@ angular.module('shoudao.controllers', [])
     $scope.showing_all_contacts=false;
 
     $scope.$watch('search.text', function(newValue, oldValue) {
-      // if (newValue == '') {
         $scope.showing_all_contacts=false;
-      // }
     });
     $scope.show_all_contacts= function () {
       $scope.showing_all_contacts=true;
@@ -123,6 +121,9 @@ angular.module('shoudao.controllers', [])
 
     $scope.add_contact= function () {
       Contacts.add_contact(true);
+    };
+    $scope.add_contact_multi=function () {
+      Contacts.add_contact_multi($scope,true);
     };
 
   })
@@ -415,9 +416,7 @@ angular.module('shoudao.controllers', [])
     $scope.showing_all_contacts=false;
 
     $scope.$watch('search.text', function(newValue, oldValue) {
-      // if (newValue == '') {
       $scope.showing_all_contacts=false;
-      // }
     });
     $scope.show_all_contacts= function () {
       $scope.showing_all_contacts=true;

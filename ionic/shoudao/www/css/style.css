@@ -73,6 +73,11 @@ p small{
 .radius-gray{
   width: 100%;border-radius: 4px;background: #f0f0f0
 }
+.radius-gray-in-popup{
+  width: 100%;border-radius: 4px;background: #c1c1c1;
+  padding:10px;
+  margin:6px 0;
+}
 
 
 .message-icon-block.notice{

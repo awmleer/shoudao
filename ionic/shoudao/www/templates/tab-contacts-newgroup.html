@@ -23,6 +23,10 @@
       <div class="item item-icon-right" ng-click="add_contact()" ng-if="search.text=='' || results.length==0">
         手动创建联系人<i class="icon ion-plus-round"></i>
       </div>
+      <div class="item item-icon-right" ng-click="add_contact_multi()" ng-if="search.text=='' || results.length==0">
+        批量添加联系人<i class="icon ion-person-add"></i>
+      </div>
+
       <div ng-if="search.text!='' && results.length==0" style="text-align: center;padding-top: 15px">无查询结果</div>
       <!--被选中的联系人-->
       <ion-checkbox ng-if="search.text=='' && !showing_all_contacts" ng-repeat="contact in contacts | filter:{checked:true}" ng-model="contact.checked" ng-click="contact_click()">{{contact.name}} ({{contact.phone}})</ion-checkbox>

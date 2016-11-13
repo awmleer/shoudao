@@ -89,6 +89,16 @@ angular.module('shoudao.services', [])
       return contacts;
     };
 
+    self.push_to_contacts= function (new_contact) {
+      for (var i = 0; i<$rootScope.contacts.length; i++) {
+        if ($rootScope.contacts[i].phone==new_contact.phone) { //如果已经存在这个手机号，就仅更新姓名和checked属性
+          $rootScope.contacts[i]=new_contact;
+          return;
+        }
+      }
+      $rootScope.contacts.push(new_contact);
+    };
+
     self.add_contact= function (checked) {
       $rootScope.new_contact={name:'',phone:''};
       $ionicPopup.show({
@@ -101,18 +111,68 @@ angular.module('shoudao.services', [])
             text: '<b>确定</b>',
             type: 'button-positive',
             onTap: function(e) {
-              //todo bug! popup didn't hide
               if (!$rootScope.new_contact.name || !$rootScope.new_contact.phone) {
                 //   不允许用户关闭
                 e.preventDefault();
               } else {
                 var contact_tmp={name:$rootScope.new_contact.name,phone:$rootScope.new_contact.phone,checked:checked};
-                $rootScope.contacts.push(contact_tmp);
+                self.push_to_contacts(contact_tmp);
                 self.history.enqueue(contact_tmp);
               }
             }
           }
         ]
+      });
+    };
+
+    self.add_contact_multi=function ($scope,checked) {
+      $scope.data_add_contact_multi={
+        showing_help:false,
+        toggle_help: function () {
+          $scope.data_add_contact_multi.showing_help=!$scope.data_add_contact_multi.showing_help;
+        },
+        text:''
+      };
+      $ionicPopup.show({
+        template: '<textarea ng-show="!data_add_contact_multi.showing_help" ng-model="data_add_contact_multi.text" placeholder="请按照标准格式输入或粘贴联系人列表" style="margin-bottom: 12px;height: 6em"></textarea>' +
+        '<div ng-if="data_add_contact_multi.showing_help">输入格式：<p class="radius-gray-in-popup">姓名 电话号码</p>或者<p class="radius-gray-in-popup">电话号码 姓名</p>姓名和电话之间用空格分隔，联系人和联系人之间换行分隔。例如：<p class="radius-gray-in-popup">张三 18811111111<br>李四 18822222222</p></div>'+
+        '<div style="text-align: center"><button class="button button-small button-clear button-dark" ng-click="data_add_contact_multi.toggle_help()"><i class="icon ion-help-circled"></i> {{data_add_contact_multi.showing_help?"收起":"查看"}}帮助</button></div>',
+        title: '批量添加联系人',
+        scope: $scope,
+        buttons: [
+          { text: '取消' },
+          {
+            text: '<b>确定</b>',
+            type: 'button-positive',
+            onTap: function(e) {
+              if (!$scope.data_add_contact_multi.text) {
+                //不允许用户关闭
+                e.preventDefault();
+              } else {
+                return 'invoke';
+              }
+            }
+          }
+        ]
+      }).then(function(res) {
+        if (res != 'invoke') {
+          return;
+        }
+        var contacts_raw=$scope.data_add_contact_multi.text.split('\n');
+        var reg_phone=/1\d{10}/;
+        var phone_array;
+        console.log(contacts_raw);
+        _.forEach(contacts_raw, function (contact_raw) {
+          if (contact_raw == '')return;
+          phone_array=reg_phone.exec(contact_raw);
+          if (phone_array==null)return;
+          var contact_tmp={name:'',phone:'',checked:checked};
+          contact_tmp.phone=phone_array[0];
+          contact_raw=contact_raw.replace(contact_tmp.phone,'');
+          contact_tmp.name=contact_raw.replace(/ +/g,"");
+          console.log(contact_tmp);
+          self.push_to_contacts(contact_tmp);
+        })
       });
     };
 
