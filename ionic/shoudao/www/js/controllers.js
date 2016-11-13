@@ -406,7 +406,7 @@ angular.module('shoudao.controllers', [])
   })
 
 
-  .controller('SelectRecipientsCtrl',function ($scope) {
+  .controller('SelectRecipientsCtrl',function ($scope,Contacts) {
     //search box
     $scope.search={text:''};
     $scope.clear_search_text= function () {
@@ -442,7 +442,9 @@ angular.module('shoudao.controllers', [])
     $scope.add_contact= function () {
       Contacts.add_contact(true);
     };
-
+    $scope.add_contact_multi=function () {
+      Contacts.add_contact_multi($scope,true);
+    };
     $scope.contact_click= function () {
       if(this.contact.checked)Contacts.history.enqueue(this.contact);
       console.log(this.contact.checked);
