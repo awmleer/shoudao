@@ -20,12 +20,21 @@
       </div>
       <!--<ion-checkbox ng-repeat="contact in contacts | filter:search.text" ng-model="contact.checked">{{contact.name}} ({{contact.phone}})</ion-checkbox>-->
       <ion-checkbox ng-if="search.text | search_valid" ng-repeat="contact in contacts | filter:search.text | limitTo:30 as results" ng-model="contact.checked">{{contact.name}} ({{contact.phone}})</ion-checkbox>
-      <div class="item item-icon-right" ng-click="add_contact()" ng-if="search.text==''">
+      <div class="item item-icon-right" ng-click="add_contact()" ng-if="search.text=='' || results.length==0">
         手动创建联系人<i class="icon ion-plus-round"></i>
       </div>
       <div ng-if="search.text!='' && results.length==0" style="text-align: center;padding-top: 15px">无查询结果</div>
-      <ion-checkbox ng-if="search.text==''" ng-repeat="contact in contacts | filter:{checked:true}" ng-model="contact.checked" ng-click="contact_click()">{{contact.name}} ({{contact.phone}})</ion-checkbox>
-      <ion-checkbox ng-if="search.text==''" ng-repeat="contact in contacts | filter:{checked:false} | contact_in_history" ng-model="contact.checked" ng-click="contact_click()">{{contact.name}} ({{contact.phone}})</ion-checkbox>
+      <!--被选中的联系人-->
+      <ion-checkbox ng-if="search.text=='' && !showing_all_contacts" ng-repeat="contact in contacts | filter:{checked:true}" ng-model="contact.checked" ng-click="contact_click()">{{contact.name}} ({{contact.phone}})</ion-checkbox>
+      <!--历史最近联系人-->
+      <ion-checkbox ng-if="search.text=='' && !showing_all_contacts" ng-repeat="contact in contacts | filter:{checked:false} | contact_in_history" ng-model="contact.checked" ng-click="contact_click()">{{contact.name}} ({{contact.phone}})</ion-checkbox>
+      <!--全部联系人-->
+      <ion-checkbox ng-if="search.text=='' && showing_all_contacts" ng-repeat="contact in contacts" ng-model="contact.checked" ng-click="contact_click()">{{contact.name}} ({{contact.phone}})</ion-checkbox>
+      <!--显示全部联系人 按钮-->
+      <div style="text-align: center">
+        <button class="button button-small button-clear button-dark" ng-if="!showing_all_contacts && search.text==''" ng-click="show_all_contacts()">点我显示全部联系人</button>
+      </div>
+
 
     </ion-list>
   </ion-content>

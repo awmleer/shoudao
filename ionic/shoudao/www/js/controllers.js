@@ -77,6 +77,16 @@ angular.module('shoudao.controllers', [])
     $scope.clear_search_text= function () {
       $scope.search.text='';
     };
+    $scope.showing_all_contacts=false;
+
+    $scope.$watch('search.text', function(newValue, oldValue) {
+      // if (newValue == '') {
+        $scope.showing_all_contacts=false;
+      // }
+    });
+    $scope.show_all_contacts= function () {
+      $scope.showing_all_contacts=true;
+    };
 
     $scope.new_group=function () {
       if ($scope.group.group_name=='') {
@@ -258,49 +268,20 @@ angular.module('shoudao.controllers', [])
       $scope.modal_preview.remove();
     });
 
-    //search box
-    $scope.search={text:''};
-    $scope.clear_search_text= function () {
-      $scope.search.text='';
-    };
-
-    $scope.group_click=function () {
-      console.log(this.group.checked);
-      if (this.group.checked) {
-        _.forEach(this.group.contacts, function (contact) {
-          Contacts.check(contact);
-        });
-      }else{
-        _.forEach(this.group.contacts, function (contact) {
-          Contacts.uncheck(contact);
-        });
-      }
-    };
-
-    $scope.contact_click= function () {
-      if(this.contact.checked)Contacts.history.enqueue(this.contact);
-      console.log(this.contact.checked);
-    };
 
     $ionicModal.fromTemplateUrl('templates/modal-select-recipients.html', {
       scope: $scope,
       animation: 'slide-in-up'
     }).then(function(modal) {
       $scope.modal_select_recipients = modal;
+      $scope.select_recipients = function() {
+        $scope.modal_select_recipients.show();
+      };
+      $scope.commit_select_recipients = function() {
+        $scope.modal_select_recipients.hide();
+      };
     });
-    $scope.select_recipients = function() {
-      $scope.modal_select_recipients.show();
-    };
-    $scope.commit_select_recipients = function() {
-      $scope.modal_select_recipients.hide();
-    };
-    $scope.clear_check= function () {
-      Contacts.clear_check();
-    };
 
-    $scope.add_contact= function () {
-      Contacts.add_contact(true);
-    };
 
     $scope.make_obj= function () {
       var obj={
@@ -421,6 +402,52 @@ angular.module('shoudao.controllers', [])
     };
 
 
+  })
+
+
+  .controller('SelectRecipientsCtrl',function ($scope) {
+    //search box
+    $scope.search={text:''};
+    $scope.clear_search_text= function () {
+      $scope.search.text='';
+    };
+
+    $scope.showing_all_contacts=false;
+
+    $scope.$watch('search.text', function(newValue, oldValue) {
+      // if (newValue == '') {
+      $scope.showing_all_contacts=false;
+      // }
+    });
+    $scope.show_all_contacts= function () {
+      $scope.showing_all_contacts=true;
+    };
+
+    $scope.group_click=function () {
+      console.log(this.group.checked);
+      if (this.group.checked) {
+        _.forEach(this.group.contacts, function (contact) {
+          Contacts.check(contact);
+        });
+      }else{
+        _.forEach(this.group.contacts, function (contact) {
+          Contacts.uncheck(contact);
+        });
+      }
+    };
+
+    $scope.clear_check= function () {
+      Contacts.clear_check();
+    };
+
+    $scope.add_contact= function () {
+      Contacts.add_contact(true);
+    };
+
+    $scope.contact_click= function () {
+      if(this.contact.checked)Contacts.history.enqueue(this.contact);
+      console.log(this.contact.checked);
+    };
   })
 
 

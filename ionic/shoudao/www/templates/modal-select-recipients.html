@@ -1,4 +1,4 @@
-<ion-modal-view>
+<ion-modal-view ng-controller="SelectRecipientsCtrl">
   <ion-header-bar>
     <button class="button button-clear button-assertive" ng-click="clear_check()">清空</button>
     <h1 class="title" style="font-weight: normal">请勾选收件人<span ng-if="contacts|checked_count">&nbsp;(已选{{contacts|checked_count}})</span></h1>
@@ -22,10 +22,16 @@
         手动创建联系人<i class="icon ion-plus-round"></i>
       </div>
       <div ng-if="search.text!='' && results.length==0" style="text-align: center;padding-top: 15px">无查询结果</div>
-      <ion-checkbox ng-if="search.text==''" ng-repeat="contact in contacts | filter:{checked:true}" ng-model="contact.checked" ng-click="contact_click()">{{contact.name}} ({{contact.phone}})</ion-checkbox>
-      <ion-checkbox ng-if="search.text==''" ng-repeat="contact in contacts | filter:{checked:false} | contact_in_history" ng-model="contact.checked" ng-click="contact_click()">{{contact.name}} ({{contact.phone}})</ion-checkbox>
-
-
+      <!--被选中的联系人-->
+      <ion-checkbox ng-if="search.text=='' && !showing_all_contacts" ng-repeat="contact in contacts | filter:{checked:true}" ng-model="contact.checked" ng-click="contact_click()">{{contact.name}} ({{contact.phone}})</ion-checkbox>
+      <!--历史最近联系人-->
+      <ion-checkbox ng-if="search.text=='' && !showing_all_contacts" ng-repeat="contact in contacts | filter:{checked:false} | contact_in_history" ng-model="contact.checked" ng-click="contact_click()">{{contact.name}} ({{contact.phone}})</ion-checkbox>
+      <!--全部联系人-->
+      <ion-checkbox ng-if="search.text=='' && showing_all_contacts" ng-repeat="contact in contacts" ng-model="contact.checked" ng-click="contact_click()">{{contact.name}} ({{contact.phone}})</ion-checkbox>
+      <!--显示全部联系人 按钮-->
+      <div style="text-align: center">
+        <button class="button button-small button-clear button-dark" ng-if="!showing_all_contacts && search.text==''" ng-click="show_all_contacts()">点我显示全部联系人</button>
+      </div>
     </ion-list>
   </ion-content>
 </ion-modal-view>

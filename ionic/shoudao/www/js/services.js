@@ -139,7 +139,7 @@ angular.module('shoudao.services', [])
         }
         if (!existence) {
           $rootScope.contacts_history.unshift({phone:contact.phone,name:contact.name});
-          while ($rootScope.contacts_history.length>20){
+          while ($rootScope.contacts_history.length>10){
             $rootScope.contacts_history.pop();
           }
         }
