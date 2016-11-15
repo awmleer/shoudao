@@ -510,6 +510,27 @@ angular.module('shoudao.controllers', [])
       });
     };
 
+    $scope.daily_sign= function () {
+      $http.get(API_URL + '/account/daily_sign/').then(function (response) {
+        if (response.data.status == 'fail') {
+          $ionicPopup.alert({
+            okText: '好的',
+            title: '注意',
+            template: response.data.message
+          });
+        }else{
+          $ionicPopup.alert({
+            okText: '好的',
+            title: '成功',
+            template: '签到成功，您获得了'+response.data.got+'条短信量'
+          });
+          $scope.doRefresh();
+        }
+      }, function () {
+        alert("请求失败");
+      });
+    };
+
     $scope.$on('$ionicView.enter', function(e) {
       $scope.doRefresh();
     });

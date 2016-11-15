@@ -23,6 +23,11 @@
       <ion-item class="item-icon-left">
         <i class="icon ion-paper-airplane"></i> 累计发送<span style="float: right;">{{user_info.message_sent}}条通知/{{user_info.text_sent}}条短信</span>
       </ion-item>
+      <ion-item ng-click="daily_sign()" class="item-icon-left" ng-if="!pre_release" ng-class="{'item-icon-right':user_info.today_signed}">
+        <i class="icon ion-android-calendar"></i> 每日签到
+        <span style="float: right;" ng-if="!user_info.today_signed">签到赚短信</span>
+        <i ng-if="user_info.today_signed" class="icon ion-checkmark-circled"></i>
+      </ion-item>
       <ion-item ui-sref="tab.upgrade" class="item-icon-left item-icon-right" ng-if="!pre_release">
         <i class="icon ion-android-arrow-up"></i> 升级账户<i class="icon ion-chevron-right icon-accessory"></i>
       </ion-item>

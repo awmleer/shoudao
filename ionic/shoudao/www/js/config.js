@@ -9,6 +9,6 @@ if (DEBUG) {
 
 var VERSION={
   major:0,
-  minor:3,
-  revision:1
+  minor:4,
+  revision:0
 };
