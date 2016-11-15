@@ -109,6 +109,17 @@ def is_logged_in(request):
 
 
 
+@login_required
+@require_http_methods(['GET'])
+def daily_sign(request):
+    user_info=request.user.user_info.get()
+    if timezone.now().date() == user_info.last_daily_sign_date:
+        return JsonResponse({'status':'fail','message':'今天您已经签到过啦'})
+    user_info.text_surplus+=2
+    user_info.last_daily_sign_date=timezone.now().date()
+    user_info.save()
+    return JsonResponse({'status':'success','got':2})
+
 
 
 
@@ -324,7 +335,8 @@ def account_info(request):
         'expiration':user_info.expiration,
         'message_sent':user_info.message_sent,
         'text_sent':user_info.text_sent,
-        'text_surplus':user_info.text_surplus
+        'text_surplus':user_info.text_surplus,
+        'today_signed':user_info.last_daily_sign_date==timezone.now().date() #今天是否已经签到
     }
     return JsonResponse(res)
 

@@ -12,6 +12,7 @@ class UserInfo(models.Model):
     message_sent=models.PositiveIntegerField(default=0)
     text_sent=models.PositiveIntegerField(default=0)
     text_surplus=models.PositiveIntegerField(default=0)
+    last_daily_sign_date=models.DateField()
     # def get_text_surplus(self):
     #     return self.text_limit-self.text_sent
     def __str__(self):
