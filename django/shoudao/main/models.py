@@ -3,6 +3,16 @@ import json
 from django.utils import timezone
 
 
+class Version(models.Model):
+    platform=models.CharField(max_length=15)
+    major=models.SmallIntegerField()
+    minor=models.SmallIntegerField()
+    revision=models.SmallIntegerField()
+    status=models.CharField(max_length=20) #pre_release,normal,old,outdated
+    def __str__(self):
+        return self.platform+' | '+str(self.major)+'.'+str(self.minor)+'.'+str(self.revision)+' | '+self.status
+
+
 class UserInfo(models.Model):
     user=models.ForeignKey('auth.User',on_delete=models.CASCADE,related_name='user_info')
     name = models.CharField(max_length=50, default='新用户')

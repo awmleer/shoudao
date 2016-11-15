@@ -20,6 +20,19 @@ logger = logging.getLogger('django')
 
 
 
+
+@require_http_methods(['POST'])
+def app_check(request):
+    data=json.loads(request.body.decode())
+    logger.info(data)
+    v=Version.objects.get(major=data['version']['major'],minor=data['version']['minor'],revision=data['version']['revision'],platform=data['platform'])
+    return JsonResponse({
+        'status':v.status,
+        'download_url':Information.objects.get(key='download_url').get_value()[data['platform']]
+    })
+
+
+
 @require_http_methods(["GET","POST"])
 def login(request):
     data = json.loads(request.body.decode())

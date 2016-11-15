@@ -9,7 +9,7 @@
   <script src="js/config.js"></script>
   <script src="lib/store.min.js"></script>
   <script src="lib/jquery.min.js"></script>
-
+  <script src="lib/lodash.js"></script>
 </head>
 <body>
 
@@ -58,52 +58,88 @@
     });
   }
 
-  function bigger_one(v1,v2) {
-    if(v1.major>v2.major)return 1;
-    if(v1.major<v2.major)return 2;
-    if(v1.minor>v2.minor)return 1;
-    if(v1.minor<v2.minor)return 2;
-    if(v1.revision>v2.revision)return 1;
-    if(v1.revision<v2.revision)return 2;
-    return 0;
-  }
+//  function bigger_one(v1,v2) {
+//    if(v1.major>v2.major)return 1;
+//    if(v1.major<v2.major)return 2;
+//    if(v1.minor>v2.minor)return 1;
+//    if(v1.minor<v2.minor)return 2;
+//    if(v1.revision>v2.revision)return 1;
+//    if(v1.revision<v2.revision)return 2;
+//    return 0;
+//  }
 
 
   function onDeviceReady() {
+    if (_.isUndefined(device.platform)) {
+      alert('APP异常，请重新启动或重新安装');
+      navigator.app.exitApp();
+    }
     $.ajax({
-      url: API_URL+"/information/versions/json/",
-      type: "get"
+      url: API_URL+"/app/check/",
+      type: "post",
+      headers: {'Content-Type': 'application/json'},
+      data: JSON.stringify({
+        platform:device.platform,
+        version:VERSION
+      })
     }).done(function (data) {
-      var versions=data;
-      if(bigger_one(VERSION,versions.latest)==1){
+      if (data.status == 'pre_release') {
         store.set('pre_release',true);
-      }else{
+      }else {
         store.set('pre_release',false);
-      }
-      if(bigger_one(VERSION,versions.oldest)==2){//如果版本号低于oldest 强制更新
-        if (device.platform == 'Android') {
-          alert("当前APP版本号过低，为了您的正常使用，请先下载最新版");
-          window.open(data.download_url, '_system', 'location=no');
-        }
-        if (device.platform == 'iOS') {
-          alert('当前APP版本号过低，我们已不再支持该版本，强烈建议您去App Store进行更新');
-          navigator.app.exitApp();
-        }
-      }else if(bigger_one(VERSION,versions.normal)==2){//如果版本号低于normal 建议更新
-        if (device.platform == 'Android') { //只有Android才提示升级
+        if (data.status == 'old') {
           if (confirm("发现新版本，是否立即升级？")) {
             window.open(data.download_url, '_system', 'location=no');
+            navigator.app.exitApp();
           }
-        }else{
-          auto_login();
+        }else if (data.status == 'outdated') {
+          alert("当前APP版本号过低，为了您的正常使用，请先更新至最新版");
+          window.open(data.download_url, '_system', 'location=no');
+          navigator.app.exitApp();
+        }else{ //如果status异常，就直接退出APP
+          navigator.app.exitApp();
         }
-      }else{//如果版本号正常
-        auto_login();
       }
+      auto_login();
     }).fail(function () {
       alert('网络异常，请检查网络连接');
       navigator.app.exitApp();
     });
+
+//    $.ajax({
+//      url: API_URL+"/information/versions/json/",
+//      type: "get"
+//    }).done(function (data) {
+//      var versions=data;
+//      if(bigger_one(VERSION,versions.latest)==1){
+//        store.set('pre_release',true);
+//      }else{
+//        store.set('pre_release',false);
+//      }
+//      if(bigger_one(VERSION,versions.oldest)==2){//如果版本号低于oldest 强制更新
+//        if (device.platform == 'Android') {
+//          alert("当前APP版本号过低，为了您的正常使用，请先下载最新版");
+//          window.open(data.download_url, '_system', 'location=no');
+//        }
+//        if (device.platform == 'iOS') {
+//          alert('当前APP版本号过低，我们已不再支持该版本，强烈建议您去App Store进行更新');
+//          navigator.app.exitApp();
+//        }
+//      }else if(bigger_one(VERSION,versions.normal)==2){//如果版本号低于normal 建议更新
+//        if (device.platform == 'Android') { //只有Android才提示升级
+//          if (confirm("发现新版本，是否立即升级？")) {
+//            window.open(data.download_url, '_system', 'location=no');
+//          }
+//        }else{
+//          auto_login();
+//        }
+//      }else{//如果版本号正常
+//        auto_login();
+//      }
+//    }).fail(function () {
+//      alert('网络异常，请检查网络连接');
+//      navigator.app.exitApp();
+//    });
   }
 
   document.addEventListener("deviceready", onDeviceReady, false);

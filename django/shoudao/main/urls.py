@@ -4,6 +4,7 @@ from . import views
 
 app_name = 'main'
 urlpatterns = [
+    url(r'^app/check/$',views.app_check),
     url(r'^message/new/$',views.message_new),
     url(r'^message/remind/all/$',views.message_remind_all),
     url(r'^message/all/$',views.message_all),
