@@ -43,6 +43,7 @@ def login(request):
             # User is valid, active and authenticated
             auth.login(request, user)
             res = HttpResponse('success')
+            UserLog.objects.create(user=user,action='login')
         else:
             # The password is valid, but the account has been disabled!
             res = HttpResponse('您的账号已被锁定')
@@ -73,6 +74,7 @@ def signup(request):
     new_user = User.objects.create_user(username=data['phone'], password=data['password'])
     default_text_surplus=Information.objects.get(key='default_text_surplus').value
     UserInfo.objects.create(user=new_user,name=data['name'],text_surplus=default_text_surplus)
+    UserLog.objects.create(user=new_user, action='signup')
     return HttpResponse('success')
 
 
@@ -108,6 +110,7 @@ def short_message_code(request):
 
 @require_http_methods(['GET'])
 def logout(request):
+    UserLog.objects.create(user=request.user, action='logout')
     auth.logout(request)
     return HttpResponse('success')
 
@@ -118,6 +121,7 @@ def logout(request):
 @login_required
 def is_logged_in(request):
     # logger.info(request.user.user_info.get())
+    UserLog.objects.create(user=request.user, action='is_logged_in')
     return HttpResponse('success')
 
 
@@ -131,6 +135,7 @@ def daily_sign(request):
     user_info.text_surplus+=2
     user_info.last_daily_sign_date=timezone.now().date()
     user_info.save()
+    UserLog.objects.create(user=request.user, action='daily_sign')
     return JsonResponse({'status':'success','got':2})
 
 
@@ -166,6 +171,7 @@ def groups_new(request):
     group.set_contacts(data['contacts'])
     # todo 每个分组中联系人数量上限
     group.save()
+    UserLog.objects.create(user=request.user, action='groups_new')
     return HttpResponse(group.id)
 
 
@@ -183,6 +189,7 @@ def groups_delete(request):
     if groups[0].user!=request.user:
         return HttpResponse('您没有权限该分组')
     groups[0].delete()
+    UserLog.objects.create(user=request.user, action='groups_delete')
     return HttpResponse('success')
 
 
@@ -242,6 +249,7 @@ def message_new(request):
     message.set_recipients(recipients)
     message.save()
 
+    UserLog.objects.create(user=request.user, action='message_new',info='{"send_count":%d}'%send_count)
     return HttpResponse('success')
 
 
@@ -265,6 +273,7 @@ def message_remind_all(request):
     user_info.text_surplus+=(-send_count)
     user_info.save()
 
+    UserLog.objects.create(user=request.user, action='message_remind_all')
     return HttpResponse('success')
 
 
@@ -380,6 +389,7 @@ def change_password(request):
     if len(new_password)<8:return HttpResponse('密码长度过短')
     request.user.set_password(new_password)
     request.user.save()
+    UserLog.objects.create(user=request.user, action='change_password')
     auth.logout(request)
     return HttpResponse('success')
 
@@ -437,7 +447,7 @@ def buy_done(request): #云通付回调
         data=request.POST
     else:
         data=request.GET
-    logger.info(data)
+    # logger.info(data)
     m = hashlib.md5()
     # 顺序：out_order_no、total_fee、trade_status、云通付PID、云通付KEY
     m.update((data['out_order_no']+data['total_fee']+data['trade_status']+settings.PASSPAY['pid']+settings.PASSPAY['key']).encode('utf-8'))
@@ -454,8 +464,12 @@ def buy_done(request): #云通付回调
     order.status='paid'
     order.save()
     #todo
-    item_handle(order.user,order.item)
+
+    item_handle(order.user,order.item,order.amount)
+    UserLog.objects.create(user=order.user, action='buy_done',info='{"item":"%s","amount":%d}'%(order.item,order.amount))
     return HttpResponse('success')
+
+
 
 
 def redeem(request,code):
@@ -463,15 +477,15 @@ def redeem(request,code):
     if len(redeem_codes)==0:return HttpResponse('兑换码无效，请检查是否输错')
     redeem_code=redeem_codes[0]
     if redeem_code.used:return HttpResponse('该兑换码已经使用过了')
-    item_handle(request.user,redeem_code.item)
+    item_handle(request.user,redeem_code.item,1)
     redeem_code.used=True
     redeem_code.who_used=request.user
     redeem_code.save()
-
+    UserLog.objects.create(user=request.user, action='redeem_use',info='{"item":"%s","amount":1}'%redeem_code.item)
     return HttpResponse('success')
 
 
-def item_handle(user,item):
+def item_handle(user,item,amount):
     user_info = user.user_info.get()
     # if item=='account_standard':
     #     if user_info.type=='免费账户': #新购
@@ -483,13 +497,13 @@ def item_handle(user,item):
     if item=='account_advance':
         if user_info.type=='免费账户': #新购
             user_info.type='高级账户'
-            user_info.expiration=timezone.now()+timedelta(days=30)
+            user_info.expiration=timezone.now()+timedelta(days=30*amount)
         else: #续费
-            user_info.expiration+=timedelta(days=30)
-    if item=='pack_10':user_info.text_surplus+=10
-    if item=='pack_50':user_info.text_surplus+=50
-    if item=='pack_100':user_info.text_surplus+=100
-    if item=='pack_300':user_info.text_surplus+=300
+            user_info.expiration+=timedelta(days=30*amount)
+    if item=='pack_10':user_info.text_surplus+=10*amount
+    if item=='pack_50':user_info.text_surplus+=50*amount
+    if item=='pack_100':user_info.text_surplus+=100*amount
+    if item=='pack_300':user_info.text_surplus+=300*amount
 
     user_info.save()
 

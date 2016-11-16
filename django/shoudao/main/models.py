@@ -166,3 +166,16 @@ class ShortMessageCode(models.Model):
     phone=models.CharField(max_length=15)
     code=models.CharField(max_length=10)
     create_time=models.DateTimeField(auto_now_add=True)
+
+
+class UserLog(models.Model):
+    user=models.ForeignKey('auth.User')
+    time=models.DateTimeField(auto_now_add=True)
+    action=models.CharField(max_length=15)
+    info=models.CharField(max_length=20,default='')
+    def set_info(self, x):
+        self.info = json.dumps(x)
+    def get_info(self):
+        return json.loads(self.info)
+    def __str__(self):
+        return timezone.localtime(self.time).strftime('%Y-%m-%d %H:%M:%S')+' | '+self.user.user_info.get().name+' | '+self.action
