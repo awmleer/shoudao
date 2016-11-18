@@ -14,6 +14,7 @@ from django.conf import settings
 import random,string
 import  urllib.request,urllib.parse
 import hashlib
+import random
 
 import logging
 logger = logging.getLogger('django')
