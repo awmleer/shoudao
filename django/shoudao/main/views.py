@@ -130,10 +130,10 @@ def is_logged_in(request):
 @require_http_methods(['GET'])
 def daily_sign(request):
     user_info=request.user.user_info.get()
-    if timezone.now().date() == user_info.last_daily_sign_date:
+    if timezone.localtime(timezone.now()).date() == user_info.last_daily_sign_date:
         return JsonResponse({'status':'fail','message':'今天您已经签到过啦'})
     user_info.text_surplus+=2
-    user_info.last_daily_sign_date=timezone.now().date()
+    user_info.last_daily_sign_date=timezone.localtime(timezone.now()).date()
     user_info.save()
     UserLog.objects.create(user=request.user, action='daily_sign')
     return JsonResponse({'status':'success','got':2})
@@ -338,7 +338,7 @@ def message_comment(request):
     message=Message.objects.get(id=data['message_id'])
     if message.user!=request.user: return HttpResponseForbidden()
     comments=message.data_notice.get_comments()
-    comments.append({'phone': request.user.username, 'name': request.user.user_info.get().name, 'text': data['text'],'time': timezone.now().strftime('%Y-%m-%d %H:%M %a')})
+    comments.append({'phone': request.user.username, 'name': request.user.user_info.get().name, 'text': data['text'],'time': timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M %a')})
     message.data_notice.set_comments(comments)
     message.data_notice.save()
     return HttpResponse('success')
@@ -358,7 +358,7 @@ def account_info(request):
         'message_sent':user_info.message_sent,
         'text_sent':user_info.text_sent,
         'text_surplus':user_info.text_surplus,
-        'today_signed':user_info.last_daily_sign_date==timezone.now().date() #今天是否已经签到
+        'today_signed':user_info.last_daily_sign_date==timezone.localtime(timezone.now()).date() #今天是否已经签到
     }
     return JsonResponse(res)
 
