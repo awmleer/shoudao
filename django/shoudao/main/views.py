@@ -133,11 +133,12 @@ def daily_sign(request):
     user_info=request.user.user_info.get()
     if timezone.localtime(timezone.now()).date() == user_info.last_daily_sign_date:
         return JsonResponse({'status':'fail','message':'今天您已经签到过啦'})
-    user_info.text_surplus+=random.randint(1, 3)
+    text_got=random.randint(1, 3)
+    user_info.text_surplus+=text_got
     user_info.last_daily_sign_date=timezone.localtime(timezone.now()).date()
     user_info.save()
     UserLog.objects.create(user=request.user, action='daily_sign')
-    return JsonResponse({'status':'success','got':2})
+    return JsonResponse({'status':'success','got':text_got})
 
 
 
