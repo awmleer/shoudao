@@ -1,5 +1,15 @@
 angular.module('shoudao.services', [])
 
+  .service('Popup', function ($ionicPopup) {
+    this.alert= function (title,template) {
+      $ionicPopup.alert({
+        okText: '好的',
+        title: title,
+        template: template
+      });
+    };
+  })
+
   .service('Contacts',function ($rootScope,$ionicPopup) {
     var self=this;
     self.get_contacts= function () {

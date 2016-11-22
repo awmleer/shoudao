@@ -23,17 +23,91 @@ angular.module('shoudao.controllers', [])
 
   })
 
-  .controller('ContactsListCtrl', function($scope, Contacts, $rootScope, $stateParams, $http, $ionicHistory,$ionicPopup) {
+  .controller('ContactsListCtrl', function($scope, Contacts, $rootScope, $stateParams, $http, $ionicHistory,$ionicPopup,Popup,$ionicModal,Groups) {
     if ($stateParams.group_index == 'all') {
       $scope.all=true;
     }else{
       $scope.all=false;
       $scope.group=$rootScope.groups[$stateParams.group_index];
     }
-    // $rootScope.contacts=[
-    //   {name:'啦啦啦',checked:false,phone:18112345678},
-    //   {name:'哈哈哈',checked:false,phone:18122223333}
-    // ];
+
+    $scope.modifying=false;
+    $scope.modify_group_contacts={
+      modify:function () {
+        $scope.group_contacts_tmp=$scope.group.contacts;
+        $scope.modify_group_contacts.commit_loading=false;
+        $scope.modifying=true;
+      },
+      add:function () {
+        $ionicModal.fromTemplateUrl('templates/modal-select-contacts.html', {
+          scope: $scope,
+          animation: 'slide-in-up'
+        }).then(function(modal) {
+          $scope.modal_select_contacts = modal;
+          modal.show();
+          $scope.select_contacts = function() {
+            $scope.modal_select_contacts.show();
+          };
+          $scope.commit_select_contacts = function() {
+            $scope.modal_select_contacts.hide();
+            _.forEach(Contacts.get_checked_contacts(),function (contact) {
+              $scope.group_contacts_tmp.push(contact);
+            })
+          };
+        });
+      },
+      commit_loading:false,
+      commit: function () {
+        $scope.modify_group_contacts.commit_loading=true;
+        $http.post(API_URL+'/groups/update_contacts/', {
+          group_id:$scope.group.group_id,
+          contacts:$scope.group.contacts
+        }).then(function (response) {
+          if (response.data == 'success') {
+            Groups.refresh();
+            $scope.group.contacts=$scope.group_contacts_tmp;
+            $scope.modifying=false;
+          }else {
+            Popup.alert('失败',response.data);
+          }
+        }, function () {
+          alert("请求失败");
+        });
+      },
+      cancel: function () {
+        $scope.modifying=false;
+      }
+    };
+
+
+    $scope.change_group_name= function () {
+      $ionicPopup.prompt({
+        title: '修改分组名',
+        template: '请输入新的分组名',
+        inputType: 'text',
+        inputPlaceholder: '',
+        okText:'确定',
+        cancelText:'取消'
+      }).then(function(res) {
+        if (_.isUndefined(res))return;
+        console.log('Your password is', res);
+        $http.post(API_URL+'/groups/change_name/', {
+          group_id:$scope.group.group_id,
+          new_group_name:res
+        }).then(function (response) {
+          if (response.data == 'success') {
+            $scope.group.group_name=res;
+            $rootScope.groups[$stateParams.group_index].group_name=res;
+            Popup.alert('成功','修改分组名成功');
+          }else {
+            Popup.alert('失败',response.data);
+          }
+        }, function () {
+          alert("请求失败");
+        });
+      });
+    };
+
     $scope.delete_group= function () {
       var confirmPopup = $ionicPopup.confirm({
         title: '删除',
@@ -265,21 +339,21 @@ angular.module('shoudao.controllers', [])
     $scope.$on('$destroy',function(){
       Contacts.clear_check();
       Groups.clear_check();
-      $scope.modal_select_recipients.remove();// Cleanup the modal
+      $scope.modal_select_contacts.remove();// Cleanup the modal
       $scope.modal_preview.remove();
     });
 
 
-    $ionicModal.fromTemplateUrl('templates/modal-select-recipients.html', {
+    $ionicModal.fromTemplateUrl('templates/modal-select-contacts.html', {
       scope: $scope,
       animation: 'slide-in-up'
     }).then(function(modal) {
-      $scope.modal_select_recipients = modal;
-      $scope.select_recipients = function() {
-        $scope.modal_select_recipients.show();
+      $scope.modal_select_contacts = modal;
+      $scope.select_contacts = function() {
+        $scope.modal_select_contacts.show();
       };
-      $scope.commit_select_recipients = function() {
-        $scope.modal_select_recipients.hide();
+      $scope.commit_select_contacts = function() {
+        $scope.modal_select_contacts.hide();
       };
     });
 
@@ -406,7 +480,7 @@ angular.module('shoudao.controllers', [])
   })
 
 
-  .controller('SelectRecipientsCtrl',function ($scope,Contacts) {
+  .controller('SelectContactsCtrl',function ($scope, Contacts) {
     //search box
     $scope.search={text:''};
     $scope.clear_search_text= function () {

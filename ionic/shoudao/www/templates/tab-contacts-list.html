@@ -1,16 +1,40 @@
 <ion-view view-title="{{all?'全部联系人':group.group_name}}">
   <ion-nav-buttons side="right">
-    <button class="button button-positive" ng-click="fresh_contacts()" ng-if="all">刷新</button>
-    <button class="button button-assertive" ng-click="delete_group()" ng-if="!all">删除</button>
-    <!--todo 编辑、删除分组-->
+    <button class="button button-dark button-outline" ng-click="fresh_contacts()" ng-if="all">刷新</button>
+    <button class="button button-dark button-outline" ng-click="modify_group_contacts.modify()" ng-if="!all && !modifying">编辑</button>
+    <button class="button button-dark button-outline" ng-click="modify_group_contacts.cancel()" ng-if="!all && modifying"
+            style="margin-right: 6px">取消</button>
+    <button class="button button-balanced" ng-class="{'disabled':modify_group_contacts.commit_loading}" ng-click="modify_group_contacts.commit()" ng-if="!all && modifying"><i ng-if="modify_group_contacts.commit_loading" class="fa fa-circle-o-notch fa-spin"></i> 保存</button>
   </ion-nav-buttons>
   <ion-content>
-    <ul class="list" ng-if="all">
-      <li ng-repeat="contact in contacts" class="item">{{contact.name}} ({{contact.phone}})</li>
-    </ul>
-    <ul class="list" ng-if="!all">
-      <li ng-repeat="contact in group.contacts" class="item">{{contact.name}} ({{contact.phone}})</li>
-    </ul>
+    <ion-list ng-if="!modifying">
+      <ion-item ng-repeat="contact in contacts" ng-if="all">
+        <li ng-repeat="contact in contacts" class="item">{{contact.name}} ({{contact.phone}})</li>
+      </ion-item>
+      <ion-item ng-repeat="contact in group.contacts" ng-if="!all">
+        {{contact.name}} ({{contact.phone}})
+      </ion-item>
+    </ion-list>
+
+    <ion-list ng-if="modifying && !all" show-delete="true">
+      <ion-item ng-repeat="contact in group_contacts_tmp">
+        {{contact.name}} ({{contact.phone}})
+        <ion-delete-button class="ion-minus-circled" ng-click="group.contacts.splice($index, 1)"></ion-delete-button>
+      </ion-item>
+    </ion-list>
+    <!--<ul class="list" ng-if="all">-->
+      <!--<li ng-repeat="contact in contacts" class="item">{{contact.name}} ({{contact.phone}})</li>-->
+    <!--</ul>-->
+    <!--<ul class="list" ng-if="!all">-->
+      <!--<li ng-repeat="contact in group.contacts" class="item">{{contact.name}} ({{contact.phone}})</li>-->
+    <!--</ul>-->
+    <div class="padding-horizontal">
+      <button class="button button-positive button-block" ng-if="modifying" ng-click="modify_group_contacts.add()">添加联系人</button>
+    </div>
+
+    <button class="button button-positive button-clear button-block button-small" ng-click="change_group_name()" ng-if="!all && !modifying">修改分组名</button>
+    <button class="button button-assertive button-clear button-block button-small" ng-click="delete_group()" ng-if="!all && !modifying">删除分组</button>
+
     <div class="card" ng-show="all && contacts.length==0">
       <div class="item item-text-wrap" style="text-align: center">
         <p>
@@ -19,13 +43,5 @@
         </p>
       </div>
     </div>
-    <!--<ion-list>-->
-
-    <!--<ion-checkbox ng-model="filter.blue">啦啦啦(11122223333)</ion-checkbox>-->
-    <!--<ion-checkbox ng-model="filter.yellow">Yellow</ion-checkbox>-->
-    <!--<ion-checkbox ng-model="filter.pink">Pink</ion-checkbox>-->
-    <!--<ion-checkbox ng-repeat="(phone,contact) in contacts" ng-model="contact.checked">{{contact.name}} ({{phone}})</ion-checkbox>-->
-
-    <!--</ion-list>-->
   </ion-content>
 </ion-view>

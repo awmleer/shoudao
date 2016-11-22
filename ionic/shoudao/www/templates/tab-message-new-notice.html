@@ -17,7 +17,7 @@
         <label class="item item-input item-stacked-label" style="padding-right: 16px">
           <span class="input-label">发送给 (共{{contacts | checked_count}}人)</span>
           <span style="display: block;width: 100%;white-space: normal;font-size: 14px"><span style="display: inline-block;margin-right: 1em" ng-repeat="contact in contacts | filter:{'checked':true}">{{contact.name}}({{contact.phone}})</span></span>
-          <button class="button button-stable button-block" style="width: 100%;" ng-click="select_recipients()">点我选择收件人</button>
+          <button class="button button-stable button-block" style="width: 100%;" ng-click="select_contacts()">点我选择收件人</button>
         </label>
       </div>
       <button ng-click="show_preview()" class="button button-stable button-block" style="margin-bottom: 10px"><i class="icon ion-eye"></i> 查看预览</button>

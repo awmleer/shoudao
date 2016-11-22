@@ -1,8 +1,8 @@
-<ion-modal-view ng-controller="SelectRecipientsCtrl">
+<ion-modal-view ng-controller="SelectContactsCtrl">
   <ion-header-bar>
     <button class="button button-clear button-assertive" ng-click="clear_check()">清空</button>
     <h1 class="title" style="font-weight: normal">请勾选收件人<span ng-if="contacts|checked_count">&nbsp;(已选{{contacts|checked_count}})</span></h1>
-    <button class="button button-clear button-positive" ng-click="commit_select_recipients()"><b>确定</b></button>
+    <button class="button button-clear button-positive" ng-click="commit_select_contacts()"><b>确定</b></button>
   </ion-header-bar>
   <ion-content>
     <ion-list>
