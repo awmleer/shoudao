@@ -9,7 +9,7 @@
   <ion-content>
     <ion-list ng-if="!modifying">
       <ion-item ng-repeat="contact in contacts" ng-if="all">
-        <li ng-repeat="contact in contacts" class="item">{{contact.name}} ({{contact.phone}})</li>
+        {{contact.name}} ({{contact.phone}})
       </ion-item>
       <ion-item ng-repeat="contact in group.contacts" ng-if="!all">
         {{contact.name}} ({{contact.phone}})
