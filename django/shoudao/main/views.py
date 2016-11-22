@@ -178,6 +178,20 @@ def groups_name_edit(request):
 
 @require_http_methods(["POST"])
 @login_required
+def update_contacts(request):
+    data = json.loads(request.body.decode())
+    group = ContactGroup.objects.get(id=data['group_id'])
+    if group.user != request.user:
+        return HttpResponse('没有操作当前用户下的分组')
+    group.set_contacts(data['contacts'])
+    group.save()
+    return HttpResponse('success')
+
+
+
+
+@require_http_methods(["POST"])
+@login_required
 def groups_new(request):
     data = json.loads(request.body.decode())
     if data['group_name']=='':
