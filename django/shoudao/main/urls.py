@@ -26,6 +26,8 @@ urlpatterns = [
     url(r'^items/(?P<category>.+)/$',views.items_filter),
     url(r'^groups/all/$',views.groups_all),
     url(r'^groups/new/$',views.groups_new),
+    url(r'^groups/change_name/$', views.groups_name_edit),
+    url(r'^groups/update_contacts/$', views.update_contacts),
     url(r'^groups/delete/$',views.groups_delete),
     url(r'^information/(?P<key>.+)/(?P<type>.+)/',views.get_information),
     # url(r'^$',views.index,name='index'),

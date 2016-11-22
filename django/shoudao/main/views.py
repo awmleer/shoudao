@@ -159,6 +159,35 @@ def groups_all(request):
     return JsonResponse(res,safe=False)
 
 
+@require_http_methods(["POST"])
+@login_required
+def groups_name_edit(request):
+    data = json.loads(request.body.decode())
+    group=ContactGroup.objects.get(id=data['group_id'])
+    if group.user!=request.user:
+        return HttpResponse('没有操作当前用户下的分组')
+    if data['new_group_name'] == '':
+        return HttpResponse('分组名不能为空')
+    if len(data['new_group_name']) > 15:
+        return HttpResponse('分组名过长(最多十五个字)')
+    group.group_name=data['new_group_name']
+    group.save()
+    return HttpResponse('success')
+
+
+
+@require_http_methods(["POST"])
+@login_required
+def update_contacts(request):
+    data = json.loads(request.body.decode())
+    group = ContactGroup.objects.get(id=data['group_id'])
+    if group.user != request.user:
+        return HttpResponse('没有操作当前用户下的分组')
+    group.set_contacts(data['contacts'])
+    group.save()
+    return HttpResponse('success')
+
+
 
 
 @require_http_methods(["POST"])
