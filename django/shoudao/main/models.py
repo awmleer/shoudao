@@ -107,7 +107,16 @@ class Link(models.Model):
     def __str__(self):
         return self.message.title+' | '+self.recipient
 
-
+class Feedback(models.Model):
+    user = models.ForeignKey('auth.User', related_name='feedbacks')
+    name=models.CharField(max_length=20)
+    contact_info=models.CharField(max_length=40)
+    message=models.CharField(max_length=1000)
+    score=models.PositiveIntegerField()
+    def set_message(self,x):
+        self.message=json.dumps(x)
+    def __str__(self):
+        return self.score
 
 class Order(models.Model):
     user=models.ForeignKey('auth.User',related_name='orders')

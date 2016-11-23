@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^account/buy_done/$',views.buy_done),
     url(r'^account/buy_done_check/$',views.buy_done_check),
     url(r'^account/redeem/(?P<code>.+)/$',views.redeem),
+    url(r'^feedback/$',views.set_feedback),
     url(r'^items/(?P<category>.+)/$',views.items_filter),
     url(r'^groups/all/$',views.groups_all),
     url(r'^groups/new/$',views.groups_new),

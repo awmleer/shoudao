@@ -284,7 +284,12 @@ def message_new(request):
     UserLog.objects.create(user=request.user, action='message_new',info='{"send_count":%d}'%send_count)
     return HttpResponse('success')
 
-
+@require_http_methods(['GET'])
+@login_required
+def message_remind_one(request):
+    message = Message.objects.get(id=request.GET['message_id'])
+    if message.user!=request.user: return  HttpResponseForbidden()
+    recipients = message.get_recipients()
 
 
 @require_http_methods(['GET'])
@@ -471,6 +476,17 @@ def buy(request): #发起支付
     }
     return JsonResponse(res)
 
+@require_http_methods(['POST'])
+@login_required()
+def set_feedback(request):
+    data=json.loads(request.body.decode())
+    if (data['score']<0) or (data['score']>5) : return HttpResponse('无评价或评价数错误')
+    if len(data['message'])==0 : return HttpResponse('反馈内容不能为空')
+    if len(data['message'])>1000: return HttpResponse('输入文字过长')
+    feedback=Feedback(user=request.user, name=data['name'], score=data['score'], contact_info=data['contact_info'])
+    feedback.set_message(data['message'])
+    feedback.save()
+    return HttpResponse('success')
 
 
 def buy_done(request): #云通付回调
