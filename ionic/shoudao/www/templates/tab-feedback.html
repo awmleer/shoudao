@@ -1,0 +1,30 @@
+<ion-view view-title="意见反馈">
+  <ion-content class="padding">
+    <div class="list">
+      <label class="item item-input item-floating-label">
+        <span class="input-label">名字</span>
+        <input type="text" placeholder="名字(选填)" ng-model="fb_content.name">
+      </label>
+      <label class="item item-input item-floating-label">
+        <span class="input-label">邮箱/手机号/QQ</span>
+        <input type="text" placeholder="邮箱/手机号/QQ(选填)" ng-model="fb_content.contact_info">
+      </label>
+      <label class="item item-input item-floating-label">
+        <span class="input-label">内容</span>
+        <textarea style="height: 10em;" placeholder="内容" ng-model="fb_content.message"></textarea>
+      </label>
+      <div class="item">
+        <label style="font-size: 16px">您觉得收道好用吗？</label>
+        <div style="font-size: 28px" class="star-rate">
+          <i class="icon" ng-click="rate(1)" ng-class="{'ion-android-star-outline':fb_content.score<1,'ion-android-star':fb_content.score>=1}"></i>
+          <i class="icon" ng-click="rate(2)" ng-class="{'ion-android-star-outline':fb_content.score<2,'ion-android-star':fb_content.score>=2}"></i>
+          <i class="icon" ng-click="rate(3)" ng-class="{'ion-android-star-outline':fb_content.score<3,'ion-android-star':fb_content.score>=3}"></i>
+          <i class="icon" ng-click="rate(4)" ng-class="{'ion-android-star-outline':fb_content.score<4,'ion-android-star':fb_content.score>=4}"></i>
+          <i class="icon" ng-click="rate(5)" ng-class="{'ion-android-star-outline':fb_content.score<5,'ion-android-star':fb_content.score>=5}"></i>
+          <span style="float: right;font-size: 16px">{{fb_content.score==1?'不好用':fb_content.score==2?'较差':fb_content.score==3?'一般':fb_content.score==4?'好用':fb_content.score==5?'非常好用':''}}</span>
+        </div>
+      </div>
+    </div>
+    <button ng-click="fb_send()" class="button button-block button-positive"><i class="icon ion-paper-airplane"></i> 发送</button>
+  </ion-content>
+</ion-view>

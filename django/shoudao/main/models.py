@@ -26,7 +26,7 @@ class UserInfo(models.Model):
     # def get_text_surplus(self):
     #     return self.text_limit-self.text_sent
     def __str__(self):
-        return self.name+' | '+str(self.text_surplus)
+        return self.name+' | '+str(self.text_sent)+' | '+str(self.text_surplus)
 
 
 class ContactGroup(models.Model):

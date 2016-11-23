@@ -173,6 +173,16 @@ angular.module('shoudao', ['ionic', 'shoudao.controllers', 'shoudao.services'])
         }
       })
 
+      .state('tab.feedback', {
+        url: '/feedback',
+        views: {
+          'tab-account': {
+            templateUrl: 'templates/tab-feedback.html',
+            controller: 'FeedbackCtrl'
+          }
+        }
+      })
+
       .state('tab.setting', {
         url: '/setting',
         views: {
