@@ -221,7 +221,7 @@ angular.module('shoudao.controllers', [])
 
 
 
-  .controller('MessageDetailCtrl', function($scope, $stateParams,$http,$ionicHistory,$ionicPopup,$ionicLoading) {
+  .controller('MessageDetailCtrl', function($scope, $stateParams,$http,$ionicHistory,$ionicPopup,$ionicLoading,Popup) {
     $scope.message_id=$stateParams.message_id;
 
     $ionicLoading.show({
@@ -242,7 +242,21 @@ angular.module('shoudao.controllers', [])
     };
     $scope.doRefresh();
 
-
+    $scope.alert_tip= function () {
+      Popup.alert('提示','向左滑动联系人可以显示更多选项');
+    };
+    $scope.remind_one=function (recipient) {
+      console.log(recipient);
+      $http.get(API_URL+'/message/remind/one/?message_id='+$scope.message_id+'&phone='+recipient.phone).then(function (response) {
+        if (response.data == 'success') {
+          Popup.alert('成功','已成功提醒'+recipient.name);
+        }else {
+          Popup.alert('失败', response.data);
+        }
+      }, function () {
+        Popup.alert('失败', '请求失败');
+      });
+    };
 
     $scope.remind_all= function () {
       var message_count=0;

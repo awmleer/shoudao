@@ -19,8 +19,8 @@
       </div>
       <!--<p>共发送给{{message.total_count}}人，已有{{message.received_count}}人确认收到</p>-->
 
-      <div class="list">
-        <div class="item item-icon-right" ng-repeat="recipient in message.recipients | orderBy:'-received'" ng-class="{'send-fail':!recipient.send_success}">
+      <ion-list>
+        <ion-item class="item-icon-right" ng-repeat="recipient in message.recipients | orderBy:'-received'" ng-class="{'send-fail':!recipient.send_success}" ng-click="alert_tip()">
           <div ng-if="recipient.send_success">
             {{recipient.name}} ({{recipient.phone}})
             <i ng-show="!recipient.received" class="icon ion-ios-clock-outline" style="color: #7a7a7a;"></i>
@@ -31,9 +31,14 @@
             <!--<span class="label label-danger">发送失败</span>-->
             <i ng-show="recipient.received" class="icon ion-ios-close-outline" style="color: #b8272d;"></i>
           </div>
+          <ion-option-button class="button-positive" ng-click="remind_one(recipient)">提醒Ta</ion-option-button>
+        </ion-item>
+      </ion-list>
+      <!--<div class="list">-->
+        <!--<div class="item item-icon-right" ng-repeat="recipient in message.recipients | orderBy:'-received'" ng-class="{'send-fail':!recipient.send_success}">-->
 
-        </div>
-      </div>
+        <!--</div>-->
+      <!--</div>-->
 
       <button ng-click="remind_all()" class="button button-balanced button-block" ng-class="{'disabled':message.received_count==message.total_count}" style="margin-top: 20px"><i ng-if="message.received_count<message.total_count" class="icon ion-ios-bell"></i> {{message.received_count==message.total_count?'已全部确认收到':'一键提醒尚未确认的成员'}}</button>
 
