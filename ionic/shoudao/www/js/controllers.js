@@ -806,6 +806,32 @@ angular.module('shoudao.controllers', [])
 
 
 
+  .controller('FeedbackCtrl', function ($scope,$http,Popup,$ionicHistory) {
+    $scope.fb_content={
+      name:'',
+      contact_info:'',
+      message:'',
+      score:0
+    };
+    $scope.rate= function (score) {
+      $scope.fb_content.score=score;
+    };
+    $scope.fb_send=function () {
+      $http.post(API_URL+'/feedback/', $scope.fb_content).then(function (response) {
+        if (response.data == 'success') {
+          Popup.alert('成功','我们已收到您的反馈，谢谢支持~');
+          $ionicHistory.goBack();
+        }else {
+          Popup.alert('失败',response.data);
+        }
+      }, function () {
+        Popup.alert('失败','请求失败');
+      });
+    };
+  })
+
+
+
   .controller('SettingCtrl', function($scope,$rootScope,$http,$ionicPopup,Account,$ionicHistory) {
   $scope.change_name= function () {
     $ionicPopup.prompt({

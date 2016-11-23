@@ -88,3 +88,12 @@ p small{
   background: #b3cde6;
   color: #ffffff;
 }
+
+
+
+.star-rate .ion-android-star-outline{
+  color: #797979;
+}
+.star-rate .ion-android-star{
+  color: #ffc900;
+}
