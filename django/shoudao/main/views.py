@@ -208,6 +208,7 @@ def groups_new(request):
 
 
 
+
 @require_http_methods(["GET"])
 @login_required
 def groups_delete(request):
@@ -502,12 +503,17 @@ def buy_done(request): #云通付回调
 
 
 
-
+@login_required()
 def redeem(request,code):
     redeem_codes=RedeemCode.objects.filter(code=code)
     if len(redeem_codes)==0:return HttpResponse('兑换码无效，请检查是否输错')
     redeem_code=redeem_codes[0]
     if redeem_code.used:return HttpResponse('该兑换码已经使用过了')
+    if redeem_code.type=='new_user':
+        user_used_all=RedeemCode.objects.filter(who_used_id=request.user)
+        for user_used_new in user_used_all:
+            if user_used_new.type=='new_user':
+                return HttpResponse('您已经使用过新用户兑换码了')
     item_handle(request.user,redeem_code.item,1)
     redeem_code.used=True
     redeem_code.who_used=request.user
