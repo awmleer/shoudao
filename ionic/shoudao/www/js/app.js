@@ -183,6 +183,16 @@ angular.module('shoudao', ['ionic', 'shoudao.controllers', 'shoudao.services'])
         }
       })
 
+      .state('tab.share-app', {
+        url: '/share-app',
+        views: {
+          'tab-account': {
+            templateUrl: 'templates/tab-share-app.html',
+            controller: 'ShareAppCtrl'
+          }
+        }
+      })
+
       .state('tab.setting', {
         url: '/setting',
         views: {

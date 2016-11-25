@@ -588,6 +588,26 @@ angular.module('shoudao.controllers', [])
       });
     };
 
+    $scope.share_app= function () {
+      var options = {
+        message: 'share this', // not supported on some apps (Facebook, Instagram)
+        subject: 'the subject', // fi. for email
+        files: ['', ''], // an array of filenames either locally or remotely
+        url: 'https://www.website.com/foo/#bar?a=b',
+        chooserTitle: 'Pick an app' // Android only, you can override the default share sheet title
+      };
+      var ShareSuccess = function(result) {
+        console.log("Share completed? " + result.completed); // On Android apps mostly return false even while it's true
+        console.log("Shared to app: " + result.app); // On Android result.app is currently empty. On iOS it's empty when sharing is cancelled (result.completed=false)
+        window.plugins.socialsharing.share('测试一下啦啦啦http://www.sparker.xyz', null, null, null);
+      };
+      var ShareError = function(msg) {
+        console.log("Sharing failed with message: " + msg);
+      };
+      // window.plugins.socialsharing.shareWithOptions(options, ShareSuccess, ShareError);
+    };
+
+
     $scope.daily_sign= function () {
       $http.get(API_URL + '/account/daily_sign/').then(function (response) {
         if (response.data.status == 'fail') {
@@ -640,6 +660,11 @@ angular.module('shoudao.controllers', [])
     };
 
   })
+
+  .controller('ShareAppCtrl', function($scope,$rootScope,$http,$ionicPopup){
+
+  })
+
 
 
   .controller('UpgradeCtrl', function($scope,$rootScope,$http,$ionicPopup,$ionicHistory) {
