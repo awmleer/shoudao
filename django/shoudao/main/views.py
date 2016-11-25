@@ -285,22 +285,32 @@ def message_new(request):
     UserLog.objects.create(user=request.user, action='message_new',info='{"send_count":%d}'%send_count)
     return HttpResponse('success')
 
+
 @require_http_methods(['GET'])
 @login_required
 def message_remind_one(request):
     message = Message.objects.get(id=request.GET['message_id'])
     if message.user != request.user: return HttpResponseForbidden()
     recipients=message.get_recipients()
+    flag=0
     for recipient in recipients:
-        if recipient['phone']==message['phone']:
-            link = message.links.get(recipient=message['phone'])
-            send_success = sms.juhe.send_sms(message['phone'], 22175,
-                                             {'#recipient#': ['name'],
-                                              '#title#': message.title,
-                                              '#sender#': request.user.user_info.get().name + '。请点击链接确认收到:' + link.short_link + ' '
-                                              })
-            return HttpResponse('success')
-    return  HttpResponse('没有找到该联系人')
+        if str(recipient['phone']) == str(request.GET['phone']):
+            recipient_name=recipient['name']
+            flag=1
+            break
+    if flag==0:return HttpResponse('没有找到该联系人')
+    link = message.links.get(recipient=request.GET['phone'])
+    send_success = sms.juhe.send_sms(link.recipient, 22175,
+                                     {'#recipient#': recipient_name,
+                                      '#title#': message.title,
+                                      '#sender#': request.user.user_info.get().name + '。请点击链接确认收到:' + link.short_link + ' '
+                                      })
+    if send_success:
+        return HttpResponse('success')
+    else:
+        return HttpResponse('发送失败')
+
+
 
 @require_http_methods(['GET'])
 @login_required()

@@ -111,7 +111,7 @@ class Bell(models.Model):
 
 class Link(models.Model):
     message=models.ForeignKey('Message',on_delete=models.CASCADE,related_name='links')
-    recipient=models.CharField(max_length=30)
+    recipient=models.CharField(max_length=30)#phone number
     token=models.CharField(max_length=20)
     short_link=models.CharField(max_length=30,default='')
     def __str__(self):
