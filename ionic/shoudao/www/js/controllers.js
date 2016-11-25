@@ -1,4 +1,5 @@
 angular.module('shoudao.controllers', [])
+//todo separate these controllers
 
   .controller('ContactsCtrl', function($scope, Contacts, $rootScope,$http) {
     $scope.doRefresh= function () {
@@ -808,6 +809,17 @@ angular.module('shoudao.controllers', [])
   })
 
 
+  .controller('BellListCtrl', function ($scope,$http,Popup) {
+
+    $scope.mark_all_read= function () {
+      //todo
+    };
+  })
+
+
+  .controller('BellDetailCtrl', function ($scope,$http,Popup,$stateParams) {
+    //todo
+  })
 
 
   .controller('FeedbackCtrl', function ($scope,$http,Popup,$ionicHistory) {

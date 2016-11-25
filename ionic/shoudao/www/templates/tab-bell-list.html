@@ -1,0 +1,28 @@
+<ion-view view-title="消息中心">
+  <ion-nav-buttons side="right">
+    <button class="button button-clear button-dark" ng-click="mark_all_read()" style="font-size: 18px">
+      <i class="icon ion-android-done-all"></i>
+    </button>
+  </ion-nav-buttons>
+  <ion-content>
+    <ion-refresher
+      pulling-text="下拉刷新…"
+      on-refresh="doRefresh()">
+    </ion-refresher>
+
+    <ion-list>
+      <!--todo fill in content-->
+      <ion-item class="item-avatar item-icon-right" ng-repeat="message in messages | orderBy:'-send_time'" type="item-text-wrap" ui-sref="tab.message-detail({message_id:message.message_id})">
+        <div class="item-number-icon message-icon-block" ng-class="{'notice':message.type=='notice','notice_p':message.type=='notice_p'}">
+          <span ng-if="message.type=='notice'"><i class="ion ion-ios-paperplane" style="font-size: 32px"></i></span>
+          <span ng-if="message.type=='notice_p'"><i class="ion ion-flag" style="font-size: 26px"></i></span>
+        </div>
+        <h2>{{message.title}}</h2>
+        <p>{{message.received_count}}/{{message.total_count}}</p>
+        <i class="icon ion-chevron-right icon-accessory"></i>
+      </ion-item>
+
+    </ion-list>
+
+  </ion-content>
+</ion-view>
