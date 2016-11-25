@@ -96,7 +96,7 @@
           alert("当前APP版本号过低，为了您的正常使用，请先更新至最新版");
           window.open(data.download_url, '_system', 'location=no');
           navigator.app.exitApp();
-        }else if (data.status=='normal') {
+        }else if (data.status=='normal' || data.status=='debug') {
           //do nothing
         }else{ //如果status异常，就直接退出APP
           navigator.app.exitApp();
