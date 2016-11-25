@@ -1,16 +1,6 @@
 angular.module('shoudao.controllers', [])
 
   .controller('ContactsCtrl', function($scope, Contacts, $rootScope,$http) {
-    // $rootScope.contacts={a:1,b:2};
-    //for DEBUG
-    // $rootScope.contacts=[
-    //   {name:'小明',checked:false,phone:18143465393},
-    //   {name:'哈哈哈',checked:false,phone:18143465393},
-    //   {name:'安',checked:false,phone:18143465393},
-    //   {name:'哈哈了',checked:false,phone:18143465393},
-    //   {name:'小华',checked:false,phone:18867100642}
-    // ];
-
     $scope.doRefresh= function () {
       $http.get(API_URL+'/groups/all/').then(function (response) {
         $rootScope.groups=response.data;
