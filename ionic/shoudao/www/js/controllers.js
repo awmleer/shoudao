@@ -820,8 +820,14 @@ angular.module('shoudao.controllers', [])
       });
     };
 
+    $scope.$on('$ionicView.enter', function(e) {
+      $scope.doRefresh();
+    });
+
     $scope.mark_all_read= function () {
-      //todo
+      Popup.confirm('确认','是否要将所有消息标记为已读？','是','否', function () {
+        //todo mark all read
+      });
     };
 
 

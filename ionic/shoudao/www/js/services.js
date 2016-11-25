@@ -8,6 +8,19 @@ angular.module('shoudao.services', [])
         template: template
       });
     };
+
+    this.confirm= function (title,template,okText,cancelText,callback) {
+      $ionicPopup.confirm({
+        title: title,
+        template: template,
+        okText: okText,
+        cancelText: cancelText
+      }).then(function(res) {
+        if(res) {
+          callback();
+        }
+      });
+    }
   })
 
   .service('Contacts',function ($rootScope,$ionicPopup) {
