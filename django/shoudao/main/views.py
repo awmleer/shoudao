@@ -292,24 +292,23 @@ def message_remind_one(request):
     message = Message.objects.get(id=request.GET['message_id'])
     if message.user != request.user: return HttpResponseForbidden()
     recipients=message.get_recipients()
-    flag=0
     for recipient in recipients:
         if str(recipient['phone']) == str(request.GET['phone']):
-            recipient_name=recipient['name']
-            flag=1
-            break
-    if flag==0:return HttpResponse('没有找到该联系人')
-    link = message.links.get(recipient=request.GET['phone'])
-    send_success = sms.juhe.send_sms(link.recipient, 22175,
-                                     {'#recipient#': recipient_name,
+            link = message.links.get(recipient=request.GET['phone'])
+            send_success = sms.juhe.send_sms(link.recipient, 22175,
+                                     {'#recipient#': recipient['name'],
                                       '#title#': message.title,
                                       '#sender#': request.user.user_info.get().name + '。请点击链接确认收到:' + link.short_link + ' '
                                       })
-    if send_success:
-        return HttpResponse('success')
-    else:
-        return HttpResponse('发送失败')
-
+            if send_success:
+                user_info = request.user.user_info.get()
+                user_info.text_sent += 1
+                user_info.text_surplus -= 1
+                user_info.save()
+                return HttpResponse('success')
+            else:
+                return HttpResponse('发送失败')
+    return HttpResponse('没有找到该联系人')
 
 
 @require_http_methods(['GET'])
