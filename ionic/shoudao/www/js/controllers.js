@@ -809,11 +809,22 @@ angular.module('shoudao.controllers', [])
   })
 
 
-  .controller('BellListCtrl', function ($scope,$http,Popup) {
+  .controller('BellListCtrl', function ($scope,$http,Popup,$rootScope) {
+    $scope.doRefresh= function () {
+      $http.get(API_URL+'/bell/all/').then(function (response) {
+        $rootScope.bells=response.data;
+        $scope.$broadcast('scroll.refreshComplete');
+      }, function () {
+        Popup.alert('失败','获取消息列表失败');
+        $scope.$broadcast('scroll.refreshComplete');
+      });
+    };
 
     $scope.mark_all_read= function () {
       //todo
     };
+
+
   })
 
 

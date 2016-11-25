@@ -12,13 +12,12 @@
 
     <ion-list>
       <!--todo fill in content-->
-      <ion-item class="item-avatar item-icon-right" ng-repeat="message in messages | orderBy:'-send_time'" type="item-text-wrap" ui-sref="tab.message-detail({message_id:message.message_id})">
-        <div class="item-number-icon message-icon-block" ng-class="{'notice':message.type=='notice','notice_p':message.type=='notice_p'}">
-          <span ng-if="message.type=='notice'"><i class="ion ion-ios-paperplane" style="font-size: 32px"></i></span>
-          <span ng-if="message.type=='notice_p'"><i class="ion ion-flag" style="font-size: 26px"></i></span>
+      <ion-item class="item-avatar item-icon-right" ng-repeat="bell in bells | orderBy:'-time'" type="item-text-wrap" ui-sref="tab.bell-detail({bell_id:bell.bell_id})">
+        <div class="item-number-icon message-icon-block" style="color: #ffffff;" ng-style="{'background-color':'#aaddff'}">
+          <span><i class="ion ion-ios-paperplane" style="font-size: 32px"></i></span>
         </div>
-        <h2>{{message.title}}</h2>
-        <p>{{message.received_count}}/{{message.total_count}}</p>
+        <h2>标题</h2>
+        <p>这里是时间这里是时间</p>
         <i class="icon ion-chevron-right icon-accessory"></i>
       </ion-item>
 
