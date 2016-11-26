@@ -15,6 +15,7 @@ import random,string
 import  urllib.request,urllib.parse
 import hashlib
 import random
+import time
 
 import logging
 logger = logging.getLogger('django')
@@ -285,7 +286,115 @@ def message_new(request):
     return HttpResponse('success')
 
 
+@require_http_methods(['GET'])
+@login_required
+def message_remind_one(request):
+    message = Message.objects.get(id=request.GET['message_id'])
+    if message.user != request.user: return HttpResponseForbidden()
+    recipients=message.get_recipients()
+    for recipient in recipients:
+        if str(recipient['phone']) == str(request.GET['phone']):
+            link = message.links.get(recipient=request.GET['phone'])
+            send_success = sms.juhe.send_sms(link.recipient, 22175,
+                                     {'#recipient#': recipient['name'],
+                                      '#title#': message.title,
+                                      '#sender#': request.user.user_info.get().name + '。请点击链接确认收到:' + link.short_link + ' '
+                                      })
+            if send_success:
+                user_info = request.user.user_info.get()
+                user_info.text_sent += 1
+                user_info.text_surplus -= 1
+                user_info.save()
+                return HttpResponse('success')
+            else:
+                return HttpResponse('发送失败')
+    return HttpResponse('没有找到该联系人')
 
+
+@require_http_methods(['GET'])
+@login_required()
+def bell_all(request):
+    user_info=request.user.user_info.get()
+    bells_read=user_info.bells_read.all()
+    bells_unread_major=user_info.bells_unread_major.all()
+    bells_unread_minor=user_info.bells_unread_minor.all()
+    diction={}
+    response=[]
+    for bell in bells_read:
+        diction['title']=bell.title
+        diction['time']=time.mktime(bell.time.timetuple())*1000
+        diction['tag']='NULL'
+        diction['status']='read'
+        diction['icon']=bell.icon
+        diction['color']=bell.color
+        diction['bell_id']=bell.id
+        response.append(diction)
+    for bell in bells_unread_major:
+        diction['title'] = bell.title
+        diction['time'] = time.mktime(bell.time.timetuple()) * 1000
+        diction['tag'] = 'major'
+        diction['status'] = 'unread'
+        diction['icon'] = bell.icon
+        diction['color'] = bell.color
+        diction['bell_id'] = bell.id
+        response.append(diction)
+    for bell in bells_unread_minor:
+        diction['title'] = bell.title
+        diction['time'] = time.mktime(bell.tim.timetuple()) * 1000
+        diction['tag'] = 'minor'
+        diction['status'] = 'unread'
+        diction['icon'] = bell.icon
+        diction['color'] = bell.color
+        diction['bell_id'] = bell.id
+        response.append(diction)
+    return JsonResponse(response)
+
+
+@require_http_methods(['GET'])
+@login_required()
+def mark_all_read(request):
+    user_info=request.user.user_info.get()
+    user_info.bells_read.add(user_info.bells_unread_major.all())
+    user_info.bells_read.add(user_info.bells_unread_minor.all())
+    user_info.bells_unread_major.clear()
+    user_info.bells_unread_minor.clear()
+    return HttpResponse('Success')
+
+@require_http_methods(['GET'])
+@login_required()
+def bell_detail(request,bell_id):
+    user_info=request.user.user_info.get()
+    flag=0
+    for bell in user_info.bells_unread_major.all():
+        if bell_id == bell.id:
+            #todo add
+            user_info.bells_read.add(bell)
+            user_info.bells_unread_major.remove(bell)
+            flag = 1
+            break
+    if flag==0:
+        for bell in user_info.bells_unread_minor.all():
+            if bell_id == bell.id:
+                user_info.bells_read.add(bell)
+                user_info.bells_unread_major.remove(bell)
+                flag = 1
+                break
+    if flag==0:
+        for bell in user_info.bells_read.all():
+            if bell_id==bell.id:
+                flag=1
+                break
+    if flag==0 : HttpResponse('您没有权限')
+    diction={}
+    bell=Bell.objects.get(id=bell_id)
+    diction['title']=bell.title
+    diction['time'] = time.mktime(bell.time.timetuple()) * 1000
+    diction['content']=bell.content
+    diction['icon'] = bell.icon
+    diction['color'] = bell.color
+    diction['bell_id'] = bell.id
+    diction['']
+    return HttpResponse(diction)
 
 @require_http_methods(['GET'])
 @login_required
@@ -471,6 +580,17 @@ def buy(request): #发起支付
     }
     return JsonResponse(res)
 
+@require_http_methods(['POST'])
+@login_required()
+def set_feedback(request):
+    data=json.loads(request.body.decode())
+    if (data['score']<0) or (data['score']>5) : return HttpResponse('无评价或评价数错误')
+    if len(data['message'])==0 : return HttpResponse('反馈内容不能为空')
+    if len(data['message'])>1000: return HttpResponse('输入文字过长')
+    feedback=Feedback(user=request.user, name=data['name'], score=data['score'], contact_info=data['contact_info'])
+    feedback.set_message(data['message'])
+    feedback.save()
+    return HttpResponse('success')
 
 
 def buy_done(request): #云通付回调
