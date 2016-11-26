@@ -642,6 +642,26 @@ angular.module('shoudao.controllers', [])
 
   })
 
+  .controller('ShareAppCtrl', function($scope,$rootScope,$http){
+    $http.get(API_URL+'/information/share_notice/text/').then(function (response) {
+      $scope.notice=response.data;
+      $http.get(API_URL+'/information/share_content/json/', {}).then(function (response) {
+        $scope.share_content=response.data;
+      }, function () {
+        alert("请求失败");
+      });
+    }, function () {
+      alert("请求失败");
+    });
+    $scope.share_invite_code= function () {
+      window.plugins.socialsharing.share($scope.share_content.for_invite_code.text, null, null, $scope.share_content.for_invite_code.url);
+    };
+    $scope.share_app_page= function () {
+      window.plugins.socialsharing.share($scope.share_content.for_app_page.text, null, null, $scope.share_content.for_app_page.url);
+    };
+  })
+
+
 
   .controller('UpgradeCtrl', function($scope,$rootScope,$http,$ionicPopup,$ionicHistory) {
     $http.get(API_URL+'/items/upgrade/').then(function (response) {
