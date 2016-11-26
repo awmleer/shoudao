@@ -17,6 +17,9 @@ class UserInfo(models.Model):
     user=models.ForeignKey('auth.User',on_delete=models.CASCADE,related_name='user_info')
     name = models.CharField(max_length=50, default='新用户')
     type = models.CharField(max_length=20, default='普通账户')
+    bells_unread_major = models.ManyToManyField('Bell', related_name='unread_major_user')
+    bells_read=models.ManyToManyField('Bell',related_name='read_user')
+    bells_unread_minor = models.ManyToManyField('Bell', related_name='unread_minor_user')
     expiration=models.DateField(null=True,blank=True)
     # avatar = models.ImageField(upload_to='avatars', default='avatar_default.png')
     message_sent=models.PositiveIntegerField(default=0)
@@ -97,17 +100,34 @@ class MessageDataNotice(models.Model):
     def get_buttons(self):
         return json.loads(self.buttons)
 
-
+class Bell(models.Model):
+    title=models.CharField(max_length=20)
+    sender=models.CharField(max_length=10)
+    content=models.CharField(max_length=1000)
+    time=models.DateTimeField(auto_now_add=True)
+    icon=models.CharField(max_length=20)
+    color=models.CharField(max_length=20)
+    def __str__(self):
+        return self.title
 
 class Link(models.Model):
     message=models.ForeignKey('Message',on_delete=models.CASCADE,related_name='links')
-    recipient=models.CharField(max_length=30)
+    recipient=models.CharField(max_length=30)#phone number
     token=models.CharField(max_length=20)
     short_link=models.CharField(max_length=30,default='')
     def __str__(self):
         return self.message.title+' | '+self.recipient
 
-
+class Feedback(models.Model):
+    user = models.ForeignKey('auth.User', related_name='feedbacks')
+    name=models.CharField(max_length=20)
+    contact_info=models.CharField(max_length=40)
+    message=models.CharField(max_length=1000)
+    score=models.PositiveIntegerField()
+    def set_message(self,x):
+        self.message=json.dumps(x)
+    def __str__(self):
+        return self.score
 
 class Order(models.Model):
     user=models.ForeignKey('auth.User',related_name='orders')

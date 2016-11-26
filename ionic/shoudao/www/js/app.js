@@ -183,6 +183,26 @@ angular.module('shoudao', ['ionic', 'shoudao.controllers', 'shoudao.services'])
         }
       })
 
+      .state('tab.bell-list', {
+        url: '/bell/list',
+        views: {
+          'tab-account': {
+            templateUrl: 'templates/tab-bell-list.html',
+            controller: 'BellListCtrl'
+          }
+        }
+      })
+
+      .state('tab.bell-detail', {
+        url: '/bell/:bell_id',
+        views: {
+          'tab-account': {
+            templateUrl: 'templates/tab-bell-detail.html',
+            controller: 'BellDetailCtrl'
+          }
+        }
+      })
+
       .state('tab.setting', {
         url: '/setting',
         views: {

@@ -1,0 +1,8 @@
+<ion-view view-title="消息详情">
+  <ion-content style="padding: 15px">
+    <h2 style="margin-bottom: 0">{{bell.title}}</h2>
+    <p class="gray-text" style="margin-bottom: 0"><small>{{bell.time | date:'yyyy-M-d H:mm'}}</small><small style="float: right;">来自 {{bell.sender}}</small></p>
+    <hr>
+    <div ng-bind-html="bell.content"></div>
+  </ion-content>
+</ion-view>
