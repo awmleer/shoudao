@@ -72,7 +72,19 @@ def signup(request):
         return HttpResponse('名字过长（四个字以内）')
     if len(data['password'])<8:
         return HttpResponse('密码不能小于八位')
-    new_user = User.objects.create_user(username=data['phone'], password=data['password'])
+    while True:
+        new_invite_code=''
+        new_invite_code += random.choice('123456789')
+        new_invite_code += random.choice('0123456789')
+        new_invite_code += random.choice('0123456789')
+        new_invite_code += random.choice('0123456789')
+        new_invite_code += random.choice('0123456789')
+        new_invite_code += random.choice('0123456789')
+        new_invite_code += random.choice('0123456789')
+        new_invite_code += random.choice('0123456789')
+        if UserInfo.objects.filter(invite_code=new_invite_code).count()==0:#确保invite_code不重复
+            break
+    new_user = User.objects.create_user(username=data['phone'],password=data['password'],invite_code=new_invite_code)
     default_text_surplus=Information.objects.get(key='default_text_surplus').value
     UserInfo.objects.create(user=new_user,name=data['name'],text_surplus=default_text_surplus)
     UserLog.objects.create(user=new_user, action='signup')
@@ -390,6 +402,7 @@ def account_info(request):
         'message_sent':user_info.message_sent,
         'text_sent':user_info.text_sent,
         'text_surplus':user_info.text_surplus,
+        'invite_code':user_info.invite_code,
         'today_signed':user_info.last_daily_sign_date==timezone.localtime(timezone.now()).date() #今天是否已经签到
     }
     return JsonResponse(res)
@@ -672,7 +685,11 @@ def m_submit(request,message_id,recipient,token):
 
 @require_http_methods(['GET'])
 def get_information(request,key,type):
-    info=Information.objects.get(key=key)
+    info=Information.objects.filter(key=key)
+    if len(info)==0:
+        return HttpResponse("")
+    else:
+        info=info[0]
     if type=='json':
         res=JsonResponse(info.get_value())
     elif type=='text':

@@ -1,24 +1,16 @@
 <ion-view view-title="分享『收道』">
   <ion-content class="padding">
-    <!--todo billboard-->
-    <div>
-      this is something dynamic<br>
-      this is something dynamic<br>
-      this is something dynamic<br>
-      this is something dynamic<br>
-      this is something dynamic<br>
-      this is something dynamic<br>
-    </div>
+    <div ng-bind-html="notice"></div>
     <hr>
     <p style="font-size: 16px">您的邀请码是：</p>
     <div style="text-align: center">
-      <span style="background: #d8c6ff;color: #ffffff;font-size: 48px;display: inline-block;padding: 20px;border-radius: 5px;">8902456</span>
+      <span style="background: #d8c6ff;color: #ffffff;font-size: 48px;display: inline-block;padding: 20px;border-radius: 5px;">{{user_info.invite_code}}</span>
     </div>
-    <button onclick="window.plugins.socialsharing.share('测试一下啦啦啦http://www.sparker.xyz', null, null, 'http://shoudao.sparker.top/home/');" class="button button-royal button-block">分享注册邀请码</button>
+    <button ng-click="share_invite_code()" class="button button-royal button-block">分享注册邀请码</button>
     <hr>
     <div style="text-align: center">
       <img src="img/icon.png" style="width: 30%;border-radius: 8px">
     </div>
-    <button onclick="window.plugins.socialsharing.share('一键发送通知，自动收集反馈。',null,null,'http://shoudao.sparker.top/home/');" class="button button-calm button-block">分享APP介绍页面</button>
+    <button ng-click="share_app_page()" class="button button-calm button-block">分享APP介绍页面</button>
   </ion-content>
 </ion-view>
