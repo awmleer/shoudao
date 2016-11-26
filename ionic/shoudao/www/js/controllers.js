@@ -826,7 +826,17 @@ angular.module('shoudao.controllers', [])
 
     $scope.mark_all_read= function () {
       Popup.confirm('确认','是否要将所有消息标记为已读？','是','否', function () {
-        //todo mark all read
+        $http.get(API_URL+'/bell/mark_all_read/', {}).then(function (response) {
+          if (response.data == 'success') {
+            _.forEach($rootScope.bells, function (bell) {
+              bell.status='read';
+            });
+          }else {
+            alert(response.data);
+          }
+        }, function () {
+          alert("请求失败");
+        });
       });
     };
 
@@ -835,7 +845,11 @@ angular.module('shoudao.controllers', [])
 
 
   .controller('BellDetailCtrl', function ($scope,$http,Popup,$stateParams) {
-    //todo
+    $http.get(API_URL+'/bell/'+$stateParams.bell_id+'/detail/').then(function (response) {
+      $scope.bell=response.data;
+    }, function () {
+      Popup.alert('失败','获取消息详情失败');
+    });
   })
 
 

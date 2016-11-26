@@ -102,12 +102,13 @@ class MessageDataNotice(models.Model):
 
 class Bell(models.Model):
     title=models.CharField(max_length=20)
+    sender=models.CharField(max_length=10)
     content=models.CharField(max_length=1000)
     time=models.DateTimeField(auto_now_add=True)
     icon=models.CharField(max_length=20)
     color=models.CharField(max_length=20)
     def __str__(self):
-        return json.dumps(self.title,self.level)
+        return self.title
 
 class Link(models.Model):
     message=models.ForeignKey('Message',on_delete=models.CASCADE,related_name='links')

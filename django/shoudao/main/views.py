@@ -286,6 +286,7 @@ def message_new(request):
     return HttpResponse('success')
 
 
+
 @require_http_methods(['GET'])
 @login_required
 def message_remind_one(request):
@@ -311,6 +312,7 @@ def message_remind_one(request):
     return HttpResponse('没有找到该联系人')
 
 
+
 @require_http_methods(['GET'])
 @login_required()
 def bell_all(request):
@@ -322,7 +324,7 @@ def bell_all(request):
     response=[]
     for bell in bells_read:
         diction['title']=bell.title
-        diction['time']=time.mktime(bell.time.timetuple())*1000
+        diction['time']=bell.time.timestamp()*1000
         diction['tag']='NULL'
         diction['status']='read'
         diction['icon']=bell.icon
@@ -331,7 +333,7 @@ def bell_all(request):
         response.append(diction)
     for bell in bells_unread_major:
         diction['title'] = bell.title
-        diction['time'] = time.mktime(bell.time.timetuple()) * 1000
+        diction['time'] = bell.time.timestamp() * 1000
         diction['tag'] = 'major'
         diction['status'] = 'unread'
         diction['icon'] = bell.icon
@@ -340,25 +342,30 @@ def bell_all(request):
         response.append(diction)
     for bell in bells_unread_minor:
         diction['title'] = bell.title
-        diction['time'] = time.mktime(bell.tim.timetuple()) * 1000
+        diction['time'] = bell.time.timestamp() * 1000
         diction['tag'] = 'minor'
         diction['status'] = 'unread'
         diction['icon'] = bell.icon
         diction['color'] = bell.color
         diction['bell_id'] = bell.id
         response.append(diction)
-    return JsonResponse(response)
+    return JsonResponse(response,safe=False)
+
 
 
 @require_http_methods(['GET'])
 @login_required()
 def mark_all_read(request):
     user_info=request.user.user_info.get()
-    user_info.bells_read.add(user_info.bells_unread_major.all())
-    user_info.bells_read.add(user_info.bells_unread_minor.all())
+    for bell in user_info.bells_unread_major.all():
+        user_info.bells_read.add(bell)
     user_info.bells_unread_major.clear()
+    for bell in user_info.bells_unread_minor.all():
+        user_info.bells_read.add(bell)
     user_info.bells_unread_minor.clear()
-    return HttpResponse('Success')
+    return HttpResponse('success')
+
+
 
 @require_http_methods(['GET'])
 @login_required()
@@ -366,35 +373,37 @@ def bell_detail(request,bell_id):
     user_info=request.user.user_info.get()
     flag=0
     for bell in user_info.bells_unread_major.all():
-        if bell_id == bell.id:
-            #todo add
+        if  int(bell_id) == bell.id:
             user_info.bells_read.add(bell)
             user_info.bells_unread_major.remove(bell)
             flag = 1
             break
     if flag==0:
         for bell in user_info.bells_unread_minor.all():
-            if bell_id == bell.id:
+            if int(bell_id) == bell.id:
                 user_info.bells_read.add(bell)
-                user_info.bells_unread_major.remove(bell)
+                user_info.bells_unread_minor.remove(bell)
                 flag = 1
                 break
     if flag==0:
         for bell in user_info.bells_read.all():
-            if bell_id==bell.id:
+            if int(bell_id)==bell.id:
                 flag=1
                 break
-    if flag==0 : HttpResponse('您没有权限')
+    if flag==0 : return HttpResponse('您没有权限')
     diction={}
     bell=Bell.objects.get(id=bell_id)
     diction['title']=bell.title
-    diction['time'] = time.mktime(bell.time.timetuple()) * 1000
+    diction['sender']=bell.sender
+    diction['time'] = bell.time.timestamp() * 1000
     diction['content']=bell.content
     diction['icon'] = bell.icon
     diction['color'] = bell.color
     diction['bell_id'] = bell.id
-    diction['']
-    return HttpResponse(diction)
+    # diction['']
+    return JsonResponse(diction)
+
+
 
 @require_http_methods(['GET'])
 @login_required
