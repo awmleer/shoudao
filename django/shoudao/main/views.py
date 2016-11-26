@@ -500,6 +500,12 @@ def message_comment(request):
 @login_required
 def account_info(request):
     user_info=request.user.user_info.get()
+    bells_count=user_info.bells_unread_major.count()
+    if bells_count==0:
+        if user_info.bells_unread_minor.count()==0:
+            bells_count=0
+        else:
+            bells_count=-1
     res={
         'user_id':request.user.id,
         'name':user_info.name,
@@ -508,6 +514,7 @@ def account_info(request):
         'message_sent':user_info.message_sent,
         'text_sent':user_info.text_sent,
         'text_surplus':user_info.text_surplus,
+        'bells_count':bells_count,
         'today_signed':user_info.last_daily_sign_date==timezone.localtime(timezone.now()).date() #今天是否已经签到
     }
     return JsonResponse(res)

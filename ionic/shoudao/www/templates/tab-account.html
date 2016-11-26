@@ -2,8 +2,8 @@
   <ion-nav-buttons side="right">
     <a class="button button-clear button-dark" ng-click="clear_check()" style="font-size: 18px" ui-sref="tab.bell-list">
       <i class="icon ion-ios-bell"></i>
-      <span class="red-dot"></span>
-      <!--<span class="red-dot-number">2</span>-->
+      <span ng-if="user_info.bells_count==-1" class="red-dot"></span>
+      <span ng-if="user_info.bells_count>0" class="red-dot-number">{{user_info.bells_count>99?99:user_info.bells_count}}</span>
     </a>
   </ion-nav-buttons>
   <ion-content>
