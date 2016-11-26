@@ -73,6 +73,17 @@ def signup(request):
         return HttpResponse('名字过长（四个字以内）')
     if len(data['password'])<8:
         return HttpResponse('密码不能小于八位')
+    if 'invite_code' in data and data['invite_code']!='':
+        inviter=UserInfo.objects.filter(invite_code=data['invite_code'])
+        if (len(inviter))==0:return HttpResponse('邀请码错误')
+        inviter=inviter[0]
+        invite_reward=int(Information.objects.get(key='invite_reward').value)
+        inviter.text_surplus+=invite_reward
+        inviter.save()
+        invited=True
+    else:
+        invite_reward=0
+        invited=False
     while True:
         new_invite_code=''
         new_invite_code += random.choice('123456789')
@@ -85,9 +96,10 @@ def signup(request):
         new_invite_code += random.choice('0123456789')
         if UserInfo.objects.filter(invite_code=new_invite_code).count()==0:#确保invite_code不重复
             break
-    new_user = User.objects.create_user(username=data['phone'],password=data['password'],invite_code=new_invite_code)
-    default_text_surplus=Information.objects.get(key='default_text_surplus').value
-    UserInfo.objects.create(user=new_user,name=data['name'],text_surplus=default_text_surplus)
+    # todo 手机号已经注册的提示
+    new_user = User.objects.create_user(username=data['phone'],password=data['password'])
+    default_text_surplus=int(Information.objects.get(key='default_text_surplus').value)
+    UserInfo.objects.create(user=new_user,name=data['name'],text_surplus=default_text_surplus+invite_reward if invited else default_text_surplus,invite_code=new_invite_code)
     UserLog.objects.create(user=new_user, action='signup')
     return HttpResponse('success')
 

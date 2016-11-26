@@ -27,6 +27,10 @@
             <span class="input-label">密码</span>
             <input type="password" placeholder="至少八位" id="password">
         </label>
+        <label class="item item-input item-stacked-label">
+            <span class="input-label">邀请码</span>
+            <input type="text" placeholder="如果没有可以不填" id="invite_code">
+        </label>
         <div class="item item-input item-stacked-label item-button-right">
             <span class="input-label">短信验证码</span>
             <input type="text" placeholder="点击右边的按钮发送" id="code">
@@ -47,6 +51,12 @@
 
 <script src="//captcha.luosimao.com/static/dist/api.js"></script>
 <script>
+    var param_reg = new RegExp("(^|&)invite_code=([^&]*)(&|$)");
+    var r = window.location.search.substr(1).match(param_reg);
+    if(r!=null){
+        $("#invite_code").val(r[2]);
+    }
+
     var token=null;
     function validation(resp){
         console.log(resp);
@@ -119,6 +129,7 @@
         var name = $('#name').val();
         var password = $('#password').val();
         var code = $('#code').val();
+        var invite_code=$("#invite_code").val();
         if (code == '') {
             alert("请先输入短信验证码");
             return;
@@ -131,6 +142,7 @@
                 phone:phone,
                 name:name,
                 password:password,
+                invite_code:invite_code,
                 code:code
             })
         }).done(function (data) {

@@ -653,11 +653,12 @@ angular.module('shoudao.controllers', [])
     }, function () {
       alert("请求失败");
     });
+    var reg_invite_code=new RegExp(/(\$invite_code\$)/g); //匹配格式是$invite_code$
     $scope.share_invite_code= function () {
-      window.plugins.socialsharing.share($scope.share_content.for_invite_code.text, null, null, $scope.share_content.for_invite_code.url);
+      window.plugins.socialsharing.share($scope.share_content.for_invite_code.text.replace(reg_invite_code,$scope.user_info.invite_code), null, null, $scope.share_content.for_invite_code.url.replace(reg_invite_code,$scope.user_info.invite_code));
     };
     $scope.share_app_page= function () {
-      window.plugins.socialsharing.share($scope.share_content.for_app_page.text, null, null, $scope.share_content.for_app_page.url);
+      window.plugins.socialsharing.share($scope.share_content.for_app_page.text.replace(reg_invite_code,$scope.user_info.invite_code), null, null, $scope.share_content.for_app_page.url.replace(reg_invite_code,$scope.user_info.invite_code));
     };
   })
 
