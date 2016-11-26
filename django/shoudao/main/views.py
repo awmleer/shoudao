@@ -93,7 +93,6 @@ def signup(request):
         new_invite_code += random.choice('0123456789')
         new_invite_code += random.choice('0123456789')
         new_invite_code += random.choice('0123456789')
-        new_invite_code += random.choice('0123456789')
         if UserInfo.objects.filter(invite_code=new_invite_code).count()==0:#确保invite_code不重复
             break
     # todo 手机号已经注册的提示
