@@ -22,5 +22,6 @@ urlpatterns = [
     url(r'^m/preview/$', main_views.m_preview),
     url(r'^m/(?P<message_id>[0-9]+)/(?P<recipient>[0-9]+)/(?P<token>[A-Za-z0-9]+)/$', main_views.m),
     url(r'^m/(?P<message_id>[0-9]+)/(?P<recipient>[0-9]+)/(?P<token>[A-Za-z0-9]+)/submit/$', main_views.m_submit),
+    url(r'^backstage/', include('backstage.urls')),
     url(r'^', include('main.urls')),
 ]
