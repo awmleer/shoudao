@@ -27,7 +27,15 @@
                 data: {{ data |safe|escape }}
             }]
         },
-        options:{}
+        options:{
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
     });
 </script>
 </body>
