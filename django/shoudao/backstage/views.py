@@ -9,8 +9,8 @@ import json
 
 @require_http_methods(['GET'])
 @permission_required('is_superuser', raise_exception=False, login_url='/admin/login/')
-def static(request):
-    i=7
+def static(request,days):
+    i=int(days)
     day=timezone.localtime(timezone.now()).date()
     labels=[]
     data=[]
@@ -25,3 +25,13 @@ def static(request):
         'data':json.dumps(data)
     }
     return render(request,'static.html',context)
+
+
+
+@require_http_methods(['GET'])
+@permission_required('is_superuser', raise_exception=False, login_url='/admin/login/')
+def user_count(request):
+    context={
+        'user_count':UserInfo.objects.count()
+    }
+    return render(request,'user_count.html',context)
