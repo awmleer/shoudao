@@ -19,6 +19,7 @@ from main import views as main_views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^qr/', main_views.qr),
     url(r'^m/preview/$', main_views.m_preview),
     url(r'^m/(?P<message_id>[0-9]+)/(?P<recipient>[0-9]+)/(?P<token>[A-Za-z0-9]+)/$', main_views.m),
     url(r'^m/(?P<message_id>[0-9]+)/(?P<recipient>[0-9]+)/(?P<token>[A-Za-z0-9]+)/submit/$', main_views.m_submit),
