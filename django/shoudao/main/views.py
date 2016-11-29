@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from main.models import *
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required,permission_required
-from django.http import HttpResponse,JsonResponse,HttpResponseBadRequest,HttpResponseForbidden
+from django.http import HttpResponse,JsonResponse,HttpResponseBadRequest,HttpResponseForbidden,HttpResponseRedirect
 import json
 import sms.juhe
 from sms import shorten
@@ -20,6 +20,11 @@ import time
 import logging
 logger = logging.getLogger('django')
 
+
+
+
+def qr(request):
+    return HttpResponseRedirect(redirect_to='/home/')
 
 
 
