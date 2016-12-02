@@ -320,6 +320,8 @@ def message_new(request):
 def message_remind_one(request):
     message = Message.objects.get(id=request.GET['message_id'])
     if message.user != request.user: return HttpResponseForbidden()
+    user_info = request.user.user_info.get()
+    if user_info.text_surplus<=0 : return HttpResponse('短信条数不足')
     recipients=message.get_recipients()
     for recipient in recipients:
         if str(recipient['phone']) == str(request.GET['phone']):
@@ -330,7 +332,6 @@ def message_remind_one(request):
                                       '#sender#': request.user.user_info.get().name + '。请点击链接确认收到:' + link.short_link + ' '
                                       })
             if send_success:
-                user_info = request.user.user_info.get()
                 user_info.text_sent += 1
                 user_info.text_surplus -= 1
                 user_info.save()
@@ -432,7 +433,6 @@ def bell_detail(request,bell_id):
     return JsonResponse(diction)
 
 
-
 @require_http_methods(['GET'])
 @login_required
 def message_remind_all(request):
@@ -441,16 +441,18 @@ def message_remind_all(request):
     recipients=message.get_recipients()
     send_count=0
     for recipient in recipients:
+        if not recipient['received']: send_count+=1
+    user_info = request.user.user_info.get()
+    if user_info.text_surplus<send_count: return HttpResponse('短信条数不足')
+    send_count=0
+    for recipient in recipients:
         if not recipient['received']:
             link=message.links.get(recipient=recipient['phone'])
             send_success = sms.juhe.send_sms(recipient['phone'], 22175,{'#recipient#': recipient['name'], '#title#': message.title,'#sender#': request.user.user_info.get().name + '。请点击链接确认收到:' + link.short_link + ' '})
             if send_success: send_count += 1
-
-    user_info=request.user.user_info.get()
     user_info.text_sent+=send_count
     user_info.text_surplus+=(-send_count)
     user_info.save()
-
     UserLog.objects.create(user=request.user, action='message_remind_all')
     return HttpResponse('success')
 
