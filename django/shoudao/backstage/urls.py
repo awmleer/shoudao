@@ -4,7 +4,8 @@ from . import views
 
 app_name = 'backstage'
 urlpatterns = [
-    url(r'^static/',views.static),
+    url(r'^static/(?P<days>[0-9]+)/$',views.static),
+    url(r'^user_count/$',views.user_count),
     # url(r'^$',views.index,name='index'),
     # url(r'^index/$',views.index,name='index'),
     # url(r'^story/add/$',views.story_add,name='story_add'),
