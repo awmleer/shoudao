@@ -31,6 +31,6 @@ class Command(BaseCommand):
             code += random.choice('0123456789')
             codes=RedeemCode.objects.filter(code=code)
             if len(codes)>0: continue
-            RedeemCode.objects.create(code=code,item=options['item_id'])
+            RedeemCode.objects.create(code=code,item=options['item_id'],type='new_user')
             count+=1
         self.stdout.write(self.style.SUCCESS('Successfully create %d redeem codes "%s"' % (count,options['item_id'])))

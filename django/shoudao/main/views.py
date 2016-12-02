@@ -24,7 +24,7 @@ logger = logging.getLogger('django')
 
 
 def qr(request):
-    return HttpResponseRedirect(redirect_to='/home/')
+    return HttpResponseRedirect(redirect_to='/home/browser_check.html')
 
 
 
